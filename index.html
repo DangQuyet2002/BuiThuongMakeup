@@ -1180,23 +1180,29 @@ async function loadArtists(){
   artistField.style.display='block';
 
   if(MODE==='demo'){
-    artistList.innerHTML=CATALOG.artists.map(function(a){
-      return '<label class="artist"><input type="radio" name="artist" value="'+a.id+'"><span class="artist-a">'+esc(a.initials)+'</span><span class="artist-t"><b>'+esc(a.name)+'</b><small>'+esc(a.specialty||'')+'</small></span></label>';
-    }).join('')+'<label class="artist"><input type="radio" name="artist" value="" checked><span class="artist-a">?</span><span class="artist-t"><b>Để Bùi Thương sắp xếp</b><small>Chuyên viên phù hợp nhất còn trống</small></span></label>';
+    artistList.innerHTML=CATALOG.artists.map(function(a,i){
+      return '<label class="artist"><input type="radio" name="artist" value="'+a.id+'"'+(i===0?' checked':'')+'><span class="artist-a">'+esc(a.initials)+'</span><span class="artist-t"><b>'+esc(a.name)+'</b><small>'+esc(a.specialty||'')+'</small></span></label>';
+    }).join('');
     bindArtists();
     return;
   }
 
   try{
     var list=await MocAPI.getArtists(dateInput.value,pickedTime,dur);
+    var firstChecked=false;
     artistList.innerHTML=list.map(function(a){
+      var isCheck=false;
+      if(a.available&&!firstChecked){
+        isCheck=true;
+        firstChecked=true;
+      }
       return '<label class="artist'+(a.available?'':' off')+'">'
-        +'<input type="radio" name="artist" value="'+a.id+'"'+(a.available?'':' disabled')+'>'
+        +'<input type="radio" name="artist" value="'+a.id+'"'+(a.available?'':' disabled')+(isCheck?' checked':'')+'>'
         +'<span class="artist-a">'+esc(a.initials)+'</span>'
         +'<span class="artist-t"><b>'+esc(a.name)+'</b><small>'+esc(a.specialty||'')+' · '+a.years+' năm</small></span>'
         +(a.available?'':'<span class="artist-s">Đã kín giờ này</span>')
         +'</label>';
-    }).join('')+'<label class="artist"><input type="radio" name="artist" value="" checked><span class="artist-a">?</span><span class="artist-t"><b>Để Bùi Thương sắp xếp</b><small>Chuyên viên phù hợp nhất còn trống</small></span></label>';
+    }).join('');
     bindArtists();
   }catch(e){
     artistField.style.display='none';
@@ -1204,10 +1210,11 @@ async function loadArtists(){
 }
 
 function bindArtists(){
+  var checkedRadio=artistList.querySelector('input[name=artist]:checked');
+  pickedArtist=checkedRadio&&checkedRadio.value?Number(checkedRadio.value):null;
   artistList.querySelectorAll('input[name=artist]').forEach(function(r){
     r.addEventListener('change',function(){pickedArtist=r.value?Number(r.value):null});
   });
-  pickedArtist=null;
 }
 
 var holdTimer=null, holdLeft=0;
