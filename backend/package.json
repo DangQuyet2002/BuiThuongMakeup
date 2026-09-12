@@ -1,0 +1,31 @@
+{
+  "name": "moc-studio-backend",
+  "version": "1.2.0",
+  "description": "Backend đặt lịch makeup cho Bùi Thương Makeup",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "seed": "node db/seed.js",
+    "db": "node db/view.js",
+    "backup": "node db/backup.js",
+    "create-admin": "node db/create-admin.js",
+    "test": "node test-auth.js && node test-catalog.js && node test-e2e.js",
+    "test:auth": "node test-auth.js",
+    "test:catalog": "node test-catalog.js",
+    "test:e2e": "node test-e2e.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.7.0",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "helmet": "^8.3.0",
+    "multer": "^2.3.0",
+    "pino": "^10.3.1",
+    "pino-roll": "^4.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -1,0 +1,45 @@
+# ===== Thư viện cài đặt =====
+node_modules/
+npm-debug.log*
+
+# ===== Cơ sở dữ liệu (dữ liệu thật của studio — KHÔNG đẩy lên) =====
+*.db
+*.db-shm
+*.db-wal
+backend/db/*.db
+backend/db/*.db-shm
+backend/db/*.db-wal
+
+# ===== Bản sao lưu database =====
+backend/backups/
+
+# ===== Ảnh khách hàng tải lên =====
+backend/uploads/
+
+# ===== Nhật ký & file tạm =====
+backend/logs/
+logs/
+*.log
+
+# ===== Biến môi trường / khoá bí mật =====
+.env
+.env.*
+!.env.example
+
+# ===== Thư mục kiểm tra tạm =====
+_verify/
+
+# ===== File hệ điều hành & trình soạn thảo =====
+Thumbs.db
+Desktop.ini
+.DS_Store
+.vscode/
+.idea/
+
+# ===== Công cụ AI của dự án =====
+.workbuddy-ai/
+
+# ===== Anh chup man hinh kiem thu =====
+admin-home-tab.png
+hero-test.png
+backend/verify-*.png
