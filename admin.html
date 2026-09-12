@@ -1,860 +1,2138 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quản trị đơn đặt lịch — Bùi Thương Makeup</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-:root{
-  --pink-50:#FBEAF0; --pink-100:#F4C0D1; --pink-400:#D4537E; --pink-600:#993556; --pink-800:#72243E;
-  --coral-50:#FAECE7; --coral-600:#993C1D;
-  --gray-50:#F1EFE8; --gray-100:#E8E6DE; --gray-200:#D3D1C7; --gray-400:#888780; --gray-600:#5F5E5A; --gray-900:#2C2C2A;
-  --green-50:#E1F5EE; --green-600:#085041;
-  --amber-50:#FAEEDA; --amber-600:#854F0B;
-  --red-50:#FCEBEB; --red-600:#A32D2D;
-  --blue-50:#E6F1FB; --blue-600:#0C447C;
-  --sans:'Segoe UI',system-ui,-apple-system,sans-serif;
-  --serif:Georgia,serif;
-  --logo:'Playfair Display',Georgia,'Times New Roman',serif;
-  --mono:'Consolas','Monaco',monospace;
-}
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:var(--sans);background:var(--gray-50);color:var(--gray-900);line-height:1.55;font-size:14px}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản trị đơn đặt lịch — Bùi Thương Makeup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --pink-50: #FBEAF0;
+      --pink-100: #F4C0D1;
+      --pink-400: #D4537E;
+      --pink-600: #993556;
+      --pink-800: #72243E;
+      --coral-50: #FAECE7;
+      --coral-600: #993C1D;
+      --gray-50: #F1EFE8;
+      --gray-100: #E8E6DE;
+      --gray-200: #D3D1C7;
+      --gray-400: #888780;
+      --gray-600: #5F5E5A;
+      --gray-900: #2C2C2A;
+      --green-50: #E1F5EE;
+      --green-600: #085041;
+      --amber-50: #FAEEDA;
+      --amber-600: #854F0B;
+      --red-50: #FCEBEB;
+      --red-600: #A32D2D;
+      --blue-50: #E6F1FB;
+      --blue-600: #0C447C;
+      --sans: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      --serif: Georgia, serif;
+      --logo: 'Playfair Display', Georgia, 'Times New Roman', serif;
+      --mono: 'Consolas', 'Monaco', monospace;
+    }
 
-/* ---------- top bar ---------- */
-.topbar{background:var(--pink-400);color:#fff;padding:18px 0}
-.topbar .in{max-width:1240px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
-.topbar h1{font-family:var(--logo);font-size:22px;font-weight:400}
-.topbar p{font-size:13px;opacity:.85}
-.topbar .right{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-.topbar a{color:#fff;font-size:13px;text-decoration:none;border:0.5px solid rgba(255,255,255,.5);padding:8px 18px;border-radius:999px}
-.topbar a:hover{background:rgba(255,255,255,.15)}
-.whoami{font-size:12px;text-align:right;line-height:1.35}
-.whoami b{font-weight:600}
-.whoami small{opacity:.8}
-.btn-out{background:transparent;color:#fff;border:0.5px solid rgba(255,255,255,.5);padding:8px 18px;border-radius:999px;font-size:13px;font-family:var(--sans);cursor:pointer}
-.btn-out:hover{background:rgba(255,255,255,.15)}
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
 
-.wrap{max-width:1240px;margin:0 auto;padding:28px 24px 60px}
+    body {
+      font-family: var(--sans);
+      background: var(--gray-50);
+      color: var(--gray-900);
+      line-height: 1.55;
+      font-size: 14px
+    }
 
-/* ---------- login gate ---------- */
-.gate{max-width:420px;margin:60px auto;background:#fff;border-radius:14px;padding:38px 36px;text-align:center;border:0.5px solid var(--gray-200);box-shadow:0 10px 40px -18px rgba(153,53,86,.22)}
-.gate .mark{width:60px;height:60px;border-radius:50%;background:var(--pink-50);color:var(--pink-600);font-family:var(--serif);font-size:24px;display:flex;align-items:center;justify-content:center;margin:0 auto 18px}
-.gate h2{font-family:var(--serif);font-size:23px;font-weight:400;margin-bottom:8px}
-.gate p.sub{font-size:13px;color:var(--gray-400);margin-bottom:24px}
-.gate label{display:block;text-align:left;font-size:12px;color:var(--gray-600);margin-bottom:6px;font-weight:500}
-.gate input{width:100%;padding:13px 16px;border:0.5px solid var(--gray-200);border-radius:8px;font-size:14px;font-family:var(--sans);margin-bottom:16px;outline:none;transition:border-color .15s}
-.gate input:focus{border-color:var(--pink-400)}
-.gate button[type=submit]{width:100%;padding:13px;background:var(--pink-400);color:#fff;border:none;border-radius:999px;font-size:14px;font-weight:500;cursor:pointer;font-family:var(--sans);transition:background .15s}
-.gate button[type=submit]:hover{background:var(--pink-600)}
-.gate button[type=submit]:disabled{opacity:.6;cursor:not-allowed}
-.gate .hint{display:block;margin-top:18px;font-size:12px;color:var(--gray-400);line-height:1.6}
-.gate .hint code{font-family:var(--mono);background:var(--gray-50);padding:2px 6px;border-radius:4px;font-size:11px;color:var(--pink-600)}
-.errline{display:block;margin-top:14px;font-size:12.5px;color:var(--red-600);background:var(--red-50);padding:10px 14px;border-radius:8px;text-align:left;line-height:1.5}
-.okline{display:block;margin-top:14px;font-size:12.5px;color:var(--green-600);background:var(--green-50);padding:10px 14px;border-radius:8px;text-align:left;line-height:1.5}
+    /* ---------- top bar ---------- */
+    .topbar {
+      background: var(--pink-400);
+      color: #fff;
+      padding: 18px 0
+    }
 
-/* ---------- stats ---------- */
-.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:26px}
-.st{background:#fff;border-radius:10px;padding:18px 20px;border:0.5px solid var(--gray-200)}
-.st span{display:block;font-size:12px;color:var(--gray-400);margin-bottom:8px}
-.st b{font-family:var(--serif);font-size:26px;font-weight:400;color:var(--pink-600)}
-.st.money b{font-size:21px}
+    .topbar .in {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px
+    }
 
-/* ---------- filter bar ---------- */
-.bar{background:#fff;border-radius:10px;padding:16px 20px;border:0.5px solid var(--gray-200);margin-bottom:18px;display:flex;gap:12px;flex-wrap:wrap;align-items:center}
-.bar input,.bar select{padding:10px 14px;border:0.5px solid var(--gray-200);border-radius:8px;font-size:13px;font-family:var(--sans);outline:none}
-.bar input:focus,.bar select:focus{border-color:var(--pink-400)}
-.bar button{padding:10px 22px;background:var(--pink-400);color:#fff;border:none;border-radius:999px;font-size:13px;font-weight:500;cursor:pointer;font-family:var(--sans)}
-.bar button:hover{background:var(--pink-600)}
-.bar button:disabled{opacity:.55;cursor:not-allowed}
-.bar .ghost{background:transparent;color:var(--gray-600);border:0.5px solid var(--gray-200)}
-.bar .ghost:hover{background:var(--gray-50);color:var(--gray-900)}
+    .topbar h1 {
+      font-family: var(--logo);
+      font-size: 22px;
+      font-weight: 400
+    }
 
-/* ---------- tables ---------- */
-.panel{background:#fff;border-radius:10px;border:0.5px solid var(--gray-200);overflow:hidden}
-table{width:100%;border-collapse:collapse;table-layout:fixed}
-th{text-align:left;font-size:12px;font-weight:500;color:var(--gray-400);padding:14px 16px;border-bottom:0.5px solid var(--gray-200);background:var(--gray-50)}
-td{padding:14px 16px;border-bottom:0.5px solid var(--gray-50);font-size:13px;vertical-align:top}
-tr:last-child td{border-bottom:none}
-tr:hover td{background:#FDFAFB}
-.code{font-family:var(--mono);font-size:12px;color:var(--pink-600);font-weight:500}
-.cust b{display:block;font-weight:500;margin-bottom:2px}
-.cust small{color:var(--gray-400);font-family:var(--mono);font-size:12px}
-.when b{display:block;font-weight:500}
-.when small{color:var(--gray-400)}
-.money{font-family:var(--serif);font-size:15px;color:var(--pink-600)}
-.badge{display:inline-block;font-size:11px;padding:4px 11px;border-radius:999px;font-weight:500;white-space:nowrap}
-.b-pending{background:var(--amber-50);color:var(--amber-600)}
-.b-confirmed{background:var(--green-50);color:var(--green-600)}
-.b-done{background:var(--gray-50);color:var(--gray-600)}
-.b-cancelled{background:var(--red-50);color:var(--red-600)}
-.acts{display:flex;gap:6px;flex-wrap:wrap}
-.acts button{font-size:11px;padding:5px 12px;border-radius:999px;border:0.5px solid var(--gray-200);background:#fff;cursor:pointer;font-family:var(--sans);color:var(--gray-600)}
-.acts button:hover{border-color:var(--pink-400);color:var(--pink-600)}
-.acts button.ok:hover{background:var(--green-50);border-color:var(--green-600);color:var(--green-600)}
-.acts button.no:hover{background:var(--red-50);border-color:var(--red-600);color:var(--red-600)}
-.acts button:disabled{opacity:.5;cursor:not-allowed}
-.addons-t{font-size:11px;color:var(--gray-400);margin-top:4px}
-.empty{padding:60px 20px;text-align:center;color:var(--gray-400);font-size:14px}
-.loading{padding:60px 20px;text-align:center;color:var(--gray-400);font-size:14px}
-.note{font-size:12px;color:var(--gray-400);margin-top:6px;line-height:1.5}
-.ro{font-size:11px;padding:4px 11px;border-radius:999px;background:var(--gray-50);color:var(--gray-600);white-space:nowrap}
+    .topbar p {
+      font-size: 13px;
+      opacity: .85
+    }
 
-/* ---------- tabs ---------- */
-.tabs{display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap}
-.tab{padding:9px 20px;border-radius:999px;border:0.5px solid var(--gray-200);background:#fff;font-size:13px;font-family:var(--sans);color:var(--gray-600);cursor:pointer}
-.tab:hover{border-color:var(--pink-100)}
-.tab.on{background:var(--pink-400);border-color:var(--pink-400);color:#fff;font-weight:500}
-.tab[hidden]{display:none}
+    .topbar .right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap
+    }
 
-/* ---------- sub tabs ---------- */
-.subtabs{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
-.subtab{padding:7px 16px;border-radius:8px;border:0.5px solid var(--gray-200);background:#fff;font-size:12.5px;font-family:var(--sans);color:var(--gray-600);cursor:pointer}
-.subtab:hover{border-color:var(--pink-100)}
-.subtab.on{background:var(--pink-50);border-color:var(--pink-400);color:var(--pink-600);font-weight:500}
+    .topbar a {
+      color: #fff;
+      font-size: 13px;
+      text-decoration: none;
+      border: 0.5px solid rgba(255, 255, 255, .5);
+      padding: 8px 18px;
+      border-radius: 999px
+    }
 
-/* ---------- thumbnail ---------- */
-.thumb{width:54px;height:54px;border-radius:8px;object-fit:cover;background:var(--gray-50);border:0.5px solid var(--gray-200);display:block}
-.thumb-wrap{position:relative;width:54px;height:54px;flex-shrink:0}
-.thumb-badge{position:absolute;bottom:-4px;right:-4px;font-size:9px;padding:1px 5px;border-radius:999px;background:var(--blue-50);color:var(--blue-600);border:1px solid #fff}
-.thumb-ph{width:54px;height:54px;border-radius:8px;background:var(--gray-50);border:0.5px dashed var(--gray-200);display:flex;align-items:center;justify-content:center;color:var(--gray-400);font-size:10px;text-align:center;flex-shrink:0}
+    .topbar a:hover {
+      background: rgba(255, 255, 255, .15)
+    }
 
-/* ---------- gallery grid ---------- */
-.gal-admin{display:grid;grid-template-columns:repeat(auto-fill,minmax(196px,1fr));gap:14px;padding:20px}
-.gcard{background:#fff;border:0.5px solid var(--gray-200);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
-.gcard .pic{width:100%;height:146px;object-fit:cover;background:var(--gray-50);display:block}
-.gcard .body{padding:12px 14px 8px;flex:1}
-.gcard .body b{display:block;font-weight:500;font-size:13.5px;margin-bottom:3px;line-height:1.35}
-.gcard .body small{color:var(--gray-400);font-size:12px}
-.gcard .foot{padding:0 14px 13px;display:flex;gap:6px;flex-wrap:wrap}
-.gcard.off{opacity:.5}
-.gcard.off .pic{filter:grayscale(1)}
-.gcard .acts button{font-size:11px;padding:5px 11px}
-.gcard .pic-wrap{position:relative}
-.gcard .badge{position:absolute;top:8px;left:8px;background:rgba(255,255,255,.94);color:var(--pink-800);font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:999px}
-.hint-inline{font-weight:400;color:var(--gray-400);font-size:12px}
+    .whoami {
+      font-size: 12px;
+      text-align: right;
+      line-height: 1.35
+    }
 
-/* ---------- upload drop ---------- */
-.drop{border:1.5px dashed var(--gray-200);border-radius:10px;padding:20px;text-align:center;background:var(--gray-50);cursor:pointer;transition:all .15s}
-.drop:hover,.drop.over{border-color:var(--pink-400);background:var(--pink-50)}
-.drop b{display:block;font-weight:500;margin-bottom:4px;font-size:13.5px}
-.drop small{color:var(--gray-400);font-size:12px}
-.preview-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.preview{width:70px;height:70px;border-radius:8px;object-fit:cover;border:0.5px solid var(--gray-200)}
-.cur-img{display:flex;align-items:center;gap:12px;margin-bottom:10px;padding:10px;background:var(--gray-50);border-radius:8px}
-.cur-img img{width:60px;height:60px;border-radius:6px;object-fit:cover}
-.cur-img small{color:var(--gray-400);font-size:12px}
-/* Khối ảnh đầu trang — nhiều ảnh, thẻ theo tỉ lệ dọc giống trang chủ */
-.hero-head{padding:20px 20px 0}
-.hero-head h4{margin-bottom:6px;font-size:15px}
-.hero-head p.help{color:var(--gray-400);font-size:12.5px;line-height:1.65;max-width:640px}
-.hgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;padding:18px 20px 4px}
-.hcard{background:#fff;border:0.5px solid var(--gray-200);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
-.hcard.cover{border-color:var(--pink-400);box-shadow:0 0 0 2px var(--pink-50)}
-.hcard.queue{border-style:dashed;border-color:var(--pink-400);background:var(--pink-50)}
-.hcard .pic-wrap{position:relative;aspect-ratio:4/5;overflow:hidden;background:var(--gray-50)}
-.hcard .pic{width:100%;height:100%;object-fit:cover;display:block}
-.hcard .badge{position:absolute;top:8px;left:8px;background:rgba(255,255,255,.94);color:var(--pink-800);font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:999px}
-.hcard.cover .badge{background:var(--pink-400);color:#fff}
-.hcard .foot{padding:9px 10px;display:flex;align-items:center;gap:5px}
-.hcard .foot button{border:1px solid var(--gray-200);background:#fff;border-radius:7px;padding:5px 9px;font-family:var(--sans);font-size:11.5px;font-weight:600;color:var(--gray-600);cursor:pointer}
-.hcard .foot button:hover:not(:disabled){border-color:var(--pink-400);color:var(--pink-600)}
-.hcard .foot button.no:hover:not(:disabled){border-color:#C0392B;color:#C0392B}
-.hcard .foot button:disabled{opacity:.3;cursor:not-allowed}
-.hcard .foot small{color:var(--gray-400);font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.hero-actions{margin-top:14px;padding:0 20px;display:flex;gap:8px;flex-wrap:wrap}
-.hero-actions button{border:0;border-radius:8px;padding:10px 16px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer}
-.hero-actions .save{background:var(--pink-400);color:#fff}
-.hero-actions .save:hover{background:var(--pink-600)}
-.hero-actions .clear{background:#fff;color:var(--gray-600);border:1px solid var(--gray-200)}
-.hero-actions button:disabled{opacity:.45;cursor:not-allowed}
-/* Thiết lập trình chiếu: tự chuyển + số giây */
-.hero-opts{margin-top:16px;padding:14px 20px 0;display:flex;gap:22px;align-items:center;flex-wrap:wrap;border-top:0.5px solid var(--gray-200)}
-.hero-opts .chk{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--gray-600);cursor:pointer}
-.hero-opts .chk input{width:15px;height:15px;accent-color:var(--pink-400);cursor:pointer}
-.hero-opts .num{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--gray-600)}
-.hero-opts .num input{width:64px;padding:7px 9px;border:1px solid var(--gray-200);border-radius:8px;font-family:var(--sans);font-size:13px;text-align:center}
-#homeForm .form-err{margin:12px 20px 20px}
-#homeForm{padding-bottom:20px}
+    .whoami b {
+      font-weight: 600
+    }
 
-/* ---------- modal form ---------- */
-.modal.wide{max-width:560px}
-.field{margin-bottom:15px}
-.field > label{display:block;font-size:12px;color:var(--gray-600);margin-bottom:5px;font-weight:500}
-.field .hint{display:block;font-size:11.5px;color:var(--gray-400);margin-top:4px;line-height:1.5}
-.field input[type=text],.field input[type=number],.field textarea,.field select{width:100%;padding:10px 13px;border:0.5px solid var(--gray-200);border-radius:8px;font-size:13.5px;font-family:var(--sans);outline:none}
-.field textarea{min-height:72px;resize:vertical;line-height:1.5}
-.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--pink-400)}
-.field .check{display:flex;align-items:center;gap:9px;font-size:13.5px;color:var(--gray-900);font-weight:400;cursor:pointer}
-.field .check input{width:auto;margin:0;flex-shrink:0}
-.money-in{position:relative}
-.money-in input{padding-right:36px}
-.money-in span{position:absolute;right:13px;top:50%;transform:translateY(-50%);color:var(--gray-400);font-size:13px;pointer-events:none}
-.radio-row{display:flex;gap:8px}
-.radio-row label{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;padding:11px;border:0.5px solid var(--gray-200);border-radius:8px;font-size:13px;cursor:pointer;font-weight:400;margin:0;color:var(--gray-600)}
-.radio-row label:has(input:checked){border-color:var(--pink-400);background:var(--pink-50);color:var(--pink-600);font-weight:500}
-.radio-row input{width:auto;margin:0}
-.form-err{background:var(--red-50);color:var(--red-600);padding:10px 14px;border-radius:8px;font-size:12.5px;margin-bottom:14px;display:none}
-.form-err.on{display:block}
+    .whoami small {
+      opacity: .8
+    }
 
-.empty{padding:50px 20px;text-align:center;color:var(--gray-400);font-size:14px}
+    .btn-out {
+      background: transparent;
+      color: #fff;
+      border: 0.5px solid rgba(255, 255, 255, .5);
+      padding: 8px 18px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-family: var(--sans);
+      cursor: pointer
+    }
 
-/* ---------- zns bar ---------- */
-.znsbar{background:#fff;border:0.5px solid var(--gray-200);border-radius:10px;padding:16px 20px;margin-bottom:18px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;font-size:13px}
-.zns-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
-.zns-on{background:#1D9E75}
-.zns-off{background:#BA7517}
-.zns-dry{background:#378ADD}
-.znsbar b{font-weight:500}
-.znsbar small{color:var(--gray-400)}
-.znsbar .sp{flex:1}
-.znsbar button{padding:8px 18px;font-size:12px;border-radius:999px;border:0.5px solid var(--gray-200);background:#fff;cursor:pointer;font-family:var(--sans)}
-.znsbar button:hover{border-color:var(--pink-400);color:var(--pink-600)}
+    .btn-out:hover {
+      background: rgba(255, 255, 255, .15)
+    }
 
-.st2{display:inline-block;font-size:11px;padding:3px 10px;border-radius:999px;font-weight:500;white-space:nowrap}
-.s-sent{background:var(--green-50);color:var(--green-600)}
-.s-failed{background:var(--red-50);color:var(--red-600)}
-.s-skipped{background:var(--gray-50);color:var(--gray-600)}
-.s-dry_run{background:var(--blue-50);color:var(--blue-600)}
-.r-owner{background:var(--pink-50);color:var(--pink-600)}
-.r-staff{background:var(--blue-50);color:var(--blue-600)}
-.r-viewer{background:var(--gray-50);color:var(--gray-600)}
-.on-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#1D9E75;margin-right:5px}
-.off-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#C9C7BE;margin-right:5px}
+    .wrap {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 28px 24px 60px
+    }
 
-/* ---------- modal ---------- */
-.backdrop{position:fixed;inset:0;background:rgba(44,44,42,.45);display:none;align-items:center;justify-content:center;padding:24px;z-index:50}
-.backdrop.on{display:flex}
-.modal{background:#fff;border-radius:14px;max-width:460px;width:100%;padding:30px 32px;max-height:88vh;overflow-y:auto}
-.modal h3{font-family:var(--serif);font-size:20px;font-weight:400;margin-bottom:6px}
-.modal p.sub{font-size:13px;color:var(--gray-400);margin-bottom:20px}
-.modal label{display:block;font-size:12px;color:var(--gray-600);margin-bottom:6px;font-weight:500}
-.modal input,.modal select{width:100%;padding:11px 14px;border:0.5px solid var(--gray-200);border-radius:8px;font-size:14px;font-family:var(--sans);margin-bottom:14px;outline:none}
-.modal input:focus,.modal select:focus{border-color:var(--pink-400)}
-.modal .row{display:flex;gap:10px;margin-top:8px}
-.modal .row button{flex:1;padding:12px;border-radius:999px;font-size:14px;font-weight:500;font-family:var(--sans);cursor:pointer}
-.modal .primary{background:var(--pink-400);color:#fff;border:none}
-.modal .primary:hover{background:var(--pink-600)}
-.modal .secondary{background:#fff;color:var(--gray-600);border:0.5px solid var(--gray-200)}
-.modal .secondary:hover{background:var(--gray-50)}
-.pwbox{background:var(--gray-50);border:0.5px dashed var(--gray-200);border-radius:8px;padding:14px 16px;font-family:var(--mono);font-size:16px;color:var(--pink-600);text-align:center;letter-spacing:.5px;margin-bottom:14px;word-break:break-all}
+    /* ---------- login gate ---------- */
+    .gate {
+      max-width: 420px;
+      margin: 60px auto;
+      background: #fff;
+      border-radius: 14px;
+      padding: 38px 36px;
+      text-align: center;
+      border: 0.5px solid var(--gray-200);
+      box-shadow: 0 10px 40px -18px rgba(153, 53, 86, .22)
+    }
 
-.toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--gray-900);color:#fff;padding:13px 24px;border-radius:999px;font-size:13.5px;opacity:0;transition:all .25s;pointer-events:none;z-index:80;max-width:90vw;text-align:center}
-.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
-.toast.err{background:var(--red-600)}
+    .gate .mark {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--pink-50);
+      color: var(--pink-600);
+      font-family: var(--serif);
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 18px
+    }
 
-@media(max-width:1000px){
-  .stats{grid-template-columns:repeat(3,1fr)}
-}
-@media(max-width:900px){
-  .stats{grid-template-columns:repeat(2,1fr)}
-  .panel{overflow-x:auto}
-  table{min-width:900px}
-}
-</style>
+    .gate h2 {
+      font-family: var(--serif);
+      font-size: 23px;
+      font-weight: 400;
+      margin-bottom: 8px
+    }
+
+    .gate p.sub {
+      font-size: 13px;
+      color: var(--gray-400);
+      margin-bottom: 24px
+    }
+
+    .gate label {
+      display: block;
+      text-align: left;
+      font-size: 12px;
+      color: var(--gray-600);
+      margin-bottom: 6px;
+      font-weight: 500
+    }
+
+    .gate input {
+      width: 100%;
+      padding: 13px 16px;
+      border: 0.5px solid var(--gray-200);
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: var(--sans);
+      margin-bottom: 16px;
+      outline: none;
+      transition: border-color .15s
+    }
+
+    .gate input:focus {
+      border-color: var(--pink-400)
+    }
+
+    .gate button[type=submit] {
+      width: 100%;
+      padding: 13px;
+      background: var(--pink-400);
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: var(--sans);
+      transition: background .15s
+    }
+
+    .gate button[type=submit]:hover {
+      background: var(--pink-600)
+    }
+
+    .gate button[type=submit]:disabled {
+      opacity: .6;
+      cursor: not-allowed
+    }
+
+    .gate .hint {
+      display: block;
+      margin-top: 18px;
+      font-size: 12px;
+      color: var(--gray-400);
+      line-height: 1.6
+    }
+
+    .gate .hint code {
+      font-family: var(--mono);
+      background: var(--gray-50);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 11px;
+      color: var(--pink-600)
+    }
+
+    .errline {
+      display: block;
+      margin-top: 14px;
+      font-size: 12.5px;
+      color: var(--red-600);
+      background: var(--red-50);
+      padding: 10px 14px;
+      border-radius: 8px;
+      text-align: left;
+      line-height: 1.5
+    }
+
+    .okline {
+      display: block;
+      margin-top: 14px;
+      font-size: 12.5px;
+      color: var(--green-600);
+      background: var(--green-50);
+      padding: 10px 14px;
+      border-radius: 8px;
+      text-align: left;
+      line-height: 1.5
+    }
+
+    /* ---------- stats ---------- */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+      margin-bottom: 26px
+    }
+
+    .st {
+      background: #fff;
+      border-radius: 10px;
+      padding: 18px 20px;
+      border: 0.5px solid var(--gray-200)
+    }
+
+    .st span {
+      display: block;
+      font-size: 12px;
+      color: var(--gray-400);
+      margin-bottom: 8px
+    }
+
+    .st b {
+      font-family: var(--serif);
+      font-size: 26px;
+      font-weight: 400;
+      color: var(--pink-600)
+    }
+
+    .st.money b {
+      font-size: 21px
+    }
+
+    /* ---------- filter bar ---------- */
+    .bar {
+      background: #fff;
+      border-radius: 10px;
+      padding: 16px 20px;
+      border: 0.5px solid var(--gray-200);
+      margin-bottom: 18px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center
+    }
+
+    .bar input,
+    .bar select {
+      padding: 10px 14px;
+      border: 0.5px solid var(--gray-200);
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: var(--sans);
+      outline: none
+    }
+
+    .bar input:focus,
+    .bar select:focus {
+      border-color: var(--pink-400)
+    }
+
+    .bar button {
+      padding: 10px 22px;
+      background: var(--pink-400);
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: var(--sans)
+    }
+
+    .bar button:hover {
+      background: var(--pink-600)
+    }
+
+    .bar button:disabled {
+      opacity: .55;
+      cursor: not-allowed
+    }
+
+    .bar .ghost {
+      background: transparent;
+      color: var(--gray-600);
+      border: 0.5px solid var(--gray-200)
+    }
+
+    .bar .ghost:hover {
+      background: var(--gray-50);
+      color: var(--gray-900)
+    }
+
+    /* ---------- tables ---------- */
+    .panel {
+      background: #fff;
+      border-radius: 10px;
+      border: 0.5px solid var(--gray-200);
+      overflow: hidden
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed
+    }
+
+    th {
+      text-align: left;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--gray-400);
+      padding: 14px 16px;
+      border-bottom: 0.5px solid var(--gray-200);
+      background: var(--gray-50)
+    }
+
+    td {
+      padding: 14px 16px;
+      border-bottom: 0.5px solid var(--gray-50);
+      font-size: 13px;
+      vertical-align: top
+    }
+
+    tr:last-child td {
+      border-bottom: none
+    }
+
+    tr:hover td {
+      background: #FDFAFB
+    }
+
+    .code {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--pink-600);
+      font-weight: 500
+    }
+
+    .cust b {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 2px
+    }
+
+    .cust small {
+      color: var(--gray-400);
+      font-family: var(--mono);
+      font-size: 12px
+    }
+
+    .when b {
+      display: block;
+      font-weight: 500
+    }
+
+    .when small {
+      color: var(--gray-400)
+    }
+
+    .money {
+      font-family: var(--serif);
+      font-size: 15px;
+      color: var(--pink-600)
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      padding: 4px 11px;
+      border-radius: 999px;
+      font-weight: 500;
+      white-space: nowrap
+    }
+
+    .b-pending {
+      background: var(--amber-50);
+      color: var(--amber-600)
+    }
+
+    .b-confirmed {
+      background: var(--green-50);
+      color: var(--green-600)
+    }
+
+    .b-done {
+      background: var(--gray-50);
+      color: var(--gray-600)
+    }
+
+    .b-cancelled {
+      background: var(--red-50);
+      color: var(--red-600)
+    }
+
+    .acts {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap
+    }
+
+    .acts button {
+      font-size: 11px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      border: 0.5px solid var(--gray-200);
+      background: #fff;
+      cursor: pointer;
+      font-family: var(--sans);
+      color: var(--gray-600)
+    }
+
+    .acts button:hover {
+      border-color: var(--pink-400);
+      color: var(--pink-600)
+    }
+
+    .acts button.ok:hover {
+      background: var(--green-50);
+      border-color: var(--green-600);
+      color: var(--green-600)
+    }
+
+    .acts button.no:hover {
+      background: var(--red-50);
+      border-color: var(--red-600);
+      color: var(--red-600)
+    }
+
+    .acts button:disabled {
+      opacity: .5;
+      cursor: not-allowed
+    }
+
+    .addons-t {
+      font-size: 11px;
+      color: var(--gray-400);
+      margin-top: 4px
+    }
+
+    .empty {
+      padding: 60px 20px;
+      text-align: center;
+      color: var(--gray-400);
+      font-size: 14px
+    }
+
+    .loading {
+      padding: 60px 20px;
+      text-align: center;
+      color: var(--gray-400);
+      font-size: 14px
+    }
+
+    .note {
+      font-size: 12px;
+      color: var(--gray-400);
+      margin-top: 6px;
+      line-height: 1.5
+    }
+
+    .ro {
+      font-size: 11px;
+      padding: 4px 11px;
+      border-radius: 999px;
+      background: var(--gray-50);
+      color: var(--gray-600);
+      white-space: nowrap
+    }
+
+    /* ---------- tabs ---------- */
+    .tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 18px;
+      flex-wrap: wrap
+    }
+
+    .tab {
+      padding: 9px 20px;
+      border-radius: 999px;
+      border: 0.5px solid var(--gray-200);
+      background: #fff;
+      font-size: 13px;
+      font-family: var(--sans);
+      color: var(--gray-600);
+      cursor: pointer
+    }
+
+    .tab:hover {
+      border-color: var(--pink-100)
+    }
+
+    .tab.on {
+      background: var(--pink-400);
+      border-color: var(--pink-400);
+      color: #fff;
+      font-weight: 500
+    }
+
+    .tab[hidden] {
+      display: none
+    }
+
+    /* ---------- sub tabs ---------- */
+    .subtabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 16px;
+      flex-wrap: wrap
+    }
+
+    .subtab {
+      padding: 7px 16px;
+      border-radius: 8px;
+      border: 0.5px solid var(--gray-200);
+      background: #fff;
+      font-size: 12.5px;
+      font-family: var(--sans);
+      color: var(--gray-600);
+      cursor: pointer
+    }
+
+    .subtab:hover {
+      border-color: var(--pink-100)
+    }
+
+    .subtab.on {
+      background: var(--pink-50);
+      border-color: var(--pink-400);
+      color: var(--pink-600);
+      font-weight: 500
+    }
+
+    /* ---------- thumbnail ---------- */
+    .thumb {
+      width: 54px;
+      height: 54px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: var(--gray-50);
+      border: 0.5px solid var(--gray-200);
+      display: block
+    }
+
+    .thumb-wrap {
+      position: relative;
+      width: 54px;
+      height: 54px;
+      flex-shrink: 0
+    }
+
+    .thumb-badge {
+      position: absolute;
+      bottom: -4px;
+      right: -4px;
+      font-size: 9px;
+      padding: 1px 5px;
+      border-radius: 999px;
+      background: var(--blue-50);
+      color: var(--blue-600);
+      border: 1px solid #fff
+    }
+
+    .thumb-ph {
+      width: 54px;
+      height: 54px;
+      border-radius: 8px;
+      background: var(--gray-50);
+      border: 0.5px dashed var(--gray-200);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gray-400);
+      font-size: 10px;
+      text-align: center;
+      flex-shrink: 0
+    }
+
+    /* ---------- gallery grid ---------- */
+    .gal-admin {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(196px, 1fr));
+      gap: 14px;
+      padding: 20px
+    }
+
+    .gcard {
+      background: #fff;
+      border: 0.5px solid var(--gray-200);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column
+    }
+
+    .gcard .pic {
+      width: 100%;
+      height: 146px;
+      object-fit: cover;
+      background: var(--gray-50);
+      display: block
+    }
+
+    .gcard .body {
+      padding: 12px 14px 8px;
+      flex: 1
+    }
+
+    .gcard .body b {
+      display: block;
+      font-weight: 500;
+      font-size: 13.5px;
+      margin-bottom: 3px;
+      line-height: 1.35
+    }
+
+    .gcard .body small {
+      color: var(--gray-400);
+      font-size: 12px
+    }
+
+    .gcard .foot {
+      padding: 0 14px 13px;
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap
+    }
+
+    .gcard.off {
+      opacity: .5
+    }
+
+    .gcard.off .pic {
+      filter: grayscale(1)
+    }
+
+    .gcard .acts button {
+      font-size: 11px;
+      padding: 5px 11px
+    }
+
+    .gcard .pic-wrap {
+      position: relative
+    }
+
+    .gcard .badge {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: rgba(255, 255, 255, .94);
+      color: var(--pink-800);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 999px
+    }
+
+    .hint-inline {
+      font-weight: 400;
+      color: var(--gray-400);
+      font-size: 12px
+    }
+
+    /* ---------- upload drop ---------- */
+    .drop {
+      border: 1.5px dashed var(--gray-200);
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      background: var(--gray-50);
+      cursor: pointer;
+      transition: all .15s
+    }
+
+    .drop:hover,
+    .drop.over {
+      border-color: var(--pink-400);
+      background: var(--pink-50)
+    }
+
+    .drop b {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 4px;
+      font-size: 13.5px
+    }
+
+    .drop small {
+      color: var(--gray-400);
+      font-size: 12px
+    }
+
+    .preview-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 12px
+    }
+
+    .preview {
+      width: 70px;
+      height: 70px;
+      border-radius: 8px;
+      object-fit: cover;
+      border: 0.5px solid var(--gray-200)
+    }
+
+    .cur-img {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+      padding: 10px;
+      background: var(--gray-50);
+      border-radius: 8px
+    }
+
+    .cur-img img {
+      width: 60px;
+      height: 60px;
+      border-radius: 6px;
+      object-fit: cover
+    }
+
+    .cur-img small {
+      color: var(--gray-400);
+      font-size: 12px
+    }
+
+    /* Khối ảnh đầu trang — nhiều ảnh, thẻ theo tỉ lệ dọc giống trang chủ */
+    .hero-head {
+      padding: 20px 20px 0
+    }
+
+    .hero-head h4 {
+      margin-bottom: 6px;
+      font-size: 15px
+    }
+
+    .hero-head p.help {
+      color: var(--gray-400);
+      font-size: 12.5px;
+      line-height: 1.65;
+      max-width: 640px
+    }
+
+    .hgrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 14px;
+      padding: 18px 20px 4px
+    }
+
+    .hcard {
+      background: #fff;
+      border: 0.5px solid var(--gray-200);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column
+    }
+
+    .hcard.cover {
+      border-color: var(--pink-400);
+      box-shadow: 0 0 0 2px var(--pink-50)
+    }
+
+    .hcard.queue {
+      border-style: dashed;
+      border-color: var(--pink-400);
+      background: var(--pink-50)
+    }
+
+    .hcard .pic-wrap {
+      position: relative;
+      aspect-ratio: 4/5;
+      overflow: hidden;
+      background: var(--gray-50)
+    }
+
+    .hcard .pic {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block
+    }
+
+    .hcard .badge {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: rgba(255, 255, 255, .94);
+      color: var(--pink-800);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 999px
+    }
+
+    .hcard.cover .badge {
+      background: var(--pink-400);
+      color: #fff
+    }
+
+    .hcard .foot {
+      padding: 9px 10px;
+      display: flex;
+      align-items: center;
+      gap: 5px
+    }
+
+    .hcard .foot button {
+      border: 1px solid var(--gray-200);
+      background: #fff;
+      border-radius: 7px;
+      padding: 5px 9px;
+      font-family: var(--sans);
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--gray-600);
+      cursor: pointer
+    }
+
+    .hcard .foot button:hover:not(:disabled) {
+      border-color: var(--pink-400);
+      color: var(--pink-600)
+    }
+
+    .hcard .foot button.no:hover:not(:disabled) {
+      border-color: #C0392B;
+      color: #C0392B
+    }
+
+    .hcard .foot button:disabled {
+      opacity: .3;
+      cursor: not-allowed
+    }
+
+    .hcard .foot small {
+      color: var(--gray-400);
+      font-size: 11px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap
+    }
+
+    .hero-actions {
+      margin-top: 14px;
+      padding: 0 20px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap
+    }
+
+    .hero-actions button {
+      border: 0;
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer
+    }
+
+    .hero-actions .save {
+      background: var(--pink-400);
+      color: #fff
+    }
+
+    .hero-actions .save:hover {
+      background: var(--pink-600)
+    }
+
+    .hero-actions .clear {
+      background: #fff;
+      color: var(--gray-600);
+      border: 1px solid var(--gray-200)
+    }
+
+    .hero-actions button:disabled {
+      opacity: .45;
+      cursor: not-allowed
+    }
+
+    /* Thiết lập trình chiếu: tự chuyển + số giây */
+    .hero-opts {
+      margin-top: 16px;
+      padding: 14px 20px 0;
+      display: flex;
+      gap: 22px;
+      align-items: center;
+      flex-wrap: wrap;
+      border-top: 0.5px solid var(--gray-200)
+    }
+
+    .hero-opts .chk {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--gray-600);
+      cursor: pointer
+    }
+
+    .hero-opts .chk input {
+      width: 15px;
+      height: 15px;
+      accent-color: var(--pink-400);
+      cursor: pointer
+    }
+
+    .hero-opts .num {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--gray-600)
+    }
+
+    .hero-opts .num input {
+      width: 64px;
+      padding: 7px 9px;
+      border: 1px solid var(--gray-200);
+      border-radius: 8px;
+      font-family: var(--sans);
+      font-size: 13px;
+      text-align: center
+    }
+
+    #homeForm .form-err {
+      margin: 12px 20px 20px
+    }
+
+    #homeForm {
+      padding-bottom: 20px
+    }
+
+    /* ---------- modal form ---------- */
+    .modal.wide {
+      max-width: 560px
+    }
+
+    .field {
+      margin-bottom: 15px
+    }
+
+    .field>label {
+      display: block;
+      font-size: 12px;
+      color: var(--gray-600);
+      margin-bottom: 5px;
+      font-weight: 500
+    }
+
+    .field .hint {
+      display: block;
+      font-size: 11.5px;
+      color: var(--gray-400);
+      margin-top: 4px;
+      line-height: 1.5
+    }
+
+    .field input[type=text],
+    .field input[type=number],
+    .field textarea,
+    .field select {
+      width: 100%;
+      padding: 10px 13px;
+      border: 0.5px solid var(--gray-200);
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-family: var(--sans);
+      outline: none
+    }
+
+    .field textarea {
+      min-height: 72px;
+      resize: vertical;
+      line-height: 1.5
+    }
+
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus {
+      border-color: var(--pink-400)
+    }
+
+    .field .check {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 13.5px;
+      color: var(--gray-900);
+      font-weight: 400;
+      cursor: pointer
+    }
+
+    .field .check input {
+      width: auto;
+      margin: 0;
+      flex-shrink: 0
+    }
+
+    .money-in {
+      position: relative
+    }
+
+    .money-in input {
+      padding-right: 36px
+    }
+
+    .money-in span {
+      position: absolute;
+      right: 13px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gray-400);
+      font-size: 13px;
+      pointer-events: none
+    }
+
+    .radio-row {
+      display: flex;
+      gap: 8px
+    }
+
+    .radio-row label {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 11px;
+      border: 0.5px solid var(--gray-200);
+      border-radius: 8px;
+      font-size: 13px;
+      cursor: pointer;
+      font-weight: 400;
+      margin: 0;
+      color: var(--gray-600)
+    }
+
+    .radio-row label:has(input:checked) {
+      border-color: var(--pink-400);
+      background: var(--pink-50);
+      color: var(--pink-600);
+      font-weight: 500
+    }
+
+    .radio-row input {
+      width: auto;
+      margin: 0
+    }
+
+    .form-err {
+      background: var(--red-50);
+      color: var(--red-600);
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      margin-bottom: 14px;
+      display: none
+    }
+
+    .form-err.on {
+      display: block
+    }
+
+    .empty {
+      padding: 50px 20px;
+      text-align: center;
+      color: var(--gray-400);
+      font-size: 14px
+    }
+
+    /* ---------- zns bar ---------- */
+    .znsbar {
+      background: #fff;
+      border: 0.5px solid var(--gray-200);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 18px;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+      font-size: 13px
+    }
+
+    .zns-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      flex-shrink: 0
+    }
+
+    .zns-on {
+      background: #1D9E75
+    }
+
+    .zns-off {
+      background: #BA7517
+    }
+
+    .zns-dry {
+      background: #378ADD
+    }
+
+    .znsbar b {
+      font-weight: 500
+    }
+
+    .znsbar small {
+      color: var(--gray-400)
+    }
+
+    .znsbar .sp {
+      flex: 1
+    }
+
+    .znsbar button {
+      padding: 8px 18px;
+      font-size: 12px;
+      border-radius: 999px;
+      border: 0.5px solid var(--gray-200);
+      background: #fff;
+      cursor: pointer;
+      font-family: var(--sans)
+    }
+
+    .znsbar button:hover {
+      border-color: var(--pink-400);
+      color: var(--pink-600)
+    }
+
+    .st2 {
+      display: inline-block;
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-weight: 500;
+      white-space: nowrap
+    }
+
+    .s-sent {
+      background: var(--green-50);
+      color: var(--green-600)
+    }
+
+    .s-failed {
+      background: var(--red-50);
+      color: var(--red-600)
+    }
+
+    .s-skipped {
+      background: var(--gray-50);
+      color: var(--gray-600)
+    }
+
+    .s-dry_run {
+      background: var(--blue-50);
+      color: var(--blue-600)
+    }
+
+    .r-owner {
+      background: var(--pink-50);
+      color: var(--pink-600)
+    }
+
+    .r-staff {
+      background: var(--blue-50);
+      color: var(--blue-600)
+    }
+
+    .r-viewer {
+      background: var(--gray-50);
+      color: var(--gray-600)
+    }
+
+    .on-dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #1D9E75;
+      margin-right: 5px
+    }
+
+    .off-dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #C9C7BE;
+      margin-right: 5px
+    }
+
+    /* ---------- modal ---------- */
+    .backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(44, 44, 42, .45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      z-index: 50
+    }
+
+    .backdrop.on {
+      display: flex
+    }
+
+    .modal {
+      background: #fff;
+      border-radius: 14px;
+      max-width: 460px;
+      width: 100%;
+      padding: 30px 32px;
+      max-height: 88vh;
+      overflow-y: auto
+    }
+
+    .modal h3 {
+      font-family: var(--serif);
+      font-size: 20px;
+      font-weight: 400;
+      margin-bottom: 6px
+    }
+
+    .modal p.sub {
+      font-size: 13px;
+      color: var(--gray-400);
+      margin-bottom: 20px
+    }
+
+    .modal label {
+      display: block;
+      font-size: 12px;
+      color: var(--gray-600);
+      margin-bottom: 6px;
+      font-weight: 500
+    }
+
+    .modal input,
+    .modal select {
+      width: 100%;
+      padding: 11px 14px;
+      border: 0.5px solid var(--gray-200);
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: var(--sans);
+      margin-bottom: 14px;
+      outline: none
+    }
+
+    .modal input:focus,
+    .modal select:focus {
+      border-color: var(--pink-400)
+    }
+
+    .modal .row {
+      display: flex;
+      gap: 10px;
+      margin-top: 8px
+    }
+
+    .modal .row button {
+      flex: 1;
+      padding: 12px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 500;
+      font-family: var(--sans);
+      cursor: pointer
+    }
+
+    .modal .primary {
+      background: var(--pink-400);
+      color: #fff;
+      border: none
+    }
+
+    .modal .primary:hover {
+      background: var(--pink-600)
+    }
+
+    .modal .secondary {
+      background: #fff;
+      color: var(--gray-600);
+      border: 0.5px solid var(--gray-200)
+    }
+
+    .modal .secondary:hover {
+      background: var(--gray-50)
+    }
+
+    .pwbox {
+      background: var(--gray-50);
+      border: 0.5px dashed var(--gray-200);
+      border-radius: 8px;
+      padding: 14px 16px;
+      font-family: var(--mono);
+      font-size: 16px;
+      color: var(--pink-600);
+      text-align: center;
+      letter-spacing: .5px;
+      margin-bottom: 14px;
+      word-break: break-all
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 26px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--gray-900);
+      color: #fff;
+      padding: 13px 24px;
+      border-radius: 999px;
+      font-size: 13.5px;
+      opacity: 0;
+      transition: all .25s;
+      pointer-events: none;
+      z-index: 80;
+      max-width: 90vw;
+      text-align: center
+    }
+
+    .toast.on {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0)
+    }
+
+    .toast.err {
+      background: var(--red-600)
+    }
+
+    @media(max-width:1000px) {
+      .stats {
+        grid-template-columns: repeat(3, 1fr)
+      }
+    }
+
+    @media(max-width:900px) {
+      .stats {
+        grid-template-columns: repeat(2, 1fr)
+      }
+
+      .panel {
+        overflow-x: auto
+      }
+
+      table {
+        min-width: 900px
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<div class="topbar">
-  <div class="in">
-    <div>
-      <h1>Bùi Thương<span style="opacity:.75">.</span>Makeup</h1>
-      <p>Quản trị đơn đặt lịch · xem và xử lý yêu cầu từ khách</p>
-    </div>
-    <div class="right">
-      <div class="whoami" id="whoami" hidden></div>
-      <button class="btn-out" id="logoutBtn" hidden>Đăng xuất</button>
-      <a href="/">← Về trang chủ</a>
+  <div class="topbar">
+    <div class="in">
+      <div>
+        <h1>Bùi Thương <span style="opacity:.75"></span>Makeup</h1>
+        <p>Quản trị đơn đặt lịch · xem và xử lý yêu cầu từ khách</p>
+      </div>
+      <div class="right">
+        <div class="whoami" id="whoami" hidden></div>
+        <button class="btn-out" id="logoutBtn" hidden>Đăng xuất</button>
+        <a href="/">← Về trang chủ</a>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="wrap">
+  <div class="wrap">
 
-  <!-- ============ LOGIN GATE ============ -->
-  <form class="gate" id="gate" autocomplete="on">
-    <div class="mark">M</div>
-    <h2>Đăng nhập quản trị</h2>
-    <p class="sub">Dùng tài khoản nội bộ của studio</p>
+    <!-- ============ LOGIN GATE ============ -->
+    <form class="gate" id="gate" autocomplete="on">
+      <div class="mark">M</div>
+      <h2>Đăng nhập quản trị</h2>
+      <p class="sub">Dùng tài khoản nội bộ của studio</p>
 
-    <div class="errslot" id="gateMsg"></div>
+      <div class="errslot" id="gateMsg"></div>
 
-    <label for="userInput">Tên đăng nhập</label>
-    <input type="text" id="userInput" name="username" placeholder="vd: admin" autocomplete="username" autocapitalize="none" spellcheck="false" required>
+      <label for="userInput">Tên đăng nhập</label>
+      <input type="text" id="userInput" name="username" placeholder="vd: admin" autocomplete="username"
+        autocapitalize="none" spellcheck="false" required>
 
-    <label for="passInput">Mật khẩu</label>
-    <input type="password" id="passInput" name="password" placeholder="••••••••" autocomplete="current-password" required>
+      <label for="passInput">Mật khẩu</label>
+      <input type="password" id="passInput" name="password" placeholder="••••••••" autocomplete="current-password"
+        required>
 
-    <button type="submit" id="loginBtn">Đăng nhập</button>
-    <span class="hint">Chưa có tài khoản? Chạy <code>npm run create-admin</code> trong thư mục <code>backend</code>.</span>
-  </form>
+      <button type="submit" id="loginBtn">Đăng nhập</button>
+      <span class="hint">Chưa có tài khoản? Chạy <code>npm run create-admin</code> trong thư mục
+        <code>backend</code>.</span>
+    </form>
 
-  <!-- ============ DASHBOARD ============ -->
-  <div id="dash" hidden>
-    <div class="stats" id="stats"></div>
+    <!-- ============ DASHBOARD ============ -->
+    <div id="dash" hidden>
+      <div class="stats" id="stats"></div>
 
-    <div class="tabs">
-      <button class="tab on" data-tab="bookings">Đơn đặt lịch</button>
-      <button class="tab" data-tab="catalog">Dịch vụ &amp; giá</button>
-      <button class="tab" data-tab="gallery">Thư viện ảnh</button>
-      <button class="tab" data-tab="home">Trang chủ</button>
-      <button class="tab" data-tab="notifications">Lịch sử thông báo</button>
-      <button class="tab" data-tab="users" id="tabUsersBtn" hidden>Tài khoản</button>
-      <button class="tab" data-tab="audit" id="tabAuditBtn" hidden>Nhật ký thao tác</button>
-    </div>
-
-    <!-- --- bookings --- -->
-    <div id="tabBookings">
-      <div class="bar">
-        <input type="date" id="fDate">
-        <select id="fStatus">
-          <option value="">Tất cả trạng thái</option>
-          <option value="pending">Chờ xác nhận</option>
-          <option value="confirmed">Đã xác nhận</option>
-          <option value="done">Đã hoàn thành</option>
-          <option value="cancelled">Đã huỷ</option>
-        </select>
-        <input type="tel" id="fPhone" placeholder="Số điện thoại">
-        <button id="filterBtn">Lọc</button>
-        <button class="ghost" id="clearBtn">Xoá lọc</button>
-        <button class="ghost" id="reloadBtn">Tải lại</button>
+      <div class="tabs">
+        <button class="tab on" data-tab="bookings">Đơn đặt lịch</button>
+        <button class="tab" data-tab="catalog">Dịch vụ &amp; giá</button>
+        <button class="tab" data-tab="gallery">Thư viện ảnh</button>
+        <button class="tab" data-tab="home">Trang chủ</button>
+        <button class="tab" data-tab="bank">Thanh toán &amp; Cọc</button>
+        <button class="tab" data-tab="notifications">Lịch sử thông báo</button>
+        <button class="tab" data-tab="users" id="tabUsersBtn" hidden>Tài khoản</button>
+        <button class="tab" data-tab="audit" id="tabAuditBtn" hidden>Nhật ký thao tác</button>
       </div>
 
-      <div class="panel">
-        <div id="list"><div class="loading">Đang tải danh sách đơn...</div></div>
-      </div>
-    </div>
+      <!-- --- bookings --- -->
+      <div id="tabBookings">
+        <div class="bar">
+          <input type="date" id="fDate">
+          <select id="fStatus">
+            <option value="">Tất cả trạng thái</option>
+            <option value="pending">Chờ xác nhận</option>
+            <option value="confirmed">Đã xác nhận</option>
+            <option value="done">Đã hoàn thành</option>
+            <option value="cancelled">Đã huỷ</option>
+          </select>
+          <input type="tel" id="fPhone" placeholder="Số điện thoại">
+          <button id="filterBtn">Lọc</button>
+          <button class="ghost" id="clearBtn">Xoá lọc</button>
+          <button class="ghost" id="reloadBtn">Tải lại</button>
+        </div>
 
-    <!-- --- catalog: dịch vụ, giá, combo, chuyên viên --- -->
-    <div id="tabCatalog" hidden>
-      <div class="subtabs" id="catalogTabs">
-        <button class="subtab on" data-kind="services">Dịch vụ</button>
-        <button class="subtab" data-kind="combos">Combo</button>
-        <button class="subtab" data-kind="addons">Dịch vụ kèm</button>
-        <button class="subtab" data-kind="artists">Chuyên viên</button>
+        <div class="panel">
+          <div id="list">
+            <div class="loading">Đang tải danh sách đơn...</div>
+          </div>
+        </div>
       </div>
 
-      <div class="bar">
-        <button id="newItemBtn">+ Thêm</button>
-        <button class="ghost" id="catalogReload">Tải lại</button>
-        <span style="flex:1"></span>
-        <small id="catalogHint" style="font-size:12px;color:var(--gray-400)"></small>
+      <!-- --- catalog: dịch vụ, giá, combo, chuyên viên --- -->
+      <div id="tabCatalog" hidden>
+        <div class="subtabs" id="catalogTabs">
+          <button class="subtab on" data-kind="services">Dịch vụ</button>
+          <button class="subtab" data-kind="combos">Combo</button>
+          <button class="subtab" data-kind="addons">Dịch vụ kèm</button>
+          <button class="subtab" data-kind="artists">Chuyên viên</button>
+        </div>
+
+        <div class="bar">
+          <button id="newItemBtn">+ Thêm</button>
+          <button class="ghost" id="catalogReload">Tải lại</button>
+          <span style="flex:1"></span>
+          <small id="catalogHint" style="font-size:12px;color:var(--gray-400)"></small>
+        </div>
+
+        <div class="panel">
+          <div id="catalogList">
+            <div class="loading">Đang tải nội dung...</div>
+          </div>
+        </div>
       </div>
 
-      <div class="panel">
-        <div id="catalogList"><div class="loading">Đang tải nội dung...</div></div>
+      <!-- --- gallery --- -->
+      <div id="tabGallery" hidden>
+        <div class="bar">
+          <button id="newPhotoBtn">+ Thêm ảnh</button>
+          <button class="ghost" id="galleryReload">Tải lại</button>
+          <span style="flex:1"></span>
+          <small id="galleryHint" style="font-size:12px;color:var(--gray-400)"></small>
+        </div>
+        <div class="panel">
+          <div id="galleryList">
+            <div class="loading">Đang tải thư viện ảnh...</div>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <!-- --- gallery --- -->
-    <div id="tabGallery" hidden>
-      <div class="bar">
-        <button id="newPhotoBtn">+ Thêm ảnh</button>
-        <button class="ghost" id="galleryReload">Tải lại</button>
-        <span style="flex:1"></span>
-        <small id="galleryHint" style="font-size:12px;color:var(--gray-400)"></small>
+      <!-- --- home (ảnh đầu trang) --- -->
+      <div id="tabHome" hidden>
+        <div class="panel">
+          <div id="homeForm">
+            <div class="loading">Đang tải nội dung trang chủ...</div>
+          </div>
+        </div>
       </div>
-      <div class="panel">
-        <div id="galleryList"><div class="loading">Đang tải thư viện ảnh...</div></div>
-      </div>
-    </div>
 
-    <!-- --- home (ảnh đầu trang) --- -->
-    <div id="tabHome" hidden>
-      <div class="panel">
-        <div id="homeForm"><div class="loading">Đang tải nội dung trang chủ...</div></div>
-      </div>
-    </div>
+      <!-- --- bank & deposit settings --- -->
+      <div id="tabBank" hidden>
+        <div class="panel" style="padding:28px 32px; max-width:860px">
+          <div style="margin-bottom:24px">
+            <h3 style="font-family:var(--serif);font-size:20px;color:var(--pink-600);margin-bottom:6px">Cấu hình VietQR &amp; Tiền cọc</h3>
+            <p style="font-size:13px;color:var(--gray-600)">Thông tin tài khoản ngân hàng nhận thanh toán quét mã VietQR tự động và số Zalo liên hệ của Studio Bùi Thương.</p>
+          </div>
 
-    <!-- --- notifications --- -->
-    <div id="tabNotifications" hidden>
-      <div class="znsbar" id="znsbar"></div>
-      <div class="bar">
-        <select id="nType">
-          <option value="">Tất cả loại tin</option>
-          <option value="booking">Xác nhận đơn mới</option>
-          <option value="reminder">Nhắc hẹn</option>
-          <option value="status">Đổi trạng thái</option>
-        </select>
-        <select id="nStatus">
-          <option value="">Tất cả kết quả</option>
-          <option value="sent">Đã gửi</option>
-          <option value="dry_run">Chạy thử</option>
-          <option value="skipped">Bỏ qua</option>
-          <option value="failed">Thất bại</option>
-        </select>
-        <button id="nFilterBtn">Lọc</button>
-        <button class="ghost" id="nReloadBtn">Tải lại</button>
-      </div>
-      <div class="panel">
-        <div id="nlist"><div class="loading">Đang tải lịch sử thông báo...</div></div>
-      </div>
-    </div>
+          <form id="bankForm" style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
+            <div style="grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:18px">
+              <div>
+                <label style="display:block;font-size:12px;font-weight:600;margin-bottom:6px;color:var(--gray-600)">Ngân hàng nhận cọc</label>
+                <select id="sBankId" style="width:100%;padding:11px 14px;border:0.5px solid var(--gray-200);border-radius:8px;font-size:14px">
+                  <option value="MB">MBBank (Ngân hàng Quân Đội)</option>
+                  <option value="VCB">Vietcombank</option>
+                  <option value="ICB">VietinBank</option>
+                  <option value="BIDV">BIDV</option>
+                  <option value="VBA">Agribank</option>
+                  <option value="TCB">Techcombank</option>
+                  <option value="ACB">ACB</option>
+                  <option value="VPB">VPBank</option>
+                  <option value="TPB">TPBank</option>
+                  <option value="VIB">VIB</option>
+                  <option value="STB">Sacombank</option>
+                  <option value="OCB">OCB</option>
+                  <option value="MSB">MSB</option>
+                  <option value="CAKE">CAKE by VPBank</option>
+                  <option value="TIMO">Timo</option>
+                </select>
+              </div>
+              <div>
+                <label style="display:block;font-size:12px;font-weight:600;margin-bottom:6px;color:var(--gray-600)">Số tài khoản ngân hàng</label>
+                <input type="text" id="sBankAccount" placeholder="Ví dụ: 0987654321" style="width:100%;padding:11px 14px;border:0.5px solid var(--gray-200);border-radius:8px;font-size:14px">
+              </div>
+            </div>
 
-    <!-- --- users --- -->
-    <div id="tabUsers" hidden>
-      <div class="bar">
-        <button id="newUserBtn">+ Thêm tài khoản</button>
-        <button class="ghost" id="uReloadBtn">Tải lại</button>
-      </div>
-      <div class="panel">
-        <div id="ulist"><div class="loading">Đang tải danh sách tài khoản...</div></div>
-      </div>
-    </div>
+            <div style="grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:18px">
+              <div>
+                <label style="display:block;font-size:12px;font-weight:600;margin-bottom:6px;color:var(--gray-600)">Tên chủ tài khoản (In hoa không dấu)</label>
+                <input type="text" id="sBankAccountName" placeholder="Ví dụ: BUI THUONG" style="width:100%;padding:11px 14px;border:0.5px solid var(--gray-200);border-radius:8px;font-size:14px;text-transform:uppercase">
+              </div>
+              <div>
+                <label style="display:block;font-size:12px;font-weight:600;margin-bottom:6px;color:var(--gray-600)">Số điện thoại Zalo Studio (Khách nhắn xác nhận)</label>
+                <input type="tel" id="sZaloPhone" placeholder="Ví dụ: 0988888888" style="width:100%;padding:11px 14px;border:0.5px solid var(--gray-200);border-radius:8px;font-size:14px">
+              </div>
+            </div>
 
-    <!-- --- audit --- -->
-    <div id="tabAudit" hidden>
-      <div class="bar">
-        <button class="ghost" id="aReloadBtn">Tải lại</button>
+            <div>
+              <label style="display:block;font-size:12px;font-weight:600;margin-bottom:6px;color:var(--gray-600)">Phương thức tính tiền cọc</label>
+              <select id="sDepositType" style="width:100%;padding:11px 14px;border:0.5px solid var(--gray-200);border-radius:8px;font-size:14px">
+                <option value="fixed">Số tiền cố định (VNĐ / đơn)</option>
+                <option value="percent">Tỷ lệ theo tổng đơn (%)</option>
+              </select>
+            </div>
+
+            <div>
+              <label id="lblDepositValue" style="display:block;font-size:12px;font-weight:600;margin-bottom:6px;color:var(--gray-600)">Số tiền cọc mỗi đơn (VNĐ)</label>
+              <input type="number" id="sDepositValue" min="0" step="any" placeholder="200000" style="width:100%;padding:11px 14px;border:0.5px solid var(--gray-200);border-radius:8px;font-size:14px">
+            </div>
+
+            <div style="grid-column:1/-1;margin-top:10px;display:flex;align-items:center;gap:12px">
+              <button type="submit" id="saveBankBtn" style="padding:12px 28px;background:var(--pink-400);color:#fff;border:none;border-radius:999px;font-size:14px;font-weight:500;cursor:pointer">Lưu cấu hình thanh toán</button>
+              <span id="bankSavedMsg" style="font-size:13px;color:var(--green-600);display:none">✓ Đã lưu thành công</span>
+            </div>
+          </form>
+
+          <!-- Preview VietQR -->
+          <div style="margin-top:32px;padding-top:24px;border-top:0.5px solid var(--gray-200)">
+            <h4 style="font-size:14px;margin-bottom:12px;color:var(--gray-900)">Xem trước mã QR mẫu:</h4>
+            <div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap">
+              <img id="qrPreviewImg" src="" alt="VietQR Preview" style="width:160px;height:160px;border-radius:12px;border:1px solid var(--gray-200);background:#fff;object-fit:contain;padding:4px">
+              <div style="font-size:13px;color:var(--gray-600);line-height:1.6">
+                <div>Ngân hàng: <b id="pvBank" style="color:var(--gray-900)">MBBank</b></div>
+                <div>Số tài khoản: <b id="pvAcc" style="color:var(--pink-600);font-family:var(--mono)">0987654321</b></div>
+                <div>Chủ tài khoản: <b id="pvName" style="color:var(--gray-900)">BUI THUONG</b></div>
+                <div>Tiền cọc thử nghiệm: <b id="pvAmount" style="color:var(--pink-600)">200.000đ</b></div>
+                <div>Zalo Studio: <b id="pvZalo" style="color:var(--blue-600)">0988888888</b></div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="panel">
-        <div id="alist"><div class="loading">Đang tải nhật ký...</div></div>
+
+      <!-- --- notifications --- -->
+      <div id="tabNotifications" hidden>
+        <div class="znsbar" id="znsbar"></div>
+        <div class="bar">
+          <select id="nType">
+            <option value="">Tất cả loại tin</option>
+            <option value="booking">Xác nhận đơn mới</option>
+            <option value="reminder">Nhắc hẹn</option>
+            <option value="status">Đổi trạng thái</option>
+          </select>
+          <select id="nStatus">
+            <option value="">Tất cả kết quả</option>
+            <option value="sent">Đã gửi</option>
+            <option value="dry_run">Chạy thử</option>
+            <option value="skipped">Bỏ qua</option>
+            <option value="failed">Thất bại</option>
+          </select>
+          <button id="nFilterBtn">Lọc</button>
+          <button class="ghost" id="nReloadBtn">Tải lại</button>
+        </div>
+        <div class="panel">
+          <div id="nlist">
+            <div class="loading">Đang tải lịch sử thông báo...</div>
+          </div>
+        </div>
       </div>
+
+      <!-- --- users --- -->
+      <div id="tabUsers" hidden>
+        <div class="bar">
+          <button id="newUserBtn">+ Thêm tài khoản</button>
+          <button class="ghost" id="uReloadBtn">Tải lại</button>
+        </div>
+        <div class="panel">
+          <div id="ulist">
+            <div class="loading">Đang tải danh sách tài khoản...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- --- audit --- -->
+      <div id="tabAudit" hidden>
+        <div class="bar">
+          <button class="ghost" id="aReloadBtn">Tải lại</button>
+        </div>
+        <div class="panel">
+          <div id="alist">
+            <div class="loading">Đang tải nhật ký...</div>
+          </div>
+        </div>
+      </div>
+
     </div>
 
   </div>
 
-</div>
-
-<!-- ============ MODAL: tạo tài khoản ============ -->
-<div class="backdrop" id="userBackdrop">
-  <div class="modal">
-    <h3>Thêm tài khoản</h3>
-    <p class="sub">Tài khoản nội bộ dùng để đăng nhập trang quản trị</p>
-    <label for="nuUsername">Tên đăng nhập</label>
-    <input type="text" id="nuUsername" placeholder="vd: linh" autocapitalize="none" spellcheck="false">
-    <label for="nuDisplay">Tên hiển thị</label>
-    <input type="text" id="nuDisplay" placeholder="vd: Trần Minh Linh">
-    <label for="nuRole">Vai trò</label>
-    <select id="nuRole">
-      <option value="staff">Nhân viên — xem và xử lý đơn</option>
-      <option value="viewer">Chỉ xem — không sửa được gì</option>
-      <option value="owner">Chủ studio — toàn quyền</option>
-    </select>
-    <label for="nuPass">Mật khẩu (để trống sẽ tự sinh)</label>
-    <input type="password" id="nuPass" placeholder="Tối thiểu 8 ký tự, có hoa/thường/số" autocomplete="new-password">
-    <div class="row">
-      <button class="secondary" id="nuCancel">Huỷ</button>
-      <button class="primary" id="nuCreate">Tạo tài khoản</button>
+  <!-- ============ MODAL: tạo tài khoản ============ -->
+  <div class="backdrop" id="userBackdrop">
+    <div class="modal">
+      <h3>Thêm tài khoản</h3>
+      <p class="sub">Tài khoản nội bộ dùng để đăng nhập trang quản trị</p>
+      <label for="nuUsername">Tên đăng nhập</label>
+      <input type="text" id="nuUsername" placeholder="vd: linh" autocapitalize="none" spellcheck="false">
+      <label for="nuDisplay">Tên hiển thị</label>
+      <input type="text" id="nuDisplay" placeholder="vd: Trần Minh Linh">
+      <label for="nuRole">Vai trò</label>
+      <select id="nuRole">
+        <option value="staff">Nhân viên — xem và xử lý đơn</option>
+        <option value="viewer">Chỉ xem — không sửa được gì</option>
+        <option value="owner">Chủ studio — toàn quyền</option>
+      </select>
+      <label for="nuPass">Mật khẩu (để trống sẽ tự sinh)</label>
+      <input type="password" id="nuPass" placeholder="Tối thiểu 8 ký tự, có hoa/thường/số" autocomplete="new-password">
+      <div class="row">
+        <button class="secondary" id="nuCancel">Huỷ</button>
+        <button class="primary" id="nuCreate">Tạo tài khoản</button>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- ============ MODAL: mật khẩu mới ============ -->
-<div class="backdrop" id="pwBackdrop">
-  <div class="modal">
-    <h3>Mật khẩu mới</h3>
-    <p class="sub" id="pwSub"></p>
-    <div class="pwbox" id="pwValue"></div>
-    <div class="row">
-      <button class="secondary" id="pwClose">Đóng</button>
-      <button class="primary" id="pwCopy">Sao chép</button>
+  <!-- ============ MODAL: mật khẩu mới ============ -->
+  <div class="backdrop" id="pwBackdrop">
+    <div class="modal">
+      <h3>Mật khẩu mới</h3>
+      <p class="sub" id="pwSub"></p>
+      <div class="pwbox" id="pwValue"></div>
+      <div class="row">
+        <button class="secondary" id="pwClose">Đóng</button>
+        <button class="primary" id="pwCopy">Sao chép</button>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- ============ MODAL: đổi mật khẩu ============ -->
-<div class="backdrop" id="cpBackdrop">
-  <div class="modal">
-    <h3>Đổi mật khẩu</h3>
-    <p class="sub" id="cpSub">Mật khẩu mới cần ít nhất 8 ký tự, gồm chữ hoa, chữ thường và số.</p>
-    <label for="cpOld">Mật khẩu hiện tại</label>
-    <input type="password" id="cpOld" autocomplete="current-password">
-    <label for="cpNew">Mật khẩu mới</label>
-    <input type="password" id="cpNew" autocomplete="new-password">
-    <div class="row">
-      <button class="secondary" id="cpCancel">Huỷ</button>
-      <button class="primary" id="cpSubmit">Đổi mật khẩu</button>
+  <!-- ============ MODAL: đổi mật khẩu ============ -->
+  <div class="backdrop" id="cpBackdrop">
+    <div class="modal">
+      <h3>Đổi mật khẩu</h3>
+      <p class="sub" id="cpSub">Mật khẩu mới cần ít nhất 8 ký tự, gồm chữ hoa, chữ thường và số.</p>
+      <label for="cpOld">Mật khẩu hiện tại</label>
+      <input type="password" id="cpOld" autocomplete="current-password">
+      <label for="cpNew">Mật khẩu mới</label>
+      <input type="password" id="cpNew" autocomplete="new-password">
+      <div class="row">
+        <button class="secondary" id="cpCancel">Huỷ</button>
+        <button class="primary" id="cpSubmit">Đổi mật khẩu</button>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="toast" id="toast"></div>
+  <div class="toast" id="toast"></div>
 
-<!-- ============ MODAL: thêm / sửa nội dung ============ -->
-<div class="backdrop" id="itemBackdrop">
-  <div class="modal wide">
-    <h3 id="itemTitle">Thêm</h3>
-    <p class="sub" id="itemSub"></p>
-    <div class="form-err" id="itemErr"></div>
-    <div id="itemForm"></div>
-    <div class="row">
-      <button class="secondary" id="itemCancel">Huỷ</button>
-      <button class="primary" id="itemSave">Lưu</button>
+  <!-- ============ MODAL: thêm / sửa nội dung ============ -->
+  <div class="backdrop" id="itemBackdrop">
+    <div class="modal wide">
+      <h3 id="itemTitle">Thêm</h3>
+      <p class="sub" id="itemSub"></p>
+      <div class="form-err" id="itemErr"></div>
+      <div id="itemForm"></div>
+      <div class="row">
+        <button class="secondary" id="itemCancel">Huỷ</button>
+        <button class="primary" id="itemSave">Lưu</button>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- ============ MODAL: thêm / sửa ảnh ============ -->
-<div class="backdrop" id="photoBackdrop">
-  <div class="modal wide">
-    <h3 id="photoTitle">Thêm ảnh</h3>
-    <p class="sub" id="photoSub"></p>
-    <div class="form-err" id="photoErr"></div>
-    <div id="photoForm"></div>
-    <div class="row">
-      <button class="secondary" id="photoCancel">Huỷ</button>
-      <button class="primary" id="photoSave">Lưu</button>
+  <!-- ============ MODAL: thêm / sửa ảnh ============ -->
+  <div class="backdrop" id="photoBackdrop">
+    <div class="modal wide">
+      <h3 id="photoTitle">Thêm ảnh</h3>
+      <p class="sub" id="photoSub"></p>
+      <div class="form-err" id="photoErr"></div>
+      <div id="photoForm"></div>
+      <div class="row">
+        <button class="secondary" id="photoCancel">Huỷ</button>
+        <button class="primary" id="photoSave">Lưu</button>
+      </div>
     </div>
   </div>
-</div>
 
-<script type="module">
-const API_BASE = window.MOC_API_BASE || 'http://localhost:3000/api';
-const TOKEN_KEY = 'moc_admin_session';
-const LEGACY_KEY = 'moc_admin_token';
+  <script type="module">
+    const API_BASE = window.MOC_API_BASE || 'http://localhost:3000/api';
+    const TOKEN_KEY = 'moc_admin_session';
+    const LEGACY_KEY = 'moc_admin_token';
 
-const $ = id => document.getElementById(id);
+    const $ = id => document.getElementById(id);
 
-let TOKEN = sessionStorage.getItem(TOKEN_KEY) || '';
-let ME = null;          // { id, username, displayName, role, permissions }
-let cache = [];         // danh sách đơn đang hiển thị
-let pendingPw = '';     // mật khẩu vừa sinh, để copy
+    let TOKEN = sessionStorage.getItem(TOKEN_KEY) || '';
+    let ME = null;          // { id, username, displayName, role, permissions }
+    let cache = [];         // danh sách đơn đang hiển thị
+    let pendingPw = '';     // mật khẩu vừa sinh, để copy
 
-/* ================= helpers ================= */
+    /* ================= helpers ================= */
 
-function vnd(n){ return Number(n||0).toLocaleString('vi-VN') + 'đ' }
-function esc(s){ return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])) }
-function pad(n){ return String(n).padStart(2,'0') }
+    function vnd(n) { return Number(n || 0).toLocaleString('vi-VN') + 'đ' }
+    function esc(s) { return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])) }
+    function pad(n) { return String(n).padStart(2, '0') }
 
-let toastTimer = null;
-function toast(msg, isErr){
-  const t = $('toast');
-  t.textContent = msg;
-  t.className = 'toast on' + (isErr ? ' err' : '');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => { t.className = 'toast' + (isErr ? ' err' : '') }, 2800);
-}
+    let toastTimer = null;
+    function toast(msg, isErr) {
+      const t = $('toast');
+      t.textContent = msg;
+      t.className = 'toast on' + (isErr ? ' err' : '');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => { t.className = 'toast' + (isErr ? ' err' : '') }, 2800);
+    }
 
-function fmtDateTime(s){
-  if(!s) return '';
-  return String(s).slice(5,16).replace('T',' ');
-}
+    function fmtDateTime(s) {
+      if (!s) return '';
+      return String(s).slice(5, 16).replace('T', ' ');
+    }
 
-/* Lưu phiên vào sessionStorage: token là chuỗi, phần còn lại để vẽ lại header */
-function saveSession(data){
-  TOKEN = data.token || '';
-  ME = data.user ? { ...data.user } : null;
-  if(TOKEN){
-    sessionStorage.setItem(TOKEN_KEY, TOKEN);
-    if(ME) sessionStorage.setItem(TOKEN_KEY + ':user', JSON.stringify(ME));
-  } else {
-    sessionStorage.removeItem(TOKEN_KEY);
-    sessionStorage.removeItem(TOKEN_KEY + ':user');
-  }
-}
+    /* Lưu phiên vào sessionStorage: token là chuỗi, phần còn lại để vẽ lại header */
+    function saveSession(data) {
+      TOKEN = data.token || '';
+      ME = data.user ? { ...data.user } : null;
+      if (TOKEN) {
+        sessionStorage.setItem(TOKEN_KEY, TOKEN);
+        if (ME) sessionStorage.setItem(TOKEN_KEY + ':user', JSON.stringify(ME));
+      } else {
+        sessionStorage.removeItem(TOKEN_KEY);
+        sessionStorage.removeItem(TOKEN_KEY + ':user');
+      }
+    }
 
-function clearSession(){
-  TOKEN = '';
-  ME = null;
-  sessionStorage.removeItem(TOKEN_KEY);
-  sessionStorage.removeItem(TOKEN_KEY + ':user');
-  sessionStorage.removeItem(LEGACY_KEY);
-}
+    function clearSession() {
+      TOKEN = '';
+      ME = null;
+      sessionStorage.removeItem(TOKEN_KEY);
+      sessionStorage.removeItem(TOKEN_KEY + ':user');
+      sessionStorage.removeItem(LEGACY_KEY);
+    }
 
-/* ================= fetch ================= */
+    /* ================= fetch ================= */
 
-async function adminFetch(path, options = {}){
-  const opts = { ...options };
-  opts.headers = {
-    'Content-Type': 'application/json',
-    ...(opts.headers || {}),
-  };
-  if(TOKEN) opts.headers['Authorization'] = 'Bearer ' + TOKEN;
+    async function adminFetch(path, options = {}) {
+      const opts = { ...options };
+      opts.headers = {
+        'Content-Type': 'application/json',
+        ...(opts.headers || {}),
+      };
+      if (TOKEN) opts.headers['Authorization'] = 'Bearer ' + TOKEN;
 
-  let res;
-  try{
-    res = await fetch(API_BASE + path, opts);
-  }catch{
-    const e = new Error('Không kết nối được máy chủ');
-    e.status = 0;
-    throw e;
-  }
+      let res;
+      try {
+        res = await fetch(API_BASE + path, opts);
+      } catch {
+        const e = new Error('Không kết nối được máy chủ');
+        e.status = 0;
+        throw e;
+      }
 
-  const json = await res.json().catch(() => null);
+      const json = await res.json().catch(() => null);
 
-  if(res.status === 401){
-    clearSession();
-    showGate(json?.error || 'Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại');
-    const e = new Error(json?.error || 'Phiên đã hết hạn');
-    e.status = 401;
-    throw e;
-  }
-  if(!res.ok){
-    const e = new Error(json?.error || `Lỗi ${res.status}`);
-    e.status = res.status;
-    e.code = json?.code;
-    throw e;
-  }
-  return json;
-}
+      if (res.status === 401) {
+        clearSession();
+        showGate(json?.error || 'Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại');
+        const e = new Error(json?.error || 'Phiên đã hết hạn');
+        e.status = 401;
+        throw e;
+      }
+      if (!res.ok) {
+        const e = new Error(json?.error || `Lỗi ${res.status}`);
+        e.status = res.status;
+        e.code = json?.code;
+        throw e;
+      }
+      return json;
+    }
 
-function can(action){
-  // ME có thể còn null nếu /admin/me chưa trả xong — không được để ném lỗi,
-  // vì lỗi ở đây sẽ chặn luôn phần vẽ giao diện phía sau.
-  if(!ME || !action) return false;
-  if(ME.role === 'owner') return true;
-  if(ME.role === 'viewer') return action === 'read';
-  return action === 'read' || action === 'write';
-}
-const isOwner = () => ME?.role === 'owner';
+    function can(action) {
+      // ME có thể còn null nếu /admin/me chưa trả xong — không được để ném lỗi,
+      // vì lỗi ở đây sẽ chặn luôn phần vẽ giao diện phía sau.
+      if (!ME || !action) return false;
+      if (ME.role === 'owner') return true;
+      if (ME.role === 'viewer') return action === 'read';
+      return action === 'read' || action === 'write';
+    }
+    const isOwner = () => ME?.role === 'owner';
 
-/* ================= gate ================= */
+    /* ================= gate ================= */
 
-function showGate(msg){
-  $('gate').hidden = false;
-  $('gate').style.display = '';
-  $('dash').hidden = true;
-  $('whoami').hidden = true;
-  $('logoutBtn').hidden = true;
-  const slot = $('gateMsg');
-  slot.innerHTML = '';
-  if(msg){
-    const s = document.createElement('span');
-    s.className = 'errline';
-    s.textContent = msg;
-    slot.appendChild(s);
-  }
-}
+    function showGate(msg) {
+      $('gate').hidden = false;
+      $('gate').style.display = '';
+      $('dash').hidden = true;
+      $('whoami').hidden = true;
+      $('logoutBtn').hidden = true;
+      const slot = $('gateMsg');
+      slot.innerHTML = '';
+      if (msg) {
+        const s = document.createElement('span');
+        s.className = 'errline';
+        s.textContent = msg;
+        slot.appendChild(s);
+      }
+    }
 
-function gateNote(text){
-  const slot = $('gateMsg');
-  slot.innerHTML = '';
-  const s = document.createElement('span');
-  s.className = 'okline';
-  s.textContent = text;
-  slot.appendChild(s);
-}
+    function gateNote(text) {
+      const slot = $('gateMsg');
+      slot.innerHTML = '';
+      const s = document.createElement('span');
+      s.className = 'okline';
+      s.textContent = text;
+      slot.appendChild(s);
+    }
 
-async function login(e){
-  if(e) e.preventDefault();
+    async function login(e) {
+      if (e) e.preventDefault();
 
-  const username = $('userInput').value.trim();
-  const password = $('passInput').value;
+      const username = $('userInput').value.trim();
+      const password = $('passInput').value;
 
-  if(!username || !password){
-    return showGate('Vui lòng nhập tên đăng nhập và mật khẩu');
-  }
+      if (!username || !password) {
+        return showGate('Vui lòng nhập tên đăng nhập và mật khẩu');
+      }
 
-  const btn = $('loginBtn');
-  btn.disabled = true;
-  btn.textContent = 'Đang kiểm tra...';
+      const btn = $('loginBtn');
+      btn.disabled = true;
+      btn.textContent = 'Đang kiểm tra...';
 
-  try{
-    const res = await fetch(API_BASE + '/admin/login', {
-      method:'POST',
-      headers:{ 'Content-Type':'application/json' },
-      body: JSON.stringify({ username, password }),
+      try {
+        const res = await fetch(API_BASE + '/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password }),
+        });
+        const json = await res.json().catch(() => null);
+
+        if (!res.ok) {
+          btn.disabled = false;
+          btn.textContent = 'Đăng nhập';
+          return showGate(json?.error || 'Tên đăng nhập hoặc mật khẩu không đúng');
+        }
+
+        saveSession(json.data);
+        $('passInput').value = '';
+        btn.disabled = false;
+        btn.textContent = 'Đăng nhập';
+
+        if (ME?.mustChange) {
+          await enterDash();
+          openChangePassword(true);
+          return;
+        }
+        await enterDash();
+      } catch (err) {
+        btn.disabled = false;
+        btn.textContent = 'Đăng nhập';
+        showGate('Không kết nối được máy chủ. Hãy chắc chắn backend đang chạy (npm start).');
+      }
+    }
+
+    async function logout() {
+      try {
+        await adminFetch('/admin/logout', { method: 'POST' });
+      } catch { /* kể cả lỗi vẫn xoá phiên ở máy khách */ }
+      clearSession();
+      cache = [];
+      showGate();
+      gateNote('Đã đăng xuất.');
+    }
+
+    /* ================= dashboard ================= */
+
+    async function enterDash() {
+      $('gate').hidden = true;
+      $('gate').style.display = 'none';
+      $('dash').hidden = false;
+
+      // khôi phục thông tin người dùng khi tải lại trang
+      if (!ME) {
+        const cached = sessionStorage.getItem(TOKEN_KEY + ':user');
+        if (cached) { try { ME = JSON.parse(cached) } catch { ME = null } }
+      }
+
+      try {
+        const r = await adminFetch('/admin/me');
+        ME = { ...r.data };
+        sessionStorage.setItem(TOKEN_KEY + ':user', JSON.stringify(ME));
+      } catch (e) {
+        if (e.status === 401) return;
+        // Có thông tin người dùng lưu sẵn thì vẫn vào được bảng điều khiển
+        // (mất mạng tạm thời không nên chặn cả trang quản trị).
+        if (!ME) return showGate(e.message);
+        toast('Không cập nhật được thông tin tài khoản — đang dùng bản lưu tạm', true);
+      }
+
+      // Bất kỳ lỗi nào khi vẽ bảng điều khiển cũng không được để trắng trang
+      try {
+        renderIdentity();
+        applyPermissions();
+        await load();
+      } catch (err) {
+        toast(err.message || 'Không tải được bảng điều khiển', true);
+      }
+    }
+
+    function renderIdentity() {
+      if (!ME) return;
+      const roleLabel = { owner: 'Chủ studio', staff: 'Nhân viên', viewer: 'Chỉ xem' }[ME.role] || ME.role;
+      $('whoami').hidden = false;
+      $('logoutBtn').hidden = false;
+      $('whoami').innerHTML = `<b>${esc(ME.displayName || ME.username)}</b><br><small>${esc(roleLabel)} · ${esc(ME.username)}</small>`;
+    }
+
+    function applyPermissions() {
+      if (!ME) return;
+      $('tabUsersBtn').hidden = !isOwner();
+      $('tabAuditBtn').hidden = !isOwner();
+
+      const write = can('write');
+      $('filterBtn').disabled = false;
+      $('reloadBtn').disabled = false;
+
+      // Nhân viên/chủ: thêm nút đổi mật khẩu vào góc phải
+      if (!$('changePwBtn') && !ME.legacy) {
+        const b = document.createElement('button');
+        b.className = 'btn-out';
+        b.id = 'changePwBtn';
+        b.textContent = 'Đổi mật khẩu';
+        b.addEventListener('click', () => openChangePassword(false));
+        $('logoutBtn').parentNode.insertBefore(b, $('logoutBtn'));
+      }
+
+      if (!write) {
+        toast('Bạn đang ở chế độ chỉ xem — không thể sửa dữ liệu');
+      }
+    }
+
+    /* ================= tab switching ================= */
+
+    let currentTab = 'bookings';
+
+    document.querySelectorAll('.tab').forEach(t => {
+      t.addEventListener('click', () => {
+        if (t.hidden) return;
+        document.querySelectorAll('.tab').forEach(x => x.classList.remove('on'));
+        t.classList.add('on');
+        currentTab = t.dataset.tab;
+
+        $('tabBookings').hidden = currentTab !== 'bookings';
+        $('tabCatalog').hidden = currentTab !== 'catalog';
+        $('tabGallery').hidden = currentTab !== 'gallery';
+        $('tabHome').hidden = currentTab !== 'home';
+        $('tabBank').hidden = currentTab !== 'bank';
+        $('tabNotifications').hidden = currentTab !== 'notifications';
+        $('tabUsers').hidden = currentTab !== 'users';
+        $('tabAudit').hidden = currentTab !== 'audit';
+
+        if (currentTab === 'catalog') loadCatalog(true);
+        if (currentTab === 'gallery') loadGallery(true);
+        if (currentTab === 'home') loadHome();
+        if (currentTab === 'bank') loadBankSettings();
+        if (currentTab === 'notifications') loadNotifications();
+        if (currentTab === 'users') loadUsers();
+        if (currentTab === 'audit') loadAudit();
+      });
     });
-    const json = await res.json().catch(() => null);
 
-    if(!res.ok){
-      btn.disabled = false;
-      btn.textContent = 'Đăng nhập';
-      return showGate(json?.error || 'Tên đăng nhập hoặc mật khẩu không đúng');
+    /* ================= bookings ================= */
+
+    async function load() {
+      $('list').innerHTML = '<div class="loading">Đang tải danh sách đơn...</div>';
+
+      const q = new URLSearchParams();
+      if ($('fDate').value) q.set('date', $('fDate').value);
+      if ($('fStatus').value) q.set('status', $('fStatus').value);
+      if ($('fPhone').value.trim()) q.set('phone', $('fPhone').value.trim());
+
+      try {
+        const stats = await adminFetch('/admin/stats');
+        renderStats(stats.data);
+
+        const res = await adminFetch('/admin/bookings?' + q.toString());
+        cache = res.data;
+        renderList(cache);
+      } catch (e) {
+        if (e.status === 401 || e.status === 403) return;
+        $('list').innerHTML = `<div class="empty">${esc(e.message)}</div>`;
+      }
     }
 
-    saveSession(json.data);
-    $('passInput').value = '';
-    btn.disabled = false;
-    btn.textContent = 'Đăng nhập';
-
-    if(ME?.mustChange){
-      await enterDash();
-      openChangePassword(true);
-      return;
-    }
-    await enterDash();
-  }catch(err){
-    btn.disabled = false;
-    btn.textContent = 'Đăng nhập';
-    showGate('Không kết nối được máy chủ. Hãy chắc chắn backend đang chạy (npm start).');
-  }
-}
-
-async function logout(){
-  try{
-    await adminFetch('/admin/logout', { method:'POST' });
-  }catch{ /* kể cả lỗi vẫn xoá phiên ở máy khách */ }
-  clearSession();
-  cache = [];
-  showGate();
-  gateNote('Đã đăng xuất.');
-}
-
-/* ================= dashboard ================= */
-
-async function enterDash(){
-  $('gate').hidden = true;
-  $('gate').style.display = 'none';
-  $('dash').hidden = false;
-
-  // khôi phục thông tin người dùng khi tải lại trang
-  if(!ME){
-    const cached = sessionStorage.getItem(TOKEN_KEY + ':user');
-    if(cached){ try{ ME = JSON.parse(cached) }catch{ ME = null } }
-  }
-
-  try{
-    const r = await adminFetch('/admin/me');
-    ME = { ...r.data };
-    sessionStorage.setItem(TOKEN_KEY + ':user', JSON.stringify(ME));
-  }catch(e){
-    if(e.status === 401) return;
-    // Có thông tin người dùng lưu sẵn thì vẫn vào được bảng điều khiển
-    // (mất mạng tạm thời không nên chặn cả trang quản trị).
-    if(!ME) return showGate(e.message);
-    toast('Không cập nhật được thông tin tài khoản — đang dùng bản lưu tạm', true);
-  }
-
-  // Bất kỳ lỗi nào khi vẽ bảng điều khiển cũng không được để trắng trang
-  try{
-    renderIdentity();
-    applyPermissions();
-    await load();
-  }catch(err){
-    toast(err.message || 'Không tải được bảng điều khiển', true);
-  }
-}
-
-function renderIdentity(){
-  if(!ME) return;
-  const roleLabel = { owner:'Chủ studio', staff:'Nhân viên', viewer:'Chỉ xem' }[ME.role] || ME.role;
-  $('whoami').hidden = false;
-  $('logoutBtn').hidden = false;
-  $('whoami').innerHTML = `<b>${esc(ME.displayName || ME.username)}</b><br><small>${esc(roleLabel)} · ${esc(ME.username)}</small>`;
-}
-
-function applyPermissions(){
-  if(!ME) return;
-  $('tabUsersBtn').hidden = !isOwner();
-  $('tabAuditBtn').hidden = !isOwner();
-
-  const write = can('write');
-  $('filterBtn').disabled = false;
-  $('reloadBtn').disabled = false;
-
-  // Nhân viên/chủ: thêm nút đổi mật khẩu vào góc phải
-  if(!$('changePwBtn') && !ME.legacy){
-    const b = document.createElement('button');
-    b.className = 'btn-out';
-    b.id = 'changePwBtn';
-    b.textContent = 'Đổi mật khẩu';
-    b.addEventListener('click', () => openChangePassword(false));
-    $('logoutBtn').parentNode.insertBefore(b, $('logoutBtn'));
-  }
-
-  if(!write){
-    toast('Bạn đang ở chế độ chỉ xem — không thể sửa dữ liệu');
-  }
-}
-
-/* ================= tab switching ================= */
-
-let currentTab = 'bookings';
-
-document.querySelectorAll('.tab').forEach(t => {
-  t.addEventListener('click', () => {
-    if(t.hidden) return;
-    document.querySelectorAll('.tab').forEach(x => x.classList.remove('on'));
-    t.classList.add('on');
-    currentTab = t.dataset.tab;
-
-    $('tabBookings').hidden      = currentTab !== 'bookings';
-    $('tabCatalog').hidden       = currentTab !== 'catalog';
-    $('tabGallery').hidden       = currentTab !== 'gallery';
-    $('tabHome').hidden          = currentTab !== 'home';
-    $('tabNotifications').hidden = currentTab !== 'notifications';
-    $('tabUsers').hidden         = currentTab !== 'users';
-    $('tabAudit').hidden         = currentTab !== 'audit';
-
-    if(currentTab === 'catalog')       loadCatalog(true);
-    if(currentTab === 'gallery')       loadGallery(true);
-    if(currentTab === 'home')          loadHome();
-    if(currentTab === 'notifications') loadNotifications();
-    if(currentTab === 'users')         loadUsers();
-    if(currentTab === 'audit')         loadAudit();
-  });
-});
-
-/* ================= bookings ================= */
-
-async function load(){
-  $('list').innerHTML = '<div class="loading">Đang tải danh sách đơn...</div>';
-
-  const q = new URLSearchParams();
-  if($('fDate').value) q.set('date', $('fDate').value);
-  if($('fStatus').value) q.set('status', $('fStatus').value);
-  if($('fPhone').value.trim()) q.set('phone', $('fPhone').value.trim());
-
-  try{
-    const stats = await adminFetch('/admin/stats');
-    renderStats(stats.data);
-
-    const res = await adminFetch('/admin/bookings?' + q.toString());
-    cache = res.data;
-    renderList(cache);
-  }catch(e){
-    if(e.status === 401 || e.status === 403) return;
-    $('list').innerHTML = `<div class="empty">${esc(e.message)}</div>`;
-  }
-}
-
-function renderStats(s){
-  $('stats').innerHTML = `
+    function renderStats(s) {
+      $('stats').innerHTML = `
     <div class="st"><span>Tổng đơn</span><b>${s.total || 0}</b></div>
     <div class="st"><span>Chờ xác nhận</span><b>${s.pending || 0}</b></div>
     <div class="st"><span>Đã xác nhận</span><b>${s.confirmed || 0}</b></div>
     <div class="st"><span>Sắp tới</span><b>${s.upcoming || 0}</b></div>
     <div class="st money"><span>Doanh thu dự kiến</span><b>${vnd(s.revenue)}</b></div>
   `;
-}
+    }
 
-const STATUS_LABEL = { pending:'Chờ xác nhận', confirmed:'Đã xác nhận', done:'Đã hoàn thành', cancelled:'Đã huỷ' };
+    const STATUS_LABEL = { pending: 'Chờ xác nhận', confirmed: 'Đã xác nhận', done: 'Đã hoàn thành', cancelled: 'Đã huỷ' };
 
-function renderList(rows){
-  if(!rows.length){
-    $('list').innerHTML = '<div class="empty">Chưa có đơn đặt lịch nào khớp bộ lọc.</div>';
-    return;
-  }
+    function renderList(rows) {
+      if (!rows.length) {
+        $('list').innerHTML = '<div class="empty">Chưa có đơn đặt lịch nào khớp bộ lọc.</div>';
+        return;
+      }
 
-  const write = can('write');
+      const write = can('write');
 
-  $('list').innerHTML = `
+      $('list').innerHTML = `
   <table>
     <thead>
       <tr>
         <th style="width:120px">Mã đơn</th>
-        <th style="width:170px">Khách hàng</th>
-        <th style="width:190px">Dịch vụ</th>
-        <th style="width:120px">Thời gian</th>
-        <th style="width:110px">Tạm tính</th>
-        <th style="width:118px">Trạng thái</th>
-        <th style="width:200px">Xử lý</th>
+        <th style="width:160px">Khách hàng</th>
+        <th style="width:180px">Dịch vụ</th>
+        <th style="width:110px">Thời gian</th>
+        <th style="width:130px">Tạm tính &amp; Cọc</th>
+        <th style="width:110px">Trạng thái</th>
+        <th style="width:210px">Xử lý</th>
       </tr>
     </thead>
     <tbody>
       ${rows.map(r => {
         const d = new Date(r.date + 'T00:00:00');
-        const wd = d.toLocaleDateString('vi-VN', { weekday:'short', day:'2-digit', month:'2-digit' });
+        const wd = d.toLocaleDateString('vi-VN', { weekday: 'short', day: '2-digit', month: '2-digit' });
         const ad = (r.addons || []).map(a => a.name).join(', ');
         let acts = '';
-        if(!write){
+        if (!write) {
           acts = '<span class="ro">Chỉ xem</span>';
-        }else{
-          if(r.status === 'pending')   acts += `<button class="ok" data-set="confirmed">Xác nhận</button>`;
-          if(r.status === 'confirmed') acts += `<button class="ok" data-set="done">Hoàn thành</button>`;
-          if(r.status !== 'cancelled' && r.status !== 'done') acts += `<button class="no" data-set="cancelled">Huỷ</button>`;
-          if(r.status === 'cancelled') acts += `<button data-set="pending">Mở lại</button>`;
+        } else {
+          if (r.deposit_status !== 'paid' && r.status !== 'cancelled') {
+            acts += `<button class="ok" data-deposit="${r.id}" title="Xác nhận đã nhận cọc">✓ Nhận cọc</button>`;
+          }
+          if (r.status === 'pending') acts += `<button class="ok" data-set="confirmed">Xác nhận</button>`;
+          if (r.status === 'confirmed') acts += `<button class="ok" data-set="done">Hoàn thành</button>`;
+          if (r.status !== 'cancelled' && r.status !== 'done') acts += `<button class="no" data-set="cancelled">Huỷ</button>`;
+          if (r.status === 'cancelled') acts += `<button data-set="pending">Mở lại</button>`;
         }
         return `
         <tr data-id="${r.id}">
           <td>
             <div class="code">${esc(r.code)}</div>
-            <div class="addons-t">${esc((r.created_at||'').slice(0,10))}</div>
+            <div class="addons-t">${esc((r.created_at || '').slice(0, 10))}</div>
           </td>
           <td class="cust">
             <b>${esc(r.customer)}</b>
@@ -869,7 +2147,14 @@ function renderList(rows){
             <b>${esc(r.time)}</b>
             <small>${esc(wd)}</small>
           </td>
-          <td class="money">${vnd(r.total)}</td>
+          <td class="money">
+            ${vnd(r.total)}
+            <div style="font-size:11px;margin-top:4px">
+              ${r.deposit_status === 'paid'
+                ? `<span class="badge b-confirmed" style="font-size:10px;padding:2px 8px">Đã cọc ${vnd(r.deposit_amount || 0)}</span>`
+                : `<span class="badge b-pending" style="font-size:10px;padding:2px 8px">Chưa cọc (${vnd(r.deposit_amount || 0)})</span>`}
+            </div>
+          </td>
           <td><span class="badge b-${r.status}">${STATUS_LABEL[r.status] || r.status}</span></td>
           <td><div class="acts">${acts || '—'}</div></td>
         </tr>`;
@@ -877,54 +2162,73 @@ function renderList(rows){
     </tbody>
   </table>`;
 
-  $('list').querySelectorAll('[data-set]').forEach(btn => {
-    btn.addEventListener('click', () => changeStatus(Number(btn.closest('tr').dataset.id), btn.dataset.set, btn));
-  });
-}
+      $('list').querySelectorAll('[data-set]').forEach(btn => {
+        btn.addEventListener('click', () => changeStatus(Number(btn.closest('tr').dataset.id), btn.dataset.set, btn));
+      });
 
-async function changeStatus(id, status, btn){
-  if(btn){ btn.disabled = true; btn.textContent = '...'; }
-  try{
-    const r = await adminFetch(`/admin/bookings/${id}/status`, {
-      method:'PATCH',
-      body: JSON.stringify({ status }),
+      $('list').querySelectorAll('[data-deposit]').forEach(btn => {
+        btn.addEventListener('click', () => changeDepositStatus(Number(btn.dataset.deposit), 'paid', btn));
+      });
+    }
+
+    async function changeDepositStatus(id, depositStatus, btn) {
+      if (btn) { btn.disabled = true; btn.textContent = '...'; }
+      try {
+        const r = await adminFetch(`/admin/bookings/${id}/deposit`, {
+          method: 'PATCH',
+          body: JSON.stringify({ depositStatus }),
+        });
+        toast(r.message || 'Đã xác nhận nhận cọc');
+        await load();
+      } catch (e) {
+        if (e.status !== 401 && e.status !== 403) toast('Không cập nhật được: ' + e.message, true);
+        if (btn) { btn.disabled = false; btn.textContent = '✓ Nhận cọc'; }
+      }
+    }
+
+    async function changeStatus(id, status, btn) {
+      if (btn) { btn.disabled = true; btn.textContent = '...'; }
+      try {
+        const r = await adminFetch(`/admin/bookings/${id}/status`, {
+          method: 'PATCH',
+          body: JSON.stringify({ status }),
+        });
+        const n = r.notification;
+        if (n?.sent) toast(n.dryRun ? 'Đã cập nhật (tin nhắn chạy thử)' : 'Đã cập nhật và gửi tin cho khách');
+        else toast('Đã cập nhật trạng thái');
+        await load();
+      } catch (e) {
+        if (e.status !== 401 && e.status !== 403) toast('Không cập nhật được: ' + e.message, true);
+        if (btn) { btn.disabled = false; }
+      }
+    }
+
+    $('filterBtn').addEventListener('click', load);
+    $('reloadBtn').addEventListener('click', load);
+    $('clearBtn').addEventListener('click', () => {
+      $('fDate').value = ''; $('fStatus').value = ''; $('fPhone').value = '';
+      load();
     });
-    const n = r.notification;
-    if(n?.sent) toast(n.dryRun ? 'Đã cập nhật (tin nhắn chạy thử)' : 'Đã cập nhật và gửi tin cho khách');
-    else toast('Đã cập nhật trạng thái');
-    await load();
-  }catch(e){
-    if(e.status !== 401 && e.status !== 403) toast('Không cập nhật được: ' + e.message, true);
-    if(btn){ btn.disabled = false; }
-  }
-}
+    $('fPhone').addEventListener('keydown', e => { if (e.key === 'Enter') load() });
 
-$('filterBtn').addEventListener('click', load);
-$('reloadBtn').addEventListener('click', load);
-$('clearBtn').addEventListener('click', () => {
-  $('fDate').value = ''; $('fStatus').value = ''; $('fPhone').value = '';
-  load();
-});
-$('fPhone').addEventListener('keydown', e => { if(e.key === 'Enter') load() });
+    /* ================= notifications ================= */
 
-/* ================= notifications ================= */
+    const ZNS_LABEL = { sent: 'Đã gửi', dry_run: 'Chạy thử', skipped: 'Bỏ qua', failed: 'Thất bại' };
+    const N_TYPE_LABEL = { booking: 'Đơn mới', reminder: 'Nhắc hẹn', status: 'Đổi trạng thái' };
 
-const ZNS_LABEL = { sent:'Đã gửi', dry_run:'Chạy thử', skipped:'Bỏ qua', failed:'Thất bại' };
-const N_TYPE_LABEL = { booking:'Đơn mới', reminder:'Nhắc hẹn', status:'Đổi trạng thái' };
+    async function loadNotificationStats() {
+      const box = $('znsbar');
+      try {
+        const r = await adminFetch('/admin/notifications/stats');
+        const { zalo, logs, reminder } = r.data;
 
-async function loadNotificationStats(){
-  const box = $('znsbar');
-  try{
-    const r = await adminFetch('/admin/notifications/stats');
-    const { zalo, logs, reminder } = r.data;
+        let dot = 'zns-off', label = 'Chưa cấu hình Zalo ZNS', hint = 'Tin nhắn được ghi log nhưng không gửi đi';
+        if (zalo.dryRun) { dot = 'zns-dry'; label = 'Đang chạy thử'; hint = 'Không gửi tin thật ra ngoài'; }
+        else if (zalo.enabled) { dot = 'zns-on'; label = 'Đang hoạt động'; hint = 'Tin nhắn được gửi qua Zalo OA'; }
 
-    let dot = 'zns-off', label = 'Chưa cấu hình Zalo ZNS', hint = 'Tin nhắn được ghi log nhưng không gửi đi';
-    if(zalo.dryRun){ dot = 'zns-dry'; label = 'Đang chạy thử'; hint = 'Không gửi tin thật ra ngoài'; }
-    else if(zalo.enabled){ dot = 'zns-on'; label = 'Đang hoạt động'; hint = 'Tin nhắn được gửi qua Zalo OA'; }
+        const canRun = can('write');
 
-    const canRun = can('write');
-
-    box.innerHTML = `
+        box.innerHTML = `
       <span class="zns-dot ${dot}"></span>
       <div>
         <b>Zalo ZNS: ${label}</b><br>
@@ -938,37 +2242,37 @@ async function loadNotificationStats(){
       ${canRun ? '<button id="runReminder">Chạy nhắc hẹn ngay</button>' : ''}
     `;
 
-    const rb = $('runReminder');
-    if(rb){
-      rb.addEventListener('click', async () => {
-        rb.disabled = true;
-        rb.textContent = 'Đang chạy...';
-        try{
-          const r2 = await adminFetch('/admin/reminders/run', { method:'POST' });
-          toast(r2.message);
-          await loadNotifications();
-        }catch(e){
-          if(e.status !== 401) toast('Lỗi: ' + e.message, true);
-        }finally{
-          rb.disabled = false;
-          rb.textContent = 'Chạy nhắc hẹn ngay';
+        const rb = $('runReminder');
+        if (rb) {
+          rb.addEventListener('click', async () => {
+            rb.disabled = true;
+            rb.textContent = 'Đang chạy...';
+            try {
+              const r2 = await adminFetch('/admin/reminders/run', { method: 'POST' });
+              toast(r2.message);
+              await loadNotifications();
+            } catch (e) {
+              if (e.status !== 401) toast('Lỗi: ' + e.message, true);
+            } finally {
+              rb.disabled = false;
+              rb.textContent = 'Chạy nhắc hẹn ngay';
+            }
+          });
         }
-      });
+      } catch (e) {
+        if (e.status === 401 || e.status === 403) return;
+        box.innerHTML = `<span class="zns-dot zns-off"></span><div><b>Không đọc được trạng thái thông báo</b><br><small>${esc(e.message)}</small></div>`;
+      }
     }
-  }catch(e){
-    if(e.status === 401 || e.status === 403) return;
-    box.innerHTML = `<span class="zns-dot zns-off"></span><div><b>Không đọc được trạng thái thông báo</b><br><small>${esc(e.message)}</small></div>`;
-  }
-}
 
-function renderNotifications(rows){
-  if(!rows.length){
-    $('nlist').innerHTML = '<div class="empty">Chưa có bản ghi thông báo nào.</div>';
-    return;
-  }
-  const write = can('write');
+    function renderNotifications(rows) {
+      if (!rows.length) {
+        $('nlist').innerHTML = '<div class="empty">Chưa có bản ghi thông báo nào.</div>';
+        return;
+      }
+      const write = can('write');
 
-  $('nlist').innerHTML = `
+      $('nlist').innerHTML = `
   <table>
     <thead>
       <tr>
@@ -995,72 +2299,72 @@ function renderNotifications(rows){
           <td style="font-size:12px;color:var(--gray-400)">${esc(fmtDateTime(n.created_at))}</td>
           <td>
             ${write && (n.status === 'failed' || n.status === 'skipped')
-              ? `<div class="acts"><button data-retry="${n.id}">Gửi lại</button></div>`
-              : (write ? '—' : '<span class="ro">Chỉ xem</span>')}
+          ? `<div class="acts"><button data-retry="${n.id}">Gửi lại</button></div>`
+          : (write ? '—' : '<span class="ro">Chỉ xem</span>')}
           </td>
         </tr>`).join('')}
     </tbody>
   </table>`;
 
-  $('nlist').querySelectorAll('[data-retry]').forEach(b => {
-    b.addEventListener('click', async () => {
-      b.disabled = true;
-      b.textContent = 'Đang gửi...';
-      try{
-        const r = await adminFetch(`/admin/notifications/${b.dataset.retry}/retry`, { method:'POST' });
-        toast(r.result?.sent ? (r.result.dryRun ? 'Đã mô phỏng gửi (chạy thử)' : 'Đã gửi lại thành công') : ('Không gửi được: ' + (r.result?.error || 'lỗi không rõ')), !r.result?.sent);
-        await loadNotifications();
-      }catch(e){
-        if(e.status !== 401 && e.status !== 403) toast('Lỗi: ' + e.message, true);
-        b.disabled = false;
-        b.textContent = 'Gửi lại';
+      $('nlist').querySelectorAll('[data-retry]').forEach(b => {
+        b.addEventListener('click', async () => {
+          b.disabled = true;
+          b.textContent = 'Đang gửi...';
+          try {
+            const r = await adminFetch(`/admin/notifications/${b.dataset.retry}/retry`, { method: 'POST' });
+            toast(r.result?.sent ? (r.result.dryRun ? 'Đã mô phỏng gửi (chạy thử)' : 'Đã gửi lại thành công') : ('Không gửi được: ' + (r.result?.error || 'lỗi không rõ')), !r.result?.sent);
+            await loadNotifications();
+          } catch (e) {
+            if (e.status !== 401 && e.status !== 403) toast('Lỗi: ' + e.message, true);
+            b.disabled = false;
+            b.textContent = 'Gửi lại';
+          }
+        });
+      });
+    }
+
+    async function loadNotifications() {
+      $('nlist').innerHTML = '<div class="loading">Đang tải lịch sử thông báo...</div>';
+      await loadNotificationStats();
+
+      const q = new URLSearchParams();
+      if ($('nType').value) q.set('type', $('nType').value);
+      if ($('nStatus').value) q.set('status', $('nStatus').value);
+
+      try {
+        const res = await adminFetch('/admin/notifications?' + q.toString());
+        renderNotifications(res.data);
+      } catch (e) {
+        if (e.status === 401 || e.status === 403) return;
+        $('nlist').innerHTML = `<div class="empty">${esc(e.message)}</div>`;
       }
-    });
-  });
-}
+    }
 
-async function loadNotifications(){
-  $('nlist').innerHTML = '<div class="loading">Đang tải lịch sử thông báo...</div>';
-  await loadNotificationStats();
+    $('nFilterBtn').addEventListener('click', loadNotifications);
+    $('nReloadBtn').addEventListener('click', loadNotifications);
 
-  const q = new URLSearchParams();
-  if($('nType').value) q.set('type', $('nType').value);
-  if($('nStatus').value) q.set('status', $('nStatus').value);
+    /* ================= users (owner) ================= */
 
-  try{
-    const res = await adminFetch('/admin/notifications?' + q.toString());
-    renderNotifications(res.data);
-  }catch(e){
-    if(e.status === 401 || e.status === 403) return;
-    $('nlist').innerHTML = `<div class="empty">${esc(e.message)}</div>`;
-  }
-}
+    const ROLE_LABEL = { owner: 'Chủ studio', staff: 'Nhân viên', viewer: 'Chỉ xem' };
 
-$('nFilterBtn').addEventListener('click', loadNotifications);
-$('nReloadBtn').addEventListener('click', loadNotifications);
+    async function loadUsers() {
+      $('ulist').innerHTML = '<div class="loading">Đang tải danh sách tài khoản...</div>';
+      try {
+        const r = await adminFetch('/admin/users');
+        renderUsers(r.data);
+      } catch (e) {
+        if (e.status === 401 || e.status === 403) return;
+        $('ulist').innerHTML = `<div class="empty">${esc(e.message)}</div>`;
+      }
+    }
 
-/* ================= users (owner) ================= */
+    function renderUsers(rows) {
+      if (!rows.length) {
+        $('ulist').innerHTML = '<div class="empty">Chưa có tài khoản nào.</div>';
+        return;
+      }
 
-const ROLE_LABEL = { owner:'Chủ studio', staff:'Nhân viên', viewer:'Chỉ xem' };
-
-async function loadUsers(){
-  $('ulist').innerHTML = '<div class="loading">Đang tải danh sách tài khoản...</div>';
-  try{
-    const r = await adminFetch('/admin/users');
-    renderUsers(r.data);
-  }catch(e){
-    if(e.status === 401 || e.status === 403) return;
-    $('ulist').innerHTML = `<div class="empty">${esc(e.message)}</div>`;
-  }
-}
-
-function renderUsers(rows){
-  if(!rows.length){
-    $('ulist').innerHTML = '<div class="empty">Chưa có tài khoản nào.</div>';
-    return;
-  }
-
-  $('ulist').innerHTML = `
+      $('ulist').innerHTML = `
   <table>
     <thead>
       <tr>
@@ -1103,140 +2407,140 @@ function renderUsers(rows){
     </tbody>
   </table>`;
 
-  $('ulist').querySelectorAll('[data-lock]').forEach(b => {
-    b.addEventListener('click', async () => {
-      const active = b.dataset.active === '1';
-      b.disabled = true;
-      try{
-        const r = await adminFetch(`/admin/users/${b.dataset.lock}/active`, {
-          method:'PATCH',
-          body: JSON.stringify({ active }),
+      $('ulist').querySelectorAll('[data-lock]').forEach(b => {
+        b.addEventListener('click', async () => {
+          const active = b.dataset.active === '1';
+          b.disabled = true;
+          try {
+            const r = await adminFetch(`/admin/users/${b.dataset.lock}/active`, {
+              method: 'PATCH',
+              body: JSON.stringify({ active }),
+            });
+            toast(r.message || 'Đã cập nhật');
+            await loadUsers();
+          } catch (e) {
+            if (e.status !== 401 && e.status !== 403) toast(e.message, true);
+            b.disabled = false;
+          }
         });
-        toast(r.message || 'Đã cập nhật');
-        await loadUsers();
-      }catch(e){
-        if(e.status !== 401 && e.status !== 403) toast(e.message, true);
-        b.disabled = false;
-      }
-    });
-  });
+      });
 
-  $('ulist').querySelectorAll('[data-reset]').forEach(b => {
-    b.addEventListener('click', async () => {
-      if(!confirm(`Đặt lại mật khẩu cho "${b.dataset.name}"? Mọi phiên đăng nhập hiện tại sẽ bị đăng xuất.`)) return;
-      b.disabled = true;
-      try{
-        const r = await adminFetch(`/admin/users/${b.dataset.reset}/reset-password`, { method:'POST' });
-        showPassword(`Mật khẩu mới cho ${r.data.username}`, r.data.newPassword);
-        await loadUsers();
-      }catch(e){
-        if(e.status !== 401 && e.status !== 403) toast(e.message, true);
-        b.disabled = false;
-      }
-    });
-  });
+      $('ulist').querySelectorAll('[data-reset]').forEach(b => {
+        b.addEventListener('click', async () => {
+          if (!confirm(`Đặt lại mật khẩu cho "${b.dataset.name}"? Mọi phiên đăng nhập hiện tại sẽ bị đăng xuất.`)) return;
+          b.disabled = true;
+          try {
+            const r = await adminFetch(`/admin/users/${b.dataset.reset}/reset-password`, { method: 'POST' });
+            showPassword(`Mật khẩu mới cho ${r.data.username}`, r.data.newPassword);
+            await loadUsers();
+          } catch (e) {
+            if (e.status !== 401 && e.status !== 403) toast(e.message, true);
+            b.disabled = false;
+          }
+        });
+      });
 
-  $('ulist').querySelectorAll('[data-kick]').forEach(b => {
-    b.addEventListener('click', async () => {
-      b.disabled = true;
-      try{
-        const r = await adminFetch(`/admin/users/${b.dataset.kick}/sessions`, { method:'DELETE' });
-        toast(r.message || 'Đã đăng xuất các thiết bị');
-        await loadUsers();
-      }catch(e){
-        if(e.status !== 401 && e.status !== 403) toast(e.message, true);
-        b.disabled = false;
-      }
-    });
-  });
-}
-
-$('newUserBtn').addEventListener('click', () => {
-  $('nuUsername').value = '';
-  $('nuDisplay').value = '';
-  $('nuPass').value = '';
-  $('nuRole').value = 'staff';
-  $('userBackdrop').classList.add('on');
-  $('nuUsername').focus();
-});
-$('nuCancel').addEventListener('click', () => $('userBackdrop').classList.remove('on'));
-$('userBackdrop').addEventListener('click', e => { if(e.target === $('userBackdrop')) $('userBackdrop').classList.remove('on') });
-
-$('nuCreate').addEventListener('click', async () => {
-  const username = $('nuUsername').value.trim();
-  const displayName = $('nuDisplay').value.trim();
-  const role = $('nuRole').value;
-  const password = $('nuPass').value;
-
-  if(!username) return toast('Vui lòng nhập tên đăng nhập', true);
-
-  const btn = $('nuCreate');
-  btn.disabled = true;
-  btn.textContent = 'Đang tạo...';
-
-  try{
-    const r = await adminFetch('/admin/users', {
-      method:'POST',
-      body: JSON.stringify({ username, displayName, role, password: password || undefined }),
-    });
-    $('userBackdrop').classList.remove('on');
-    if(r.data.generatedPassword){
-      showPassword(`Mật khẩu cho ${r.data.user.username}`, r.data.generatedPassword);
-    }else{
-      toast(r.message || 'Đã tạo tài khoản');
+      $('ulist').querySelectorAll('[data-kick]').forEach(b => {
+        b.addEventListener('click', async () => {
+          b.disabled = true;
+          try {
+            const r = await adminFetch(`/admin/users/${b.dataset.kick}/sessions`, { method: 'DELETE' });
+            toast(r.message || 'Đã đăng xuất các thiết bị');
+            await loadUsers();
+          } catch (e) {
+            if (e.status !== 401 && e.status !== 403) toast(e.message, true);
+            b.disabled = false;
+          }
+        });
+      });
     }
-    await loadUsers();
-  }catch(e){
-    if(e.status !== 401 && e.status !== 403) toast(e.message, true);
-  }finally{
-    btn.disabled = false;
-    btn.textContent = 'Tạo tài khoản';
-  }
-});
 
-/* ================= audit ================= */
+    $('newUserBtn').addEventListener('click', () => {
+      $('nuUsername').value = '';
+      $('nuDisplay').value = '';
+      $('nuPass').value = '';
+      $('nuRole').value = 'staff';
+      $('userBackdrop').classList.add('on');
+      $('nuUsername').focus();
+    });
+    $('nuCancel').addEventListener('click', () => $('userBackdrop').classList.remove('on'));
+    $('userBackdrop').addEventListener('click', e => { if (e.target === $('userBackdrop')) $('userBackdrop').classList.remove('on') });
 
-async function loadAudit(){
-  $('alist').innerHTML = '<div class="loading">Đang tải nhật ký...</div>';
-  try{
-    const r = await adminFetch('/admin/audit?limit=150');
-    renderAudit(r.data);
-  }catch(e){
-    if(e.status === 401 || e.status === 403) return;
-    $('alist').innerHTML = `<div class="empty">${esc(e.message)}</div>`;
-  }
-}
+    $('nuCreate').addEventListener('click', async () => {
+      const username = $('nuUsername').value.trim();
+      const displayName = $('nuDisplay').value.trim();
+      const role = $('nuRole').value;
+      const password = $('nuPass').value;
 
-const ACTION_LABEL = {
-  doi_trang_thai:'Đổi trạng thái đơn',
-  huy_don:'Huỷ đơn',
-  gui_lai_tin:'Gửi lại tin nhắn',
-  chay_nhac_hen:'Chạy nhắc hẹn',
-  tao_tai_khoan:'Tạo tài khoản',
-  khoa_tai_khoan:'Khoá / mở tài khoản',
-  dat_lai_mat_khau:'Đặt lại mật khẩu',
-  dang_xuat_moi_thiet_bi:'Đăng xuất mọi thiết bị',
-  bi_tu_choi:'Bị từ chối (thiếu quyền)',
-  them_noi_dung:'Thêm dịch vụ / combo',
-  sua_noi_dung:'Sửa dịch vụ / combo',
-  an_hien_noi_dung:'Ẩn / hiện nội dung',
-  xoa_noi_dung:'Xoá nội dung',
-  sap_xep_noi_dung:'Đổi thứ tự hiển thị',
-  tai_anh_len:'Tải ảnh lên',
-  them_anh:'Thêm ảnh vào thư viện',
-  sua_anh:'Sửa ảnh',
-  an_hien_anh:'Ẩn / hiện ảnh',
-  xoa_anh:'Xoá ảnh',
-  sap_xep_anh:'Đổi thứ tự ảnh',
-};
+      if (!username) return toast('Vui lòng nhập tên đăng nhập', true);
 
-function renderAudit(rows){
-  if(!rows.length){
-    $('alist').innerHTML = '<div class="empty">Chưa có thao tác nào được ghi lại.</div>';
-    return;
-  }
+      const btn = $('nuCreate');
+      btn.disabled = true;
+      btn.textContent = 'Đang tạo...';
 
-  $('alist').innerHTML = `
+      try {
+        const r = await adminFetch('/admin/users', {
+          method: 'POST',
+          body: JSON.stringify({ username, displayName, role, password: password || undefined }),
+        });
+        $('userBackdrop').classList.remove('on');
+        if (r.data.generatedPassword) {
+          showPassword(`Mật khẩu cho ${r.data.user.username}`, r.data.generatedPassword);
+        } else {
+          toast(r.message || 'Đã tạo tài khoản');
+        }
+        await loadUsers();
+      } catch (e) {
+        if (e.status !== 401 && e.status !== 403) toast(e.message, true);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Tạo tài khoản';
+      }
+    });
+
+    /* ================= audit ================= */
+
+    async function loadAudit() {
+      $('alist').innerHTML = '<div class="loading">Đang tải nhật ký...</div>';
+      try {
+        const r = await adminFetch('/admin/audit?limit=150');
+        renderAudit(r.data);
+      } catch (e) {
+        if (e.status === 401 || e.status === 403) return;
+        $('alist').innerHTML = `<div class="empty">${esc(e.message)}</div>`;
+      }
+    }
+
+    const ACTION_LABEL = {
+      doi_trang_thai: 'Đổi trạng thái đơn',
+      huy_don: 'Huỷ đơn',
+      gui_lai_tin: 'Gửi lại tin nhắn',
+      chay_nhac_hen: 'Chạy nhắc hẹn',
+      tao_tai_khoan: 'Tạo tài khoản',
+      khoa_tai_khoan: 'Khoá / mở tài khoản',
+      dat_lai_mat_khau: 'Đặt lại mật khẩu',
+      dang_xuat_moi_thiet_bi: 'Đăng xuất mọi thiết bị',
+      bi_tu_choi: 'Bị từ chối (thiếu quyền)',
+      them_noi_dung: 'Thêm dịch vụ / combo',
+      sua_noi_dung: 'Sửa dịch vụ / combo',
+      an_hien_noi_dung: 'Ẩn / hiện nội dung',
+      xoa_noi_dung: 'Xoá nội dung',
+      sap_xep_noi_dung: 'Đổi thứ tự hiển thị',
+      tai_anh_len: 'Tải ảnh lên',
+      them_anh: 'Thêm ảnh vào thư viện',
+      sua_anh: 'Sửa ảnh',
+      an_hien_anh: 'Ẩn / hiện ảnh',
+      xoa_anh: 'Xoá ảnh',
+      sap_xep_anh: 'Đổi thứ tự ảnh',
+    };
+
+    function renderAudit(rows) {
+      if (!rows.length) {
+        $('alist').innerHTML = '<div class="empty">Chưa có thao tác nào được ghi lại.</div>';
+        return;
+      }
+
+      $('alist').innerHTML = `
   <table>
     <thead>
       <tr>
@@ -1263,240 +2567,240 @@ function renderAudit(rows){
         </tr>`).join('')}
     </tbody>
   </table>`;
-}
+    }
 
-$('uReloadBtn').addEventListener('click', loadUsers);
-$('aReloadBtn').addEventListener('click', loadAudit);
+    $('uReloadBtn').addEventListener('click', loadUsers);
+    $('aReloadBtn').addEventListener('click', loadAudit);
 
-/* ================= password modals ================= */
+    /* ================= password modals ================= */
 
-function showPassword(title, pw){
-  pendingPw = pw;
-  $('pwSub').textContent = title + ' — hãy lưu lại ngay, mật khẩu chỉ hiện một lần.';
-  $('pwValue').textContent = pw;
-  $('pwBackdrop').classList.add('on');
-}
+    function showPassword(title, pw) {
+      pendingPw = pw;
+      $('pwSub').textContent = title + ' — hãy lưu lại ngay, mật khẩu chỉ hiện một lần.';
+      $('pwValue').textContent = pw;
+      $('pwBackdrop').classList.add('on');
+    }
 
-$('pwClose').addEventListener('click', () => { $('pwBackdrop').classList.remove('on'); pendingPw = '' });
-$('pwBackdrop').addEventListener('click', e => { if(e.target === $('pwBackdrop')){ $('pwBackdrop').classList.remove('on'); pendingPw = '' } });
-$('pwCopy').addEventListener('click', async () => {
-  try{
-    await navigator.clipboard.writeText(pendingPw);
-    toast('Đã sao chép mật khẩu');
-  }catch{
-    const r = document.createRange();
-    r.selectNodeContents($('pwValue'));
-    const sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(r);
-    toast('Hãy nhấn Ctrl+C để sao chép');
-  }
-});
-
-function openChangePassword(required){
-  $('cpOld').value = '';
-  $('cpNew').value = '';
-  $('cpSub').textContent = required
-    ? 'Đây là lần đăng nhập đầu tiên — bạn cần đổi mật khẩu trước khi tiếp tục.'
-    : 'Mật khẩu mới cần ít nhất 8 ký tự, gồm chữ hoa, chữ thường và số.';
-  $('cpCancel').textContent = required ? 'Đăng xuất' : 'Huỷ';
-  $('cpBackdrop').classList.add('on');
-  ($('cpOld').offsetParent ? $('cpOld') : $('cpNew')).focus();
-}
-
-$('cpCancel').addEventListener('click', async () => {
-  $('cpBackdrop').classList.remove('on');
-  if(ME?.mustChange) await logout();
-});
-
-$('cpSubmit').addEventListener('click', async () => {
-  const newPassword = $('cpNew').value;
-  if(newPassword.length < 8) return toast('Mật khẩu cần ít nhất 8 ký tự', true);
-
-  const btn = $('cpSubmit');
-  btn.disabled = true;
-  btn.textContent = 'Đang xử lý...';
-
-  try{
-    const r = await adminFetch('/admin/change-password', {
-      method:'POST',
-      body: JSON.stringify({ currentPassword: $('cpOld').value, newPassword }),
+    $('pwClose').addEventListener('click', () => { $('pwBackdrop').classList.remove('on'); pendingPw = '' });
+    $('pwBackdrop').addEventListener('click', e => { if (e.target === $('pwBackdrop')) { $('pwBackdrop').classList.remove('on'); pendingPw = '' } });
+    $('pwCopy').addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(pendingPw);
+        toast('Đã sao chép mật khẩu');
+      } catch {
+        const r = document.createRange();
+        r.selectNodeContents($('pwValue'));
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(r);
+        toast('Hãy nhấn Ctrl+C để sao chép');
+      }
     });
-    $('cpBackdrop').classList.remove('on');
-    toast(r.message || 'Đã đổi mật khẩu');
-    await logout();
-    gateNote('Mật khẩu đã đổi. Vui lòng đăng nhập lại bằng mật khẩu mới.');
-  }catch(e){
-    if(e.status !== 401) toast(e.message, true);
-  }finally{
-    btn.disabled = false;
-    btn.textContent = 'Đổi mật khẩu';
-  }
-});
 
-/* ================= quản lý nội dung: dịch vụ · giá · combo · ảnh ================= */
+    function openChangePassword(required) {
+      $('cpOld').value = '';
+      $('cpNew').value = '';
+      $('cpSub').textContent = required
+        ? 'Đây là lần đăng nhập đầu tiên — bạn cần đổi mật khẩu trước khi tiếp tục.'
+        : 'Mật khẩu mới cần ít nhất 8 ký tự, gồm chữ hoa, chữ thường và số.';
+      $('cpCancel').textContent = required ? 'Đăng xuất' : 'Huỷ';
+      $('cpBackdrop').classList.add('on');
+      ($('cpOld').offsetParent ? $('cpOld') : $('cpNew')).focus();
+    }
 
-let CAT = { services: [], addons: [], combos: [], artists: [], gallery: [], galleryStats: null };
-let catalogKind = 'services';
-let editingId = null;
+    $('cpCancel').addEventListener('click', async () => {
+      $('cpBackdrop').classList.remove('on');
+      if (ME?.mustChange) await logout();
+    });
 
-const KIND_META = {
-  services: {
-    label: 'dịch vụ', empty: 'Chưa có dịch vụ nào. Bấm "+ Thêm" để tạo gói đầu tiên.',
-    columns: [
-      { key: 'name', label: 'Tên dịch vụ' },
-      { key: 'price', label: 'Giá', money: true },
-      { key: 'duration', label: 'Thời lượng', suffix: ' phút' },
-      { key: 'tag', label: 'Nhãn' },
-    ],
-    fields: [
-      { key: 'name', label: 'Tên dịch vụ', type: 'text', required: true, ph: 'Ví dụ: Makeup dự tiệc' },
-      { key: 'price', label: 'Giá tiền', type: 'money', required: true, hint: 'Chỉ nhập số, ví dụ 650000' },
-      { key: 'duration', label: 'Thời lượng (phút)', type: 'number', def: 60, hint: 'Từ 15 đến 480 phút' },
-      { key: 'timeLabel', label: 'Dòng thời gian hiển thị', type: 'text', ph: 'Ví dụ: 60 phút · 1 người' },
-      { key: 'tag', label: 'Nhãn nổi bật', type: 'text', ph: 'Ví dụ: Được chọn nhiều' },
-      { key: 'description', label: 'Mô tả ngắn', type: 'textarea', ph: 'Hiện ngay dưới tên dịch vụ' },
-      { key: 'features', label: 'Quyền lợi', type: 'lines', hint: 'Mỗi dòng một ý — hiện thành danh sách gạch đầu dòng' },
-      { key: 'featured', label: 'Đánh dấu là gói nổi bật', type: 'check' },
-    ],
-  },
-  combos: {
-    label: 'combo', empty: 'Chưa có combo nào. Bấm "+ Thêm" để tạo gói ưu đãi.',
-    columns: [
-      { key: 'name', label: 'Tên combo' },
-      { key: 'price', label: 'Giá bán', money: true },
-      { key: 'old_price', label: 'Giá gốc', money: true },
-      { key: 'tag', label: 'Nhãn' },
-    ],
-    fields: [
-      { key: 'name', label: 'Tên combo', type: 'text', required: true, ph: 'Ví dụ: Combo Cô dâu trọn gói' },
-      { key: 'price', label: 'Giá bán', type: 'money', required: true, hint: 'Giá khách thực trả' },
-      { key: 'oldPrice', label: 'Giá gốc', type: 'money', hint: 'Để trống hoặc bằng giá bán nếu không muốn hiện giá gạch ngang' },
-      { key: 'tag', label: 'Nhãn nổi bật', type: 'text', ph: 'Ví dụ: Tiết kiệm nhất' },
-      { key: 'description', label: 'Mô tả ngắn', type: 'textarea' },
-      { key: 'features', label: 'Quyền lợi', type: 'lines', hint: 'Mỗi dòng một ý' },
-      { key: 'featured', label: 'Đánh dấu là combo nổi bật', type: 'check' },
-    ],
-  },
-  addons: {
-    label: 'dịch vụ kèm', empty: 'Chưa có dịch vụ kèm nào. Bấm "+ Thêm" để tạo.',
-    columns: [
-      { key: 'name', label: 'Tên dịch vụ kèm' },
-      { key: 'price', label: 'Giá cộng thêm', money: true },
-      { key: 'note', label: 'Ghi chú' },
-    ],
-    fields: [
-      { key: 'name', label: 'Tên dịch vụ kèm', type: 'text', required: true, ph: 'Ví dụ: Làm tóc' },
-      { key: 'price', label: 'Giá cộng thêm', type: 'money', required: true },
-      { key: 'note', label: 'Ghi chú', type: 'text', ph: 'Ví dụ: Uốn / tết / xịt giữ nếp' },
-    ],
-  },
-  artists: {
-    label: 'chuyên viên', empty: 'Chưa có chuyên viên nào. Bấm "+ Thêm" để tạo.',
-    columns: [
-      { key: 'name', label: 'Tên chuyên viên' },
-      { key: 'initials', label: 'Viết tắt' },
-      { key: 'specialty', label: 'Sở trường' },
-      { key: 'years', label: 'Kinh nghiệm', suffix: ' năm' },
-    ],
-    fields: [
-      { key: 'name', label: 'Tên chuyên viên', type: 'text', required: true, ph: 'Ví dụ: Ngọc Trâm' },
-      { key: 'initials', label: 'Chữ viết tắt', type: 'text', ph: 'Để trống sẽ tự sinh, ví dụ NT' },
-      { key: 'specialty', label: 'Sở trường', type: 'text', ph: 'Ví dụ: Cô dâu · tông Hàn Quốc' },
-      { key: 'years', label: 'Số năm kinh nghiệm', type: 'number', def: 1 },
-    ],
-  },
-};
+    $('cpSubmit').addEventListener('click', async () => {
+      const newPassword = $('cpNew').value;
+      if (newPassword.length < 8) return toast('Mật khẩu cần ít nhất 8 ký tự', true);
 
-function fieldHtml(f, val) {
-  const v = val === undefined || val === null
-    ? (f.type === 'check' ? false : (f.def ?? ''))
-    : val;
-  const id = 'f_' + f.key;
+      const btn = $('cpSubmit');
+      btn.disabled = true;
+      btn.textContent = 'Đang xử lý...';
 
-  if (f.type === 'check') {
-    return `<div class="field"><label class="check"><input type="checkbox" id="${id}"${v ? ' checked' : ''}><span>${esc(f.label)}</span></label></div>`;
-  }
+      try {
+        const r = await adminFetch('/admin/change-password', {
+          method: 'POST',
+          body: JSON.stringify({ currentPassword: $('cpOld').value, newPassword }),
+        });
+        $('cpBackdrop').classList.remove('on');
+        toast(r.message || 'Đã đổi mật khẩu');
+        await logout();
+        gateNote('Mật khẩu đã đổi. Vui lòng đăng nhập lại bằng mật khẩu mới.');
+      } catch (e) {
+        if (e.status !== 401) toast(e.message, true);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Đổi mật khẩu';
+      }
+    });
 
-  let input;
-  if (f.type === 'text') {
-    input = `<input type="text" id="${id}" value="${esc(v)}" placeholder="${esc(f.ph || '')}">`;
-  } else if (f.type === 'number') {
-    input = `<input type="number" id="${id}" value="${esc(v)}" min="0">`;
-  } else if (f.type === 'money') {
-    input = `<div class="money-in"><input type="number" id="${id}" value="${esc(v)}" min="0" step="1000"><span>đ</span></div>`;
-  } else if (f.type === 'textarea') {
-    input = `<textarea id="${id}" placeholder="${esc(f.ph || '')}">${esc(v)}</textarea>`;
-  } else if (f.type === 'lines') {
-    const txt = Array.isArray(v) ? v.join('\n') : (v || '');
-    input = `<textarea id="${id}" placeholder="Mỗi dòng một ý">${esc(txt)}</textarea>`;
-  }
+    /* ================= quản lý nội dung: dịch vụ · giá · combo · ảnh ================= */
 
-  return `<div class="field">
+    let CAT = { services: [], addons: [], combos: [], artists: [], gallery: [], galleryStats: null };
+    let catalogKind = 'services';
+    let editingId = null;
+
+    const KIND_META = {
+      services: {
+        label: 'dịch vụ', empty: 'Chưa có dịch vụ nào. Bấm "+ Thêm" để tạo gói đầu tiên.',
+        columns: [
+          { key: 'name', label: 'Tên dịch vụ' },
+          { key: 'price', label: 'Giá', money: true },
+          { key: 'duration', label: 'Thời lượng', suffix: ' phút' },
+          { key: 'tag', label: 'Nhãn' },
+        ],
+        fields: [
+          { key: 'name', label: 'Tên dịch vụ', type: 'text', required: true, ph: 'Ví dụ: Makeup dự tiệc' },
+          { key: 'price', label: 'Giá tiền', type: 'money', required: true, hint: 'Chỉ nhập số, ví dụ 650000' },
+          { key: 'duration', label: 'Thời lượng (phút)', type: 'number', def: 60, hint: 'Từ 15 đến 480 phút' },
+          { key: 'timeLabel', label: 'Dòng thời gian hiển thị', type: 'text', ph: 'Ví dụ: 60 phút · 1 người' },
+          { key: 'tag', label: 'Nhãn nổi bật', type: 'text', ph: 'Ví dụ: Được chọn nhiều' },
+          { key: 'description', label: 'Mô tả ngắn', type: 'textarea', ph: 'Hiện ngay dưới tên dịch vụ' },
+          { key: 'features', label: 'Quyền lợi', type: 'lines', hint: 'Mỗi dòng một ý — hiện thành danh sách gạch đầu dòng' },
+          { key: 'featured', label: 'Đánh dấu là gói nổi bật', type: 'check' },
+        ],
+      },
+      combos: {
+        label: 'combo', empty: 'Chưa có combo nào. Bấm "+ Thêm" để tạo gói ưu đãi.',
+        columns: [
+          { key: 'name', label: 'Tên combo' },
+          { key: 'price', label: 'Giá bán', money: true },
+          { key: 'old_price', label: 'Giá gốc', money: true },
+          { key: 'tag', label: 'Nhãn' },
+        ],
+        fields: [
+          { key: 'name', label: 'Tên combo', type: 'text', required: true, ph: 'Ví dụ: Combo Cô dâu trọn gói' },
+          { key: 'price', label: 'Giá bán', type: 'money', required: true, hint: 'Giá khách thực trả' },
+          { key: 'oldPrice', label: 'Giá gốc', type: 'money', hint: 'Để trống hoặc bằng giá bán nếu không muốn hiện giá gạch ngang' },
+          { key: 'tag', label: 'Nhãn nổi bật', type: 'text', ph: 'Ví dụ: Tiết kiệm nhất' },
+          { key: 'description', label: 'Mô tả ngắn', type: 'textarea' },
+          { key: 'features', label: 'Quyền lợi', type: 'lines', hint: 'Mỗi dòng một ý' },
+          { key: 'featured', label: 'Đánh dấu là combo nổi bật', type: 'check' },
+        ],
+      },
+      addons: {
+        label: 'dịch vụ kèm', empty: 'Chưa có dịch vụ kèm nào. Bấm "+ Thêm" để tạo.',
+        columns: [
+          { key: 'name', label: 'Tên dịch vụ kèm' },
+          { key: 'price', label: 'Giá cộng thêm', money: true },
+          { key: 'note', label: 'Ghi chú' },
+        ],
+        fields: [
+          { key: 'name', label: 'Tên dịch vụ kèm', type: 'text', required: true, ph: 'Ví dụ: Làm tóc' },
+          { key: 'price', label: 'Giá cộng thêm', type: 'money', required: true },
+          { key: 'note', label: 'Ghi chú', type: 'text', ph: 'Ví dụ: Uốn / tết / xịt giữ nếp' },
+        ],
+      },
+      artists: {
+        label: 'chuyên viên', empty: 'Chưa có chuyên viên nào. Bấm "+ Thêm" để tạo.',
+        columns: [
+          { key: 'name', label: 'Tên chuyên viên' },
+          { key: 'initials', label: 'Viết tắt' },
+          { key: 'specialty', label: 'Sở trường' },
+          { key: 'years', label: 'Kinh nghiệm', suffix: ' năm' },
+        ],
+        fields: [
+          { key: 'name', label: 'Tên chuyên viên', type: 'text', required: true, ph: 'Ví dụ: Ngọc Trâm' },
+          { key: 'initials', label: 'Chữ viết tắt', type: 'text', ph: 'Để trống sẽ tự sinh, ví dụ NT' },
+          { key: 'specialty', label: 'Sở trường', type: 'text', ph: 'Ví dụ: Cô dâu · tông Hàn Quốc' },
+          { key: 'years', label: 'Số năm kinh nghiệm', type: 'number', def: 1 },
+        ],
+      },
+    };
+
+    function fieldHtml(f, val) {
+      const v = val === undefined || val === null
+        ? (f.type === 'check' ? false : (f.def ?? ''))
+        : val;
+      const id = 'f_' + f.key;
+
+      if (f.type === 'check') {
+        return `<div class="field"><label class="check"><input type="checkbox" id="${id}"${v ? ' checked' : ''}><span>${esc(f.label)}</span></label></div>`;
+      }
+
+      let input;
+      if (f.type === 'text') {
+        input = `<input type="text" id="${id}" value="${esc(v)}" placeholder="${esc(f.ph || '')}">`;
+      } else if (f.type === 'number') {
+        input = `<input type="number" id="${id}" value="${esc(v)}" min="0">`;
+      } else if (f.type === 'money') {
+        input = `<div class="money-in"><input type="number" id="${id}" value="${esc(v)}" min="0" step="1000"><span>đ</span></div>`;
+      } else if (f.type === 'textarea') {
+        input = `<textarea id="${id}" placeholder="${esc(f.ph || '')}">${esc(v)}</textarea>`;
+      } else if (f.type === 'lines') {
+        const txt = Array.isArray(v) ? v.join('\n') : (v || '');
+        input = `<textarea id="${id}" placeholder="Mỗi dòng một ý">${esc(txt)}</textarea>`;
+      }
+
+      return `<div class="field">
     <label for="${id}">${esc(f.label)}${f.required ? ' *' : ''}</label>
     ${input}
     ${f.hint ? `<span class="hint">${esc(f.hint)}</span>` : ''}
   </div>`;
-}
+    }
 
-function readFields(fields) {
-  const out = {};
-  for (const f of fields) {
-    const el = $('f_' + f.key);
-    if (!el) continue;
-    if (f.type === 'check') out[f.key] = el.checked;
-    else if (f.type === 'lines') out[f.key] = el.value.split('\n').map((s) => s.trim()).filter(Boolean);
-    else if (f.type === 'number' || f.type === 'money') out[f.key] = el.value === '' ? undefined : Number(el.value);
-    else out[f.key] = el.value.trim();
-  }
-  return out;
-}
+    function readFields(fields) {
+      const out = {};
+      for (const f of fields) {
+        const el = $('f_' + f.key);
+        if (!el) continue;
+        if (f.type === 'check') out[f.key] = el.checked;
+        else if (f.type === 'lines') out[f.key] = el.value.split('\n').map((s) => s.trim()).filter(Boolean);
+        else if (f.type === 'number' || f.type === 'money') out[f.key] = el.value === '' ? undefined : Number(el.value);
+        else out[f.key] = el.value.trim();
+      }
+      return out;
+    }
 
-function cellHtml(col, row) {
-  const v = row[col.key];
-  if (v === null || v === undefined || v === '') return `<span style="color:var(--gray-400)">—</span>`;
-  if (col.money) return `<span class="money">${vnd(v)}</span>`;
-  if (col.suffix) return `${esc(v)}<span style="color:var(--gray-400)">${esc(col.suffix)}</span>`;
-  return esc(v);
-}
+    function cellHtml(col, row) {
+      const v = row[col.key];
+      if (v === null || v === undefined || v === '') return `<span style="color:var(--gray-400)">—</span>`;
+      if (col.money) return `<span class="money">${vnd(v)}</span>`;
+      if (col.suffix) return `${esc(v)}<span style="color:var(--gray-400)">${esc(col.suffix)}</span>`;
+      return esc(v);
+    }
 
-function formError(boxId, msg) {
-  const box = $(boxId);
-  if (!msg) { box.className = 'form-err'; box.textContent = ''; return; }
-  box.className = 'form-err on';
-  box.textContent = msg;
-}
+    function formError(boxId, msg) {
+      const box = $(boxId);
+      if (!msg) { box.className = 'form-err'; box.textContent = ''; return; }
+      box.className = 'form-err on';
+      box.textContent = msg;
+    }
 
-async function loadCatalog(showSpinner) {
-  if (showSpinner) $('catalogList').innerHTML = '<div class="loading">Đang tải nội dung...</div>';
-  try {
-    const r = await adminFetch('/admin/catalog');
-    CAT = r.data;
-    renderCatalog();
-  } catch (e) {
-    if (e.status === 401 || e.status === 403) return;
-    $('catalogList').innerHTML = `<div class="empty">${esc(e.message)}</div>`;
-  }
-}
+    async function loadCatalog(showSpinner) {
+      if (showSpinner) $('catalogList').innerHTML = '<div class="loading">Đang tải nội dung...</div>';
+      try {
+        const r = await adminFetch('/admin/catalog');
+        CAT = r.data;
+        renderCatalog();
+      } catch (e) {
+        if (e.status === 401 || e.status === 403) return;
+        $('catalogList').innerHTML = `<div class="empty">${esc(e.message)}</div>`;
+      }
+    }
 
-function renderCatalog() {
-  const meta = KIND_META[catalogKind];
-  const rows = CAT[catalogKind] || [];
-  const shown = rows.filter((r) => r.active).length;
+    function renderCatalog() {
+      const meta = KIND_META[catalogKind];
+      const rows = CAT[catalogKind] || [];
+      const shown = rows.filter((r) => r.active).length;
 
-  $('catalogHint').textContent = rows.length
-    ? `${shown} đang hiện · ${rows.length - shown} đang ẩn`
-    : '';
+      $('catalogHint').textContent = rows.length
+        ? `${shown} đang hiện · ${rows.length - shown} đang ẩn`
+        : '';
 
-  if (!rows.length) {
-    $('catalogList').innerHTML = `<div class="empty">${esc(meta.empty)}</div>`;
-    return;
-  }
+      if (!rows.length) {
+        $('catalogList').innerHTML = `<div class="empty">${esc(meta.empty)}</div>`;
+        return;
+      }
 
-  const write = can('write');
-  const owner = isOwner();
+      const write = can('write');
+      const owner = isOwner();
 
-  $('catalogList').innerHTML = `
+      $('catalogList').innerHTML = `
   <table>
     <thead>
       <tr>
@@ -1510,14 +2814,14 @@ function renderCatalog() {
         <tr>
           ${meta.columns.map((c) => `<td>${cellHtml(c, r)}</td>`).join('')}
           <td>${r.active
-            ? '<span class="badge b-confirmed">Đang hiện</span>'
-            : '<span class="badge b-done">Đang ẩn</span>'}</td>
+          ? '<span class="badge b-confirmed">Đang hiện</span>'
+          : '<span class="badge b-done">Đang ẩn</span>'}</td>
           <td>
             <div class="acts">
               ${write
-                ? `<button data-edit="${r.id}">Sửa</button>
+          ? `<button data-edit="${r.id}">Sửa</button>
                    <button data-toggle="${r.id}" data-active="${r.active ? 0 : 1}">${r.active ? 'Ẩn' : 'Hiện'}</button>`
-                : '<span class="ro">Chỉ xem</span>'}
+          : '<span class="ro">Chỉ xem</span>'}
               ${owner ? `<button class="no" data-del="${r.id}">Xoá</button>` : ''}
             </div>
           </td>
@@ -1525,146 +2829,146 @@ function renderCatalog() {
     </tbody>
   </table>`;
 
-  $('catalogList').querySelectorAll('[data-edit]').forEach((b) => {
-    b.addEventListener('click', () => {
-      const item = (CAT[catalogKind] || []).find((x) => x.id === Number(b.dataset.edit));
-      if (item) openItemModal(item);
-    });
-  });
-
-  $('catalogList').querySelectorAll('[data-toggle]').forEach((b) => {
-    b.addEventListener('click', async () => {
-      b.disabled = true;
-      try {
-        const r = await adminFetch(`/admin/catalog/${catalogKind}/${b.dataset.toggle}/active`, {
-          method: 'PATCH',
-          body: JSON.stringify({ active: b.dataset.active === '1' }),
+      $('catalogList').querySelectorAll('[data-edit]').forEach((b) => {
+        b.addEventListener('click', () => {
+          const item = (CAT[catalogKind] || []).find((x) => x.id === Number(b.dataset.edit));
+          if (item) openItemModal(item);
         });
-        toast(r.message || 'Đã cập nhật');
-        await loadCatalog();
-      } catch (e) {
-        if (e.status !== 401 && e.status !== 403) toast(e.message, true);
-        b.disabled = false;
-      }
-    });
-  });
+      });
 
-  $('catalogList').querySelectorAll('[data-del]').forEach((b) => {
-    b.addEventListener('click', async () => {
-      const item = (CAT[catalogKind] || []).find((x) => x.id === Number(b.dataset.del));
-      if (!confirm(`Xoá "${item?.name || 'mục này'}"? Thao tác này không khôi phục được.`)) return;
-      b.disabled = true;
-      try {
-        const r = await adminFetch(`/admin/catalog/${catalogKind}/${b.dataset.del}`, { method: 'DELETE' });
-        toast(r.message || 'Đã xoá');
-        await loadCatalog();
-      } catch (e) {
-        if (e.status !== 401 && e.status !== 403) toast(e.message, true);
-        b.disabled = false;
-      }
-    });
-  });
-}
+      $('catalogList').querySelectorAll('[data-toggle]').forEach((b) => {
+        b.addEventListener('click', async () => {
+          b.disabled = true;
+          try {
+            const r = await adminFetch(`/admin/catalog/${catalogKind}/${b.dataset.toggle}/active`, {
+              method: 'PATCH',
+              body: JSON.stringify({ active: b.dataset.active === '1' }),
+            });
+            toast(r.message || 'Đã cập nhật');
+            await loadCatalog();
+          } catch (e) {
+            if (e.status !== 401 && e.status !== 403) toast(e.message, true);
+            b.disabled = false;
+          }
+        });
+      });
 
-function openItemModal(item) {
-  const meta = KIND_META[catalogKind];
-  editingId = item ? item.id : null;
-
-  $('itemTitle').textContent = item ? `Sửa ${meta.label}` : `Thêm ${meta.label}`;
-  $('itemSub').textContent = item
-    ? `Đang sửa: ${item.name}`
-    : `Điền thông tin để tạo ${meta.label} mới`;
-  formError('itemErr');
-
-  $('itemForm').innerHTML = meta.fields.map((f) => fieldHtml(f, item ? item[f.key] : undefined)).join('');
-  $('itemBackdrop').classList.add('on');
-
-  const first = $('itemForm').querySelector('input[type=text],input[type=number],textarea');
-  if (first) first.focus();
-}
-
-async function saveItem() {
-  const meta = KIND_META[catalogKind];
-  const body = readFields(meta.fields);
-
-  const req = meta.fields.find((f) => f.required && !body[f.key]);
-  if (req) return formError('itemErr', `Vui lòng nhập ${req.label.toLowerCase()}`);
-
-  const btn = $('itemSave');
-  btn.disabled = true;
-  btn.textContent = 'Đang lưu...';
-
-  try {
-    const path = editingId
-      ? `/admin/catalog/${catalogKind}/${editingId}`
-      : `/admin/catalog/${catalogKind}`;
-    const r = await adminFetch(path, {
-      method: editingId ? 'PATCH' : 'POST',
-      body: JSON.stringify(body),
-    });
-    $('itemBackdrop').classList.remove('on');
-    toast(r.message || 'Đã lưu');
-    await loadCatalog();
-  } catch (e) {
-    if (e.status === 401 || e.status === 403) {
-      $('itemBackdrop').classList.remove('on');
-    } else {
-      formError('itemErr', e.message);
+      $('catalogList').querySelectorAll('[data-del]').forEach((b) => {
+        b.addEventListener('click', async () => {
+          const item = (CAT[catalogKind] || []).find((x) => x.id === Number(b.dataset.del));
+          if (!confirm(`Xoá "${item?.name || 'mục này'}"? Thao tác này không khôi phục được.`)) return;
+          b.disabled = true;
+          try {
+            const r = await adminFetch(`/admin/catalog/${catalogKind}/${b.dataset.del}`, { method: 'DELETE' });
+            toast(r.message || 'Đã xoá');
+            await loadCatalog();
+          } catch (e) {
+            if (e.status !== 401 && e.status !== 403) toast(e.message, true);
+            b.disabled = false;
+          }
+        });
+      });
     }
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'Lưu';
-  }
-}
 
-/* ================= thư viện ảnh ================= */
+    function openItemModal(item) {
+      const meta = KIND_META[catalogKind];
+      editingId = item ? item.id : null;
 
-let editingPhotoId = null;
+      $('itemTitle').textContent = item ? `Sửa ${meta.label}` : `Thêm ${meta.label}`;
+      $('itemSub').textContent = item
+        ? `Đang sửa: ${item.name}`
+        : `Điền thông tin để tạo ${meta.label} mới`;
+      formError('itemErr');
 
-async function loadGallery(showSpinner) {
-  if (showSpinner) $('galleryList').innerHTML = '<div class="loading">Đang tải thư viện ảnh...</div>';
-  try {
-    const r = await adminFetch('/admin/gallery');
-    CAT.gallery = r.data;
-    CAT.galleryStats = r.stats;
-    renderGallery();
-  } catch (e) {
-    if (e.status === 401 || e.status === 403) return;
-    $('galleryList').innerHTML = `<div class="empty">${esc(e.message)}</div>`;
-  }
-}
+      $('itemForm').innerHTML = meta.fields.map((f) => fieldHtml(f, item ? item[f.key] : undefined)).join('');
+      $('itemBackdrop').classList.add('on');
 
-function renderGallery() {
-  const rows = CAT.gallery || [];
-  const s = CAT.galleryStats || {};
+      const first = $('itemForm').querySelector('input[type=text],input[type=number],textarea');
+      if (first) first.focus();
+    }
 
-  $('galleryHint').textContent = rows.length
-    ? `${s.active || 0} đang hiện · ${s.hidden || 0} đang ẩn${s.incomplete ? ` · ${s.incomplete} thiếu ảnh` : ''}`
-    : '';
+    async function saveItem() {
+      const meta = KIND_META[catalogKind];
+      const body = readFields(meta.fields);
 
-  if (!rows.length) {
-    $('galleryList').innerHTML = `<div class="empty">
+      const req = meta.fields.find((f) => f.required && !body[f.key]);
+      if (req) return formError('itemErr', `Vui lòng nhập ${req.label.toLowerCase()}`);
+
+      const btn = $('itemSave');
+      btn.disabled = true;
+      btn.textContent = 'Đang lưu...';
+
+      try {
+        const path = editingId
+          ? `/admin/catalog/${catalogKind}/${editingId}`
+          : `/admin/catalog/${catalogKind}`;
+        const r = await adminFetch(path, {
+          method: editingId ? 'PATCH' : 'POST',
+          body: JSON.stringify(body),
+        });
+        $('itemBackdrop').classList.remove('on');
+        toast(r.message || 'Đã lưu');
+        await loadCatalog();
+      } catch (e) {
+        if (e.status === 401 || e.status === 403) {
+          $('itemBackdrop').classList.remove('on');
+        } else {
+          formError('itemErr', e.message);
+        }
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Lưu';
+      }
+    }
+
+    /* ================= thư viện ảnh ================= */
+
+    let editingPhotoId = null;
+
+    async function loadGallery(showSpinner) {
+      if (showSpinner) $('galleryList').innerHTML = '<div class="loading">Đang tải thư viện ảnh...</div>';
+      try {
+        const r = await adminFetch('/admin/gallery');
+        CAT.gallery = r.data;
+        CAT.galleryStats = r.stats;
+        renderGallery();
+      } catch (e) {
+        if (e.status === 401 || e.status === 403) return;
+        $('galleryList').innerHTML = `<div class="empty">${esc(e.message)}</div>`;
+      }
+    }
+
+    function renderGallery() {
+      const rows = CAT.gallery || [];
+      const s = CAT.galleryStats || {};
+
+      $('galleryHint').textContent = rows.length
+        ? `${s.active || 0} đang hiện · ${s.hidden || 0} đang ẩn${s.incomplete ? ` · ${s.incomplete} thiếu ảnh` : ''}`
+        : '';
+
+      if (!rows.length) {
+        $('galleryList').innerHTML = `<div class="empty">
       Chưa có ảnh so sánh nào.<br><br>
       Trang chủ đang dùng hình minh hoạ có sẵn. Mỗi ảnh bạn thêm cần <b>một ảnh trước</b> và <b>một ảnh sau</b> —
       ảnh sau hiện ở lưới, bấm vào mới xem được so sánh trước/sau.<br><br>
       Bấm <b>"+ Thêm ảnh"</b> để bắt đầu.
     </div>`;
-    return;
-  }
+        return;
+      }
 
-  const write = can('write');
+      const write = can('write');
 
-  $('galleryList').innerHTML = `
+      $('galleryList').innerHTML = `
   <div class="gal-admin">
     ${rows.map((g) => {
-      // Thư viện chỉ có ảnh so sánh trước/sau. Thẻ ngoài hiện ảnh SAU.
-      const src = g.after_image || g.before_image || g.image_path;
-      const missing = !g.before_image || !g.after_image;
-      return `
+        // Thư viện chỉ có ảnh so sánh trước/sau. Thẻ ngoài hiện ảnh SAU.
+        const src = g.after_image || g.before_image || g.image_path;
+        const missing = !g.before_image || !g.after_image;
+        return `
       <div class="gcard${g.active ? '' : ' off'}">
         ${src
-          ? `<div class="pic-wrap"><img class="pic" src="${esc(src)}" alt="${esc(g.alt_text || g.title)}" loading="lazy"><span class="badge">Sau</span></div>`
-          : '<div class="pic" style="display:flex;align-items:center;justify-content:center;color:#888780;font-size:12px">Không có ảnh</div>'}
+            ? `<div class="pic-wrap"><img class="pic" src="${esc(src)}" alt="${esc(g.alt_text || g.title)}" loading="lazy"><span class="badge">Sau</span></div>`
+            : '<div class="pic" style="display:flex;align-items:center;justify-content:center;color:#888780;font-size:12px">Không có ảnh</div>'}
         <div class="body">
           <b>${esc(g.title)}</b>
           <small>${esc(g.category || 'Chưa phân loại')}${missing ? ' · <b style="color:#C0392B">thiếu ảnh trước/sau</b>' : ''}</small>
@@ -1675,59 +2979,59 @@ function renderGallery() {
                      <button class="no" data-gdel="${g.id}">Xoá</button>` : '<span class="ro">Chỉ xem</span>'}
         </div>
       </div>`;
-    }).join('')}
+      }).join('')}
   </div>`;
 
-  $('galleryList').querySelectorAll('[data-gedit]').forEach((b) => {
-    b.addEventListener('click', () => {
-      const item = (CAT.gallery || []).find((x) => x.id === Number(b.dataset.gedit));
-      if (item) openPhotoModal(item);
-    });
-  });
-
-  $('galleryList').querySelectorAll('[data-gtoggle]').forEach((b) => {
-    b.addEventListener('click', async () => {
-      b.disabled = true;
-      try {
-        const r = await adminFetch(`/admin/gallery/${b.dataset.gtoggle}/active`, {
-          method: 'PATCH',
-          body: JSON.stringify({ active: b.dataset.active === '1' }),
+      $('galleryList').querySelectorAll('[data-gedit]').forEach((b) => {
+        b.addEventListener('click', () => {
+          const item = (CAT.gallery || []).find((x) => x.id === Number(b.dataset.gedit));
+          if (item) openPhotoModal(item);
         });
-        toast(r.message || 'Đã cập nhật');
-        await loadGallery();
-      } catch (e) {
-        if (e.status !== 401 && e.status !== 403) toast(e.message, true);
-        b.disabled = false;
-      }
-    });
-  });
+      });
 
-  $('galleryList').querySelectorAll('[data-gdel]').forEach((b) => {
-    b.addEventListener('click', async () => {
-      const item = (CAT.gallery || []).find((x) => x.id === Number(b.dataset.gdel));
-      if (!confirm(`Xoá ảnh "${item?.title || ''}"? File ảnh trên máy chủ cũng bị xoá.`)) return;
-      b.disabled = true;
-      try {
-        const r = await adminFetch(`/admin/gallery/${b.dataset.gdel}`, { method: 'DELETE' });
-        toast(r.message || 'Đã xoá ảnh');
-        await loadGallery();
-      } catch (e) {
-        if (e.status !== 401 && e.status !== 403) toast(e.message, true);
-        b.disabled = false;
-      }
-    });
-  });
-}
+      $('galleryList').querySelectorAll('[data-gtoggle]').forEach((b) => {
+        b.addEventListener('click', async () => {
+          b.disabled = true;
+          try {
+            const r = await adminFetch(`/admin/gallery/${b.dataset.gtoggle}/active`, {
+              method: 'PATCH',
+              body: JSON.stringify({ active: b.dataset.active === '1' }),
+            });
+            toast(r.message || 'Đã cập nhật');
+            await loadGallery();
+          } catch (e) {
+            if (e.status !== 401 && e.status !== 403) toast(e.message, true);
+            b.disabled = false;
+          }
+        });
+      });
 
-function photoFieldsHtml(item) {
-  const before = item?.before_image;
-  const after = item?.after_image;
+      $('galleryList').querySelectorAll('[data-gdel]').forEach((b) => {
+        b.addEventListener('click', async () => {
+          const item = (CAT.gallery || []).find((x) => x.id === Number(b.dataset.gdel));
+          if (!confirm(`Xoá ảnh "${item?.title || ''}"? File ảnh trên máy chủ cũng bị xoá.`)) return;
+          b.disabled = true;
+          try {
+            const r = await adminFetch(`/admin/gallery/${b.dataset.gdel}`, { method: 'DELETE' });
+            toast(r.message || 'Đã xoá ảnh');
+            await loadGallery();
+          } catch (e) {
+            if (e.status !== 401 && e.status !== 403) toast(e.message, true);
+            b.disabled = false;
+          }
+        });
+      });
+    }
 
-  const cur = (src, label) => src
-    ? `<div class="cur-img"><img src="${esc(src)}" alt=""><small>${esc(label)} hiện tại</small></div>`
-    : '';
+    function photoFieldsHtml(item) {
+      const before = item?.before_image;
+      const after = item?.after_image;
 
-  return `
+      const cur = (src, label) => src
+        ? `<div class="cur-img"><img src="${esc(src)}" alt=""><small>${esc(label)} hiện tại</small></div>`
+        : '';
+
+      return `
     <div class="field">
       <label for="p_before">Ảnh TRƯỚC <span class="hint-inline">— lúc chưa trang điểm</span></label>
       ${cur(before, 'Ảnh trước')}
@@ -1749,186 +3053,186 @@ function photoFieldsHtml(item) {
       <input type="text" id="p_cat" value="${esc(item?.category || '')}" placeholder="Ví dụ: Cô dâu" list="catList">
       ${catListHtml()}
     </div>`;
-}
+    }
 
-function catListHtml() {
-  const cats = [...new Set((CAT.gallery || []).map((g) => g.category).filter(Boolean))];
-  if (!cats.length) return '';
-  return `<datalist id="catList">${cats.map((c) => `<option value="${esc(c)}">`).join('')}</datalist>`;
-}
+    function catListHtml() {
+      const cats = [...new Set((CAT.gallery || []).map((g) => g.category).filter(Boolean))];
+      if (!cats.length) return '';
+      return `<datalist id="catList">${cats.map((c) => `<option value="${esc(c)}">`).join('')}</datalist>`;
+    }
 
-function openPhotoModal(item) {
-  editingPhotoId = item ? item.id : null;
+    function openPhotoModal(item) {
+      editingPhotoId = item ? item.id : null;
 
-  $('photoTitle').textContent = item ? 'Sửa ảnh so sánh' : 'Thêm ảnh so sánh';
-  $('photoSub').textContent = item
-    ? 'Chọn ảnh mới nếu muốn thay ảnh hiện tại'
-    : 'Cần đủ ảnh trước và ảnh sau. Ảnh sau sẽ hiện ở lưới Thư viện trên trang chủ.';
-  formError('photoErr');
+      $('photoTitle').textContent = item ? 'Sửa ảnh so sánh' : 'Thêm ảnh so sánh';
+      $('photoSub').textContent = item
+        ? 'Chọn ảnh mới nếu muốn thay ảnh hiện tại'
+        : 'Cần đủ ảnh trước và ảnh sau. Ảnh sau sẽ hiện ở lưới Thư viện trên trang chủ.';
+      formError('photoErr');
 
-  $('photoForm').innerHTML = photoFieldsHtml(item);
-  $('photoBackdrop').classList.add('on');
-  wirePhotoForm(item);
-}
+      $('photoForm').innerHTML = photoFieldsHtml(item);
+      $('photoBackdrop').classList.add('on');
+      wirePhotoForm(item);
+    }
 
-// Ảnh đã tải lên trong phiên làm việc này
-let uploaded = { file: null, before: null, after: null };
+    // Ảnh đã tải lên trong phiên làm việc này
+    let uploaded = { file: null, before: null, after: null };
 
-function wirePhotoForm(item) {
-  uploaded = { file: null, before: null, after: null };
+    function wirePhotoForm(item) {
+      uploaded = { file: null, before: null, after: null };
 
-  const bind = (dropId, inputId, slot) => {
-    const drop = $(dropId);
-    const input = $(inputId);
-    if (!drop || !input) return;
+      const bind = (dropId, inputId, slot) => {
+        const drop = $(dropId);
+        const input = $(inputId);
+        if (!drop || !input) return;
 
-    drop.addEventListener('click', () => input.click());
-    input.addEventListener('change', () => {
-      if (!input.files?.[0]) return;
-      uploaded[slot] = input.files[0];
-      const url = URL.createObjectURL(input.files[0]);
-      drop.innerHTML = `<img class="preview" src="${url}" alt=""><small style="display:block;margin-top:8px">${esc(input.files[0].name)}</small>`;
-      drop.style.padding = '12px';
+        drop.addEventListener('click', () => input.click());
+        input.addEventListener('change', () => {
+          if (!input.files?.[0]) return;
+          uploaded[slot] = input.files[0];
+          const url = URL.createObjectURL(input.files[0]);
+          drop.innerHTML = `<img class="preview" src="${url}" alt=""><small style="display:block;margin-top:8px">${esc(input.files[0].name)}</small>`;
+          drop.style.padding = '12px';
+        });
+      };
+
+      bind('dropBefore', 'p_before', 'before');
+      bind('dropAfter', 'p_after', 'after');
+    }
+
+    async function uploadOne(file) {
+      const fd = new FormData();
+      fd.append('files', file);
+      const res = await fetch(API_BASE + '/admin/uploads', {
+        method: 'POST',
+        headers: TOKEN ? { Authorization: 'Bearer ' + TOKEN } : {},
+        body: fd,
+      });
+      const json = await res.json().catch(() => null);
+      if (res.status === 401) {
+        clearSession();
+        showGate('Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại');
+        throw new Error('Phiên đã hết hạn');
+      }
+      if (!res.ok) throw new Error(json?.error || 'Không tải được ảnh lên');
+      return json.data[0].url;
+    }
+
+    async function savePhoto() {
+      const title = $('p_title')?.value.trim();
+      const category = $('p_cat')?.value.trim();
+
+      if (!title) return formError('photoErr', 'Vui lòng nhập tiêu đề ảnh');
+
+      // Khi thêm mới bắt buộc đủ hai ảnh; khi sửa thì có thể giữ ảnh cũ.
+      if (!editingPhotoId) {
+        if (!uploaded.before && !uploaded.after) {
+          return formError('photoErr', 'Vui lòng chọn cả ảnh TRƯỚC và ảnh SAU');
+        }
+        if (!uploaded.before) return formError('photoErr', 'Thiếu ảnh TRƯỚC');
+        if (!uploaded.after) return formError('photoErr', 'Thiếu ảnh SAU');
+      }
+
+      const btn = $('photoSave');
+      btn.disabled = true;
+      btn.textContent = 'Đang lưu...';
+
+      try {
+        const body = { title, category, kind: 'compare' };
+
+        if (uploaded.before) body.beforeImage = await uploadOne(uploaded.before);
+        if (uploaded.after) body.afterImage = await uploadOne(uploaded.after);
+
+        const r = await adminFetch(
+          editingPhotoId ? `/admin/gallery/${editingPhotoId}` : '/admin/gallery',
+          { method: editingPhotoId ? 'PATCH' : 'POST', body: JSON.stringify(body) }
+        );
+
+        $('photoBackdrop').classList.remove('on');
+        toast(r.message || 'Đã lưu ảnh');
+        await loadGallery();
+      } catch (e) {
+        if (e.status === 401 || e.status === 403) {
+          $('photoBackdrop').classList.remove('on');
+        } else {
+          formError('photoErr', e.message);
+        }
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Lưu';
+      }
+    }
+
+    /* ================= nối sự kiện cho tab mới ================= */
+
+    $('catalogTabs').querySelectorAll('.subtab').forEach((t) => {
+      t.addEventListener('click', () => {
+        $('catalogTabs').querySelectorAll('.subtab').forEach((x) => x.classList.remove('on'));
+        t.classList.add('on');
+        catalogKind = t.dataset.kind;
+        renderCatalog();
+      });
     });
-  };
 
-  bind('dropBefore', 'p_before', 'before');
-  bind('dropAfter', 'p_after', 'after');
-}
+    $('newItemBtn').addEventListener('click', () => openItemModal(null));
+    $('itemCancel').addEventListener('click', () => $('itemBackdrop').classList.remove('on'));
+    $('itemBackdrop').addEventListener('click', (e) => { if (e.target === $('itemBackdrop')) $('itemBackdrop').classList.remove('on') });
+    $('itemSave').addEventListener('click', saveItem);
 
-async function uploadOne(file) {
-  const fd = new FormData();
-  fd.append('files', file);
-  const res = await fetch(API_BASE + '/admin/uploads', {
-    method: 'POST',
-    headers: TOKEN ? { Authorization: 'Bearer ' + TOKEN } : {},
-    body: fd,
-  });
-  const json = await res.json().catch(() => null);
-  if (res.status === 401) {
-    clearSession();
-    showGate('Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại');
-    throw new Error('Phiên đã hết hạn');
-  }
-  if (!res.ok) throw new Error(json?.error || 'Không tải được ảnh lên');
-  return json.data[0].url;
-}
+    $('catalogReload').addEventListener('click', () => loadCatalog(true));
 
-async function savePhoto() {
-  const title = $('p_title')?.value.trim();
-  const category = $('p_cat')?.value.trim();
+    $('newPhotoBtn').addEventListener('click', () => openPhotoModal(null));
+    $('photoCancel').addEventListener('click', () => $('photoBackdrop').classList.remove('on'));
+    $('photoBackdrop').addEventListener('click', (e) => { if (e.target === $('photoBackdrop')) $('photoBackdrop').classList.remove('on') });
+    $('photoSave').addEventListener('click', savePhoto);
 
-  if (!title) return formError('photoErr', 'Vui lòng nhập tiêu đề ảnh');
+    $('galleryReload').addEventListener('click', () => loadGallery(true));
+    /* ================= trang chủ (ảnh đầu trang) ================= */
 
-  // Khi thêm mới bắt buộc đủ hai ảnh; khi sửa thì có thể giữ ảnh cũ.
-  if (!editingPhotoId) {
-    if (!uploaded.before && !uploaded.after) {
-      return formError('photoErr', 'Vui lòng chọn cả ảnh TRƯỚC và ảnh SAU');
+    // Nhiều ảnh cùng lúc — trang chủ tự chuyển qua lại như trình chiếu.
+    // Ảnh đầu tiên trong danh sách là ảnh bìa, cũng là ảnh hiện ra trước.
+
+    let HOME = null;            // { heroImages: [], heroAutoplay, heroInterval, ... }
+    let homeQueue = [];         // các file vừa chọn, chờ tải lên
+    let homePreviews = [];      // URL xem trước — phải thu hồi để không rò rỉ bộ nhớ
+    let homeBusy = false;       // đang tải lên / đang lưu
+
+    async function loadHome() {
+      $('homeForm').innerHTML = '<div class="loading">Đang tải nội dung trang chủ...</div>';
+      try {
+        const r = await adminFetch('/admin/settings');
+        HOME = r.data || {};
+        clearHomeQueue();
+        renderHome();
+      } catch (e) {
+        if (e.status === 401 || e.status === 403) return;
+        $('homeForm').innerHTML = `<div class="empty">${esc(e.message)}</div>`;
+      }
     }
-    if (!uploaded.before) return formError('photoErr', 'Thiếu ảnh TRƯỚC');
-    if (!uploaded.after) return formError('photoErr', 'Thiếu ảnh SAU');
-  }
 
-  const btn = $('photoSave');
-  btn.disabled = true;
-  btn.textContent = 'Đang lưu...';
-
-  try {
-    const body = { title, category, kind: 'compare' };
-
-    if (uploaded.before) body.beforeImage = await uploadOne(uploaded.before);
-    if (uploaded.after) body.afterImage = await uploadOne(uploaded.after);
-
-    const r = await adminFetch(
-      editingPhotoId ? `/admin/gallery/${editingPhotoId}` : '/admin/gallery',
-      { method: editingPhotoId ? 'PATCH' : 'POST', body: JSON.stringify(body) }
-    );
-
-    $('photoBackdrop').classList.remove('on');
-    toast(r.message || 'Đã lưu ảnh');
-    await loadGallery();
-  } catch (e) {
-    if (e.status === 401 || e.status === 403) {
-      $('photoBackdrop').classList.remove('on');
-    } else {
-      formError('photoErr', e.message);
+    function clearHomeQueue() {
+      homeQueue = [];
+      homePreviews.forEach((u) => URL.revokeObjectURL(u));
+      homePreviews = [];
     }
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'Lưu';
-  }
-}
 
-/* ================= nối sự kiện cho tab mới ================= */
+    function heroList() {
+      return Array.isArray(HOME?.heroImages) ? HOME.heroImages : [];
+    }
 
-$('catalogTabs').querySelectorAll('.subtab').forEach((t) => {
-  t.addEventListener('click', () => {
-    $('catalogTabs').querySelectorAll('.subtab').forEach((x) => x.classList.remove('on'));
-    t.classList.add('on');
-    catalogKind = t.dataset.kind;
-    renderCatalog();
-  });
-});
+    // Lấy tên file từ đường dẫn để gọi API gỡ ảnh
+    function heroNameOf(src) {
+      return String(src || '').split('/').pop();
+    }
 
-$('newItemBtn').addEventListener('click', () => openItemModal(null));
-$('itemCancel').addEventListener('click', () => $('itemBackdrop').classList.remove('on'));
-$('itemBackdrop').addEventListener('click', (e) => { if (e.target === $('itemBackdrop')) $('itemBackdrop').classList.remove('on') });
-$('itemSave').addEventListener('click', saveItem);
+    function renderHome() {
+      const write = can('write');
+      const list = heroList();
+      const autoplay = HOME?.heroAutoplay !== false;
+      const interval = Number(HOME?.heroInterval) || 6;
 
-$('catalogReload').addEventListener('click', () => loadCatalog(true));
-
-$('newPhotoBtn').addEventListener('click', () => openPhotoModal(null));
-$('photoCancel').addEventListener('click', () => $('photoBackdrop').classList.remove('on'));
-$('photoBackdrop').addEventListener('click', (e) => { if (e.target === $('photoBackdrop')) $('photoBackdrop').classList.remove('on') });
-$('photoSave').addEventListener('click', savePhoto);
-
-$('galleryReload').addEventListener('click', () => loadGallery(true));
-/* ================= trang chủ (ảnh đầu trang) ================= */
-
-// Nhiều ảnh cùng lúc — trang chủ tự chuyển qua lại như trình chiếu.
-// Ảnh đầu tiên trong danh sách là ảnh bìa, cũng là ảnh hiện ra trước.
-
-let HOME = null;            // { heroImages: [], heroAutoplay, heroInterval, ... }
-let homeQueue = [];         // các file vừa chọn, chờ tải lên
-let homePreviews = [];      // URL xem trước — phải thu hồi để không rò rỉ bộ nhớ
-let homeBusy = false;       // đang tải lên / đang lưu
-
-async function loadHome() {
-  $('homeForm').innerHTML = '<div class="loading">Đang tải nội dung trang chủ...</div>';
-  try {
-    const r = await adminFetch('/admin/settings');
-    HOME = r.data || {};
-    clearHomeQueue();
-    renderHome();
-  } catch (e) {
-    if (e.status === 401 || e.status === 403) return;
-    $('homeForm').innerHTML = `<div class="empty">${esc(e.message)}</div>`;
-  }
-}
-
-function clearHomeQueue() {
-  homeQueue = [];
-  homePreviews.forEach((u) => URL.revokeObjectURL(u));
-  homePreviews = [];
-}
-
-function heroList() {
-  return Array.isArray(HOME?.heroImages) ? HOME.heroImages : [];
-}
-
-// Lấy tên file từ đường dẫn để gọi API gỡ ảnh
-function heroNameOf(src) {
-  return String(src || '').split('/').pop();
-}
-
-function renderHome() {
-  const write = can('write');
-  const list = heroList();
-  const autoplay = HOME?.heroAutoplay !== false;
-  const interval = Number(HOME?.heroInterval) || 6;
-
-  const cards = list
-    .map((src, i) => `
+      const cards = list
+        .map((src, i) => `
       <div class="hcard${i === 0 ? ' cover' : ''}">
         <div class="pic-wrap">
           <img class="pic" src="${esc(src)}" alt="">
@@ -1943,10 +3247,10 @@ function renderHome() {
             <button class="no" data-hdel="${esc(src)}" title="Gỡ ảnh này">Gỡ</button>
           </div>` : ''}
       </div>`)
-    .join('');
+        .join('');
 
-  const queue = homeQueue
-    .map((f, i) => `
+      const queue = homeQueue
+        .map((f, i) => `
       <div class="hcard queue">
         <div class="pic-wrap">
           <img class="pic" src="${esc(homePreviews[i] || '')}" alt="">
@@ -1954,9 +3258,9 @@ function renderHome() {
         </div>
         <div class="foot"><small>${esc(f.name)}</small></div>
       </div>`)
-    .join('');
+        .join('');
 
-  $('homeForm').innerHTML = `
+      $('homeForm').innerHTML = `
   <div class="hero-head">
     <div>
       <h4>Ảnh đầu trang</h4>
@@ -1997,197 +3301,315 @@ function renderHome() {
     <div class="form-err" id="homeErr"></div>` : '<span class="ro">Chỉ xem</span>'}
   `;
 
-  if (!write) return;
+      if (!write) return;
 
-  wireHome(list);
-}
+      wireHome(list);
+    }
 
-function wireHome(list) {
-  const input = $('homeFile');
+    function wireHome(list) {
+      const input = $('homeFile');
 
-  $('homePick').addEventListener('click', () => input.click());
+      $('homePick').addEventListener('click', () => input.click());
 
-  input.addEventListener('change', () => {
-    const picked = Array.from(input.files || []);
-    if (!picked.length) return;
+      input.addEventListener('change', () => {
+        const picked = Array.from(input.files || []);
+        if (!picked.length) return;
 
-    // Tối đa 12 ảnh tính cả ảnh đã có
-    const room = 12 - list.length - homeQueue.length;
-    if (room <= 0) return formError('homeErr', 'Đã đủ 12 ảnh đầu trang, gỡ bớt trước khi thêm');
+        // Tối đa 12 ảnh tính cả ảnh đã có
+        const room = 12 - list.length - homeQueue.length;
+        if (room <= 0) return formError('homeErr', 'Đã đủ 12 ảnh đầu trang, gỡ bớt trước khi thêm');
 
-    const take = picked.slice(0, room);
-    if (take.length < picked.length) {
-      formError('homeErr', `Chỉ nhận thêm ${take.length} ảnh (tối đa 12 ảnh đầu trang)`);
+        const take = picked.slice(0, room);
+        if (take.length < picked.length) {
+          formError('homeErr', `Chỉ nhận thêm ${take.length} ảnh (tối đa 12 ảnh đầu trang)`);
+        } else {
+          formError('homeErr');
+        }
+
+        take.forEach((f) => {
+          homeQueue.push(f);
+          homePreviews.push(URL.createObjectURL(f));
+        });
+
+        input.value = '';
+        renderHome();
+        saveHome();   // chọn xong là tải lên và lưu luôn
+      });
+
+      if ($('homeCancel')) {
+        $('homeCancel').addEventListener('click', () => {
+          clearHomeQueue();
+          formError('homeErr');
+          renderHome();
+        });
+      }
+
+      // Đổi thứ tự ảnh
+      $('homeForm').querySelectorAll('[data-hleft]').forEach((b) => {
+        b.addEventListener('click', () => reorderHero(Number(b.dataset.hleft), -1));
+      });
+      $('homeForm').querySelectorAll('[data-hright]').forEach((b) => {
+        b.addEventListener('click', () => reorderHero(Number(b.dataset.hright), 1));
+      });
+
+      // Đặt làm ảnh bìa (đưa lên đầu danh sách)
+      $('homeForm').querySelectorAll('[data-hcover]').forEach((b) => {
+        b.addEventListener('click', () => reorderHero(Number(b.dataset.hcover), -Number(b.dataset.hcover)));
+      });
+
+      // Gỡ một ảnh
+      $('homeForm').querySelectorAll('[data-hdel]').forEach((b) => {
+        b.addEventListener('click', () => removeHero(b.dataset.hdel, list.length));
+      });
+
+      // Tự chuyển / thời gian
+      if ($('homeAutoplay')) {
+        $('homeAutoplay').addEventListener('change', (e) => {
+          saveHome({ heroAutoplay: e.target.checked, silent: true });
+        });
+      }
+      if ($('homeInterval')) {
+        $('homeInterval').addEventListener('change', (e) => {
+          saveHome({ heroInterval: Number(e.target.value), silent: true });
+        });
+      }
+    }
+
+    // Sắp xếp lại danh sách ảnh: đổi chỗ hoặc đưa lên đầu
+    async function reorderHero(i, delta) {
+      const list = heroList().slice();
+      const j = i + delta;
+
+      if (delta === -i) {
+        // "Đặt làm ảnh bìa": chuyển ảnh thứ i lên đầu
+        const [item] = list.splice(i, 1);
+        list.unshift(item);
+      } else {
+        if (j < 0 || j >= list.length) return;
+        [list[i], list[j]] = [list[j], list[i]];
+      }
+
+      await saveHome({ heroImages: list, replace: true, silent: true });
+    }
+
+    async function removeHero(src, total) {
+      const name = heroNameOf(src);
+      const isCover = heroList()[0] === src;
+      const note = total === 1
+        ? ' Đây là ảnh duy nhất — trang chủ sẽ quay lại dùng hình minh hoạ có sẵn.'
+        : isCover ? ' Ảnh kế tiếp sẽ thành ảnh bìa.' : '';
+
+      if (!confirm(`Gỡ ảnh này khỏi đầu trang?${note}`)) return;
+
+      setHomeBusy(true);
+      try {
+        const r = await adminFetch(`/admin/settings/hero/${encodeURIComponent(name)}`, { method: 'DELETE' });
+        HOME = r.data || {};
+        toast(r.message || 'Đã gỡ ảnh');
+        renderHome();
+      } catch (e) {
+        if (e.status !== 401 && e.status !== 403) formError('homeErr', e.message);
+      } finally {
+        setHomeBusy(false);
+      }
+    }
+
+    function setHomeBusy(on) {
+      homeBusy = on;
+      const btn = $('homePick');
+      if (btn) btn.disabled = on;
+    }
+
+    // opts: { silent } — không hiện thông báo khi chỉ đổi thiết lập nhỏ
+    async function saveHome(opts = {}) {
+      if (homeBusy) return;
+
+      const list = heroList();
+      const queue = homeQueue.slice();
+
+      setHomeBusy(true);
+      const btn = $('homePick');
+      const oldLabel = btn ? btn.textContent : '';
+
+      try {
+        // 1. Tải các ảnh vừa chọn lên (tuần tự để giữ đúng thứ tự)
+        const uploaded = [];
+        if (queue.length) {
+          if (btn) btn.textContent = `Đang tải ${queue.length} ảnh...`;
+          for (const f of queue) uploaded.push(await uploadOne(f));
+        }
+
+        // 2. Gộp vào danh sách hiện có rồi lưu
+        const body = { ...opts };
+        delete body.silent;
+
+        if (uploaded.length) {
+          if (btn) btn.textContent = 'Đang lưu...';
+          body.heroImages = [...list, ...uploaded];   // thêm vào cuối danh sách
+          body.replace = true;                        // gửi nguyên danh sách mới
+        }
+
+        const r = await adminFetch('/admin/settings', {
+          method: 'PATCH',
+          body: JSON.stringify(body),
+        });
+
+        HOME = r.data || {};
+        clearHomeQueue();
+        formError('homeErr');
+        if (!opts.silent) toast(r.message || 'Đã lưu ảnh đầu trang');
+        renderHome();
+      } catch (e) {
+        if (e.status === 401 || e.status === 403) return;
+
+        // Ảnh đã tải lên nhưng lưu thất bại thì giữ lại trong hàng đợi để thử lại,
+        // không im lặng bỏ rác trên đĩa.
+        formError('homeErr', e.message);
+        renderHome();
+      } finally {
+        setHomeBusy(false);
+        const b = $('homePick');
+        if (b) { b.disabled = false; b.textContent = oldLabel || '+ Thêm ảnh'; }
+      }
+    }
+
+    /* ================= bank & deposit settings ================= */
+
+    let BANK_SETTINGS = null;
+
+    async function loadBankSettings() {
+      try {
+        const r = await adminFetch('/admin/settings');
+        BANK_SETTINGS = r.data || {};
+        renderBankSettings();
+      } catch (e) {
+        if (e.status === 401 || e.status === 403) return;
+        toast('Không tải được cấu hình thanh toán: ' + e.message, true);
+      }
+    }
+
+    function renderBankSettings() {
+      if (!BANK_SETTINGS) return;
+      if ($('sBankId')) $('sBankId').value = BANK_SETTINGS.bankId || 'MB';
+      if ($('sBankAccount')) $('sBankAccount').value = BANK_SETTINGS.bankAccount || '';
+      if ($('sBankAccountName')) $('sBankAccountName').value = BANK_SETTINGS.bankAccountName || '';
+      if ($('sDepositType')) $('sDepositType').value = BANK_SETTINGS.depositType || 'fixed';
+      if ($('sDepositValue')) $('sDepositValue').value = BANK_SETTINGS.depositValue !== undefined ? BANK_SETTINGS.depositValue : 200000;
+      if ($('sZaloPhone')) $('sZaloPhone').value = BANK_SETTINGS.zaloPhone || '';
+
+      updateDepositLabel();
+      updateQrPreview();
+    }
+
+    function updateDepositLabel() {
+      if (!$('sDepositType') || !$('lblDepositValue') || !$('sDepositValue')) return;
+      const isPercent = $('sDepositType').value === 'percent';
+      $('lblDepositValue').textContent = isPercent ? 'Tỷ lệ cọc theo đơn (%)' : 'Số tiền cọc mỗi đơn (VNĐ)';
+      if (isPercent) {
+        $('sDepositValue').placeholder = '20';
+        $('sDepositValue').min = '1';
+        $('sDepositValue').max = '100';
+        $('sDepositValue').step = '1';
+      } else {
+        $('sDepositValue').placeholder = '200000';
+        $('sDepositValue').min = '0';
+        $('sDepositValue').removeAttribute('max');
+        $('sDepositValue').step = 'any';
+      }
+    }
+
+    function updateQrPreview() {
+      if (!$('qrPreviewImg')) return;
+      const bank = $('sBankId')?.value || 'MB';
+      const acc = $('sBankAccount')?.value.trim() || '0987654321';
+      const name = ($('sBankAccountName')?.value.trim() || 'BUI THUONG').toUpperCase();
+      const type = $('sDepositType')?.value || 'fixed';
+      const val = Number($('sDepositValue')?.value) || (type === 'percent' ? 20 : 200000);
+      const zalo = $('sZaloPhone')?.value.trim() || '0988888888';
+
+      const depositAmt = type === 'percent' ? Math.round((500000 * val) / 100) : val;
+      const qrUrl = `https://img.vietqr.io/image/${encodeURIComponent(bank)}-${encodeURIComponent(acc)}-compact2.png?amount=${depositAmt}&addInfo=DEMO%20DAT%20LICH&accountName=${encodeURIComponent(name)}`;
+
+      $('qrPreviewImg').src = qrUrl;
+      if ($('pvBank')) $('pvBank').textContent = $('sBankId')?.selectedOptions[0]?.text || bank;
+      if ($('pvAcc')) $('pvAcc').textContent = acc;
+      if ($('pvName')) $('pvName').textContent = name;
+      if ($('pvAmount')) $('pvAmount').textContent = type === 'percent' ? `${val}% (ví dụ đơn 500k = ${vnd(depositAmt)})` : vnd(depositAmt);
+      if ($('pvZalo')) $('pvZalo').textContent = zalo;
+    }
+
+    async function saveBankSettings(e) {
+      if (e) e.preventDefault();
+      const write = can('write');
+      if (!write) return toast('Bạn không có quyền chỉnh sửa', true);
+
+      const bankId = $('sBankId')?.value || 'MB';
+      const bankAccount = $('sBankAccount')?.value.trim() || '';
+      const bankAccountName = ($('sBankAccountName')?.value.trim() || '').toUpperCase();
+      const depositType = $('sDepositType')?.value || 'fixed';
+      let depositValue = Number($('sDepositValue')?.value);
+      if (isNaN(depositValue) || depositValue < 0) depositValue = 0;
+      if (depositType === 'percent' && depositValue > 100) depositValue = 100;
+      const zaloPhone = $('sZaloPhone')?.value.trim() || '';
+
+      const btn = $('saveBankBtn');
+      if (btn) { btn.disabled = true; btn.textContent = 'Đang lưu...'; }
+
+      try {
+        const r = await adminFetch('/admin/settings', {
+          method: 'PATCH',
+          body: JSON.stringify({
+            bankId,
+            bankAccount,
+            bankAccountName,
+            depositType,
+            depositValue,
+            zaloPhone,
+          }),
+        });
+        BANK_SETTINGS = r.data || {};
+        toast('Đã lưu cấu hình thanh toán & tiền cọc');
+        const msg = $('bankSavedMsg');
+        if (msg) {
+          msg.style.display = 'inline';
+          setTimeout(() => { msg.style.display = 'none'; }, 3000);
+        }
+        updateQrPreview();
+      } catch (e) {
+        if (e.status !== 401 && e.status !== 403) toast('Lỗi lưu cấu hình: ' + e.message, true);
+      } finally {
+        if (btn) { btn.disabled = false; btn.textContent = 'Lưu cấu hình thanh toán'; }
+      }
+    }
+
+    if ($('bankForm')) $('bankForm').addEventListener('submit', saveBankSettings);
+    if ($('sDepositType')) $('sDepositType').addEventListener('change', () => { updateDepositLabel(); updateQrPreview(); });
+    if ($('sBankId')) $('sBankId').addEventListener('change', updateQrPreview);
+    if ($('sBankAccount')) $('sBankAccount').addEventListener('input', updateQrPreview);
+    if ($('sBankAccountName')) $('sBankAccountName').addEventListener('input', updateQrPreview);
+    if ($('sDepositValue')) $('sDepositValue').addEventListener('input', updateQrPreview);
+    if ($('sZaloPhone')) $('sZaloPhone').addEventListener('input', updateQrPreview);
+
+    /* ================= boot ================= */
+
+    $('gate').addEventListener('submit', login);
+    $('logoutBtn').addEventListener('click', async () => {
+      if (confirm('Đăng xuất khỏi trang quản trị?')) await logout();
+    });
+
+    // khôi phục phiên cũ (mã chung) nếu có — backend vẫn hỗ trợ
+    if (!TOKEN) {
+      const legacy = sessionStorage.getItem(LEGACY_KEY);
+      if (legacy) { TOKEN = legacy; sessionStorage.setItem(TOKEN_KEY, legacy); }
+    }
+
+    if (TOKEN) {
+      enterDash();
     } else {
-      formError('homeErr');
+      showGate();
+      $('userInput').focus();
     }
-
-    take.forEach((f) => {
-      homeQueue.push(f);
-      homePreviews.push(URL.createObjectURL(f));
-    });
-
-    input.value = '';
-    renderHome();
-    saveHome();   // chọn xong là tải lên và lưu luôn
-  });
-
-  if ($('homeCancel')) {
-    $('homeCancel').addEventListener('click', () => {
-      clearHomeQueue();
-      formError('homeErr');
-      renderHome();
-    });
-  }
-
-  // Đổi thứ tự ảnh
-  $('homeForm').querySelectorAll('[data-hleft]').forEach((b) => {
-    b.addEventListener('click', () => reorderHero(Number(b.dataset.hleft), -1));
-  });
-  $('homeForm').querySelectorAll('[data-hright]').forEach((b) => {
-    b.addEventListener('click', () => reorderHero(Number(b.dataset.hright), 1));
-  });
-
-  // Đặt làm ảnh bìa (đưa lên đầu danh sách)
-  $('homeForm').querySelectorAll('[data-hcover]').forEach((b) => {
-    b.addEventListener('click', () => reorderHero(Number(b.dataset.hcover), -Number(b.dataset.hcover)));
-  });
-
-  // Gỡ một ảnh
-  $('homeForm').querySelectorAll('[data-hdel]').forEach((b) => {
-    b.addEventListener('click', () => removeHero(b.dataset.hdel, list.length));
-  });
-
-  // Tự chuyển / thời gian
-  if ($('homeAutoplay')) {
-    $('homeAutoplay').addEventListener('change', (e) => {
-      saveHome({ heroAutoplay: e.target.checked, silent: true });
-    });
-  }
-  if ($('homeInterval')) {
-    $('homeInterval').addEventListener('change', (e) => {
-      saveHome({ heroInterval: Number(e.target.value), silent: true });
-    });
-  }
-}
-
-// Sắp xếp lại danh sách ảnh: đổi chỗ hoặc đưa lên đầu
-async function reorderHero(i, delta) {
-  const list = heroList().slice();
-  const j = i + delta;
-
-  if (delta === -i) {
-    // "Đặt làm ảnh bìa": chuyển ảnh thứ i lên đầu
-    const [item] = list.splice(i, 1);
-    list.unshift(item);
-  } else {
-    if (j < 0 || j >= list.length) return;
-    [list[i], list[j]] = [list[j], list[i]];
-  }
-
-  await saveHome({ heroImages: list, replace: true, silent: true });
-}
-
-async function removeHero(src, total) {
-  const name = heroNameOf(src);
-  const isCover = heroList()[0] === src;
-  const note = total === 1
-    ? ' Đây là ảnh duy nhất — trang chủ sẽ quay lại dùng hình minh hoạ có sẵn.'
-    : isCover ? ' Ảnh kế tiếp sẽ thành ảnh bìa.' : '';
-
-  if (!confirm(`Gỡ ảnh này khỏi đầu trang?${note}`)) return;
-
-  setHomeBusy(true);
-  try {
-    const r = await adminFetch(`/admin/settings/hero/${encodeURIComponent(name)}`, { method: 'DELETE' });
-    HOME = r.data || {};
-    toast(r.message || 'Đã gỡ ảnh');
-    renderHome();
-  } catch (e) {
-    if (e.status !== 401 && e.status !== 403) formError('homeErr', e.message);
-  } finally {
-    setHomeBusy(false);
-  }
-}
-
-function setHomeBusy(on) {
-  homeBusy = on;
-  const btn = $('homePick');
-  if (btn) btn.disabled = on;
-}
-
-// opts: { silent } — không hiện thông báo khi chỉ đổi thiết lập nhỏ
-async function saveHome(opts = {}) {
-  if (homeBusy) return;
-
-  const list = heroList();
-  const queue = homeQueue.slice();
-
-  setHomeBusy(true);
-  const btn = $('homePick');
-  const oldLabel = btn ? btn.textContent : '';
-
-  try {
-    // 1. Tải các ảnh vừa chọn lên (tuần tự để giữ đúng thứ tự)
-    const uploaded = [];
-    if (queue.length) {
-      if (btn) btn.textContent = `Đang tải ${queue.length} ảnh...`;
-      for (const f of queue) uploaded.push(await uploadOne(f));
-    }
-
-    // 2. Gộp vào danh sách hiện có rồi lưu
-    const body = { ...opts };
-    delete body.silent;
-
-    if (uploaded.length) {
-      if (btn) btn.textContent = 'Đang lưu...';
-      body.heroImages = [...list, ...uploaded];   // thêm vào cuối danh sách
-      body.replace = true;                        // gửi nguyên danh sách mới
-    }
-
-    const r = await adminFetch('/admin/settings', {
-      method: 'PATCH',
-      body: JSON.stringify(body),
-    });
-
-    HOME = r.data || {};
-    clearHomeQueue();
-    formError('homeErr');
-    if (!opts.silent) toast(r.message || 'Đã lưu ảnh đầu trang');
-    renderHome();
-  } catch (e) {
-    if (e.status === 401 || e.status === 403) return;
-
-    // Ảnh đã tải lên nhưng lưu thất bại thì giữ lại trong hàng đợi để thử lại,
-    // không im lặng bỏ rác trên đĩa.
-    formError('homeErr', e.message);
-    renderHome();
-  } finally {
-    setHomeBusy(false);
-    const b = $('homePick');
-    if (b) { b.disabled = false; b.textContent = oldLabel || '+ Thêm ảnh'; }
-  }
-}
-
-/* ================= boot ================= */
-
-$('gate').addEventListener('submit', login);
-$('logoutBtn').addEventListener('click', async () => {
-  if(confirm('Đăng xuất khỏi trang quản trị?')) await logout();
-});
-
-// khôi phục phiên cũ (mã chung) nếu có — backend vẫn hỗ trợ
-if(!TOKEN){
-  const legacy = sessionStorage.getItem(LEGACY_KEY);
-  if(legacy){ TOKEN = legacy; sessionStorage.setItem(TOKEN_KEY, legacy); }
-}
-
-if(TOKEN){
-  enterDash();
-}else{
-  showGate();
-  $('userInput').focus();
-}
-</script>
+  </script>
 </body>
+
 </html>

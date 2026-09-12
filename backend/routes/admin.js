@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { createHash } from 'crypto';
-import { listBookings, updateStatus, bookingStats, getBookingByCode } from '../src/booking.js';
+import { listBookings, updateStatus, updateDepositStatus, bookingStats, getBookingByCode } from '../src/booking.js';
 import { rateLimit } from '../src/rate-limit.js';
 import {
   listNotifications, notificationStats, retryNotification,
@@ -161,6 +161,33 @@ router.patch('/bookings/:id/status', requireRole('write'), auditAction('doi_tran
   }
 
   res.json({ ok: true, data: updated, notification: notify });
+});
+
+router.patch('/bookings/:id/deposit', requireRole('write'), auditAction('xac_nhan_coc'), async (req, res) => {
+  const { depositStatus } = req.body || {};
+  const status = depositStatus || 'paid';
+  const updated = updateDepositStatus(Number(req.params.id), status);
+  if (!updated) {
+    return res.status(400).json({ ok: false, error: 'Không tìm thấy đơn' });
+  }
+
+  let notify = null;
+  if (status === 'paid' && req.body.notify !== false) {
+    try {
+      const r = await notifyStatusChanged({
+        ...updated,
+        addons: parseAddons(updated.addons),
+      });
+      notify = r.result.ok
+        ? { sent: true, dryRun: !!r.result.dryRun }
+        : { sent: false, skipped: !!r.result.skipped, error: r.result.error };
+    } catch (e) {
+      logger.error({ err: { message: e.message } }, 'lỗi gửi thông báo xác nhận cọc');
+      notify = { sent: false, error: e.message };
+    }
+  }
+
+  res.json({ ok: true, data: updated, notification: notify, message: status === 'paid' ? 'Đã xác nhận nhận cọc' : 'Đã cập nhật cọc' });
 });
 
 router.delete('/bookings/:id', requireRole('write'), auditAction('huy_don'), async (req, res) => {
@@ -540,8 +567,13 @@ router.delete('/settings/hero/:name', requireRole('write'), auditAction('sua_tra
 function settingsMessage(r) {
   if (!r.changed.length) return 'Không có thay đổi nào';
 
+  const hasBank = r.changed.some((c) => ['bankId', 'bankAccount', 'bankAccountName', 'depositType', 'depositValue', 'zaloPhone'].includes(c));
+  if (hasBank && !r.changed.includes('heroImages')) {
+    return 'Đã lưu cấu hình thanh toán & tiền cọc';
+  }
+
   const onlyToggle = r.changed.every((c) => c !== 'heroImages');
-  if (onlyToggle) return 'Đã lưu thiết lập ảnh đầu trang';
+  if (onlyToggle) return 'Đã lưu thiết lập';
 
   const n = r.data.heroCount || 0;
   if (n === 0) return 'Đã gỡ hết ảnh đầu trang';

@@ -21,7 +21,7 @@ async function req(path, { method = 'GET', body, token, raw } = {}) {
   return { status: res.status, json: await res.json().catch(() => null), headers: res.headers };
 }
 
-const ADMIN = { u: 'admin', p: 'VScY9J!&k@r9$Q' };
+const ADMIN = { u: 'admin', p: 'Admin@2026!Ok' };
 const STAFF = { u: 'linh', p: 'Staff@2026' };
 const VIEWER = { u: 'mai', p: 'View@2026' };
 

@@ -2,7 +2,7 @@
 // Kiểm tra vòng tròn đầy đủ: sửa ở trang quản trị → hiện ra trang công khai.
 // Chạy: node test-e2e.js   (cần server đang chạy)
 const API = process.env.BASE || 'http://localhost:3000/api';
-const ADMIN = { username: 'admin', password: 'VScY9J!&k@r9$Q' };
+const ADMIN = { username: 'admin', password: 'Admin@2026!Ok' };
 
 const post = (p, body, token) =>
   fetch(API + p, {

@@ -101,6 +101,23 @@ const tx = db.transaction(() => {
 
   const insBlock = db.prepare('INSERT OR IGNORE INTO blocked_slots (date,time,reason) VALUES (@date,@time,@reason)');
   blockSample.forEach((b) => insBlock.run(b));
+
+  const insSetting = db.prepare(`
+    INSERT INTO site_settings (key, value, updated_at)
+    VALUES (?, ?, datetime('now','localtime'))
+    ON CONFLICT(key) DO UPDATE SET value = excluded.value
+  `);
+  insSetting.run('bank_id', 'MB');
+  insSetting.run('bank_account', '0988776655');
+  insSetting.run('bank_account_name', 'BUI THI THUONG');
+  insSetting.run('deposit_type', 'fixed');
+  insSetting.run('deposit_value', '200000');
+  insSetting.run('zalo_phone', '0988776655');
+
+  db.prepare(`
+    INSERT INTO bookings (code, service_name, date, time, duration, customer, phone, total, deposit_amount, deposit_status, status)
+    VALUES ('MC2026090101', 'Makeup dự tiệc', '2026-09-20', '09:00', 60, 'Nguyễn Thuỳ Linh', '0912345678', 650000, 200000, 'unpaid', 'pending')
+  `).run();
 });
 
 tx();
@@ -111,4 +128,5 @@ console.log('  addons   :', db.prepare('SELECT COUNT(*) c FROM addons').get().c)
 console.log('  combos   :', db.prepare('SELECT COUNT(*) c FROM combos').get().c);
 console.log('  artists  :', db.prepare('SELECT COUNT(*) c FROM artists').get().c);
 console.log('  blocked  :', db.prepare('SELECT COUNT(*) c FROM blocked_slots').get().c);
+console.log('  bookings :', db.prepare('SELECT COUNT(*) c FROM bookings').get().c);
 console.log('  gallery  :', db.prepare('SELECT COUNT(*) c FROM gallery').get().c);

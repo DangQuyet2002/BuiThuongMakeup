@@ -204,4 +204,9 @@ export function initSchema() {
   addColumnIfMissing('combos', 'sort_order', 'INTEGER NOT NULL DEFAULT 0');
 
   addColumnIfMissing('artists', 'sort_order', 'INTEGER NOT NULL DEFAULT 0');
+
+  addColumnIfMissing('bookings', 'deposit_amount', 'INTEGER NOT NULL DEFAULT 0');
+  addColumnIfMissing('bookings', 'deposit_status', "TEXT NOT NULL DEFAULT 'unpaid'");
 }
+
+initSchema();

@@ -125,8 +125,6 @@ function removeIfUnused(path) {
   removeUpload(path);
 }
 
-// Dữ liệu trả ra API:
-// { heroImages: ['/uploads/...'], heroAutoplay: true, heroInterval: 6 }
 export function getSettings() {
   migrateLegacyHero();
 
@@ -138,6 +136,12 @@ export function getSettings() {
     heroCount: heroImages.length,
     heroAutoplay: heroImages.length > 1 ? readBool(FIELDS.heroAutoplay.key, true) : false,
     heroInterval: readInterval(),
+    bankId: readRaw('bank_id') || 'MB',
+    bankAccount: readRaw('bank_account') || '',
+    bankAccountName: readRaw('bank_account_name') || '',
+    depositType: readRaw('deposit_type') || 'fixed',
+    depositValue: Number(readRaw('deposit_value')) || 200000,
+    zaloPhone: readRaw('zalo_phone') || '',
   };
 }
 
@@ -230,6 +234,34 @@ export function updateSettings(data) {
       }
       writeRaw(FIELDS.heroInterval.key, String(Math.round(n)));
       changed.push('heroInterval');
+    }
+
+    // ---- cấu hình ngân hàng & tiền cọc ----
+    if (patch.bankId !== undefined) {
+      writeRaw('bank_id', text(patch.bankId, 20));
+      changed.push('bankId');
+    }
+    if (patch.bankAccount !== undefined) {
+      writeRaw('bank_account', text(patch.bankAccount, 50));
+      changed.push('bankAccount');
+    }
+    if (patch.bankAccountName !== undefined) {
+      writeRaw('bank_account_name', text(patch.bankAccountName, 100));
+      changed.push('bankAccountName');
+    }
+    if (patch.depositType !== undefined) {
+      const dt = patch.depositType === 'percent' ? 'percent' : 'fixed';
+      writeRaw('deposit_type', dt);
+      changed.push('depositType');
+    }
+    if (patch.depositValue !== undefined) {
+      const dv = Number(patch.depositValue) || 0;
+      writeRaw('deposit_value', String(dv));
+      changed.push('depositValue');
+    }
+    if (patch.zaloPhone !== undefined) {
+      writeRaw('zalo_phone', text(patch.zaloPhone, 20));
+      changed.push('zaloPhone');
     }
 
     // Ảnh cũ không còn trong danh sách mới thì đánh dấu để dọn sau.

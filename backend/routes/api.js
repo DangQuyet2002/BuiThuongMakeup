@@ -131,6 +131,14 @@ router.post('/bookings', bookingLimiter, async (req, res) => {
     });
   }
 
+  const settings = getSettings();
+  let depositAmount = 0;
+  if (settings.depositType === 'percent') {
+    depositAmount = Math.round((calc.total * (settings.depositValue || 30)) / 100 / 1000) * 1000;
+  } else {
+    depositAmount = Math.min(calc.total, settings.depositValue || 200000);
+  }
+
   const booking = createBooking({
     service_id: serviceId,
     service_name: calc.serviceName,
@@ -144,11 +152,20 @@ router.post('/bookings', bookingLimiter, async (req, res) => {
     note: b.note ? String(b.note).trim().slice(0, 500) : null,
     addons: calc.addons,
     total: calc.total,
+    deposit_amount: depositAmount,
   });
+
+  const bankId = settings.bankId || 'MB';
+  const bankAccount = settings.bankAccount || '';
+  const bankAccountName = settings.bankAccountName || '';
+  const transferContent = `${booking.code} ${booking.phone}`;
+  const qrUrl = bankAccount
+    ? `https://img.vietqr.io/image/${bankId}-${bankAccount}-compact2.png?amount=${depositAmount}&addInfo=${encodeURIComponent(transferContent)}&accountName=${encodeURIComponent(bankAccountName)}`
+    : null;
 
   let notify;
   try {
-    notify = await notifyBookingCreated({ ...booking, addons: calc.addons });
+    notify = await notifyBookingCreated({ ...booking, addons: calc.addons, deposit_amount: depositAmount });
   } catch (e) {
     console.error('Lỗi gửi thông báo:', e.message);
     notify = { result: { ok: false, error: e.message }, log: null };
@@ -164,6 +181,15 @@ router.post('/bookings', bookingLimiter, async (req, res) => {
       ...booking,
       addons: calc.addons,
       notification: notifyInfo,
+      payment: {
+        bank_id: bankId,
+        bank_account: bankAccount,
+        bank_account_name: bankAccountName,
+        transfer_content: transferContent,
+        deposit_amount: depositAmount,
+        qr_url: qrUrl,
+        zalo_phone: settings.zaloPhone || '0912345678',
+      },
       message: `Đặt lịch thành công. Mã đơn ${booking.code}. Bùi Thương sẽ liên hệ qua Zalo trong 15 phút.`,
     },
   });

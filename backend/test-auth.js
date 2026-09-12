@@ -28,7 +28,7 @@ async function req(path, { method = 'GET', body, token, headers = {} } = {}) {
 
 function section(t) { results.push(`\n${t}`); }
 
-const ADMIN = { u: 'admin', p: 'VScY9J!&k@r9$Q' };
+const ADMIN = { u: 'admin', p: 'Admin@2026!Ok' };
 const STAFF = { u: 'linh', p: 'Staff@2026' };
 const VIEWER = { u: 'mai', p: 'View@2026' };
 

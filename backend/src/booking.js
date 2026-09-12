@@ -189,24 +189,25 @@ export function createBooking(data) {
   const info = db.prepare(`
     INSERT INTO bookings
       (code,service_id,service_name,combo_name,date,time,duration,artist_id,
-       customer,phone,note,addons,total,status)
+       customer,phone,note,addons,total,deposit_amount,deposit_status,status)
     VALUES
       (@code,@service_id,@service_name,@combo_name,@date,@time,@duration,@artist_id,
-       @customer,@phone,@note,@addons,@total,'pending')
+       @customer,@phone,@note,@addons,@total,@deposit_amount,'unpaid','pending')
   `).run({
     code,
-    service_id: data.service_id ?? null,
-    service_name: data.service_name,
-    combo_name: data.combo_name ?? null,
+    service_id: data.service_id ?? data.serviceId ?? null,
+    service_name: data.service_name || data.serviceName || 'Dịch vụ Makeup',
+    combo_name: data.combo_name ?? data.comboName ?? null,
     date: data.date,
     time: data.time,
     duration: data.duration,
-    artist_id: data.artist_id ?? null,
+    artist_id: data.artist_id ?? data.artistId ?? null,
     customer: data.customer,
     phone: data.phone,
     note: data.note ?? null,
     addons: JSON.stringify(data.addons || []),
     total: data.total,
+    deposit_amount: Number(data.deposit_amount ?? data.depositAmount) || 0,
   });
 
   return db.prepare('SELECT * FROM bookings WHERE id = ?').get(info.lastInsertRowid);
@@ -239,6 +240,17 @@ export function updateStatus(id, status) {
   if (!allowed.includes(status)) return null;
   const info = db.prepare('UPDATE bookings SET status = ? WHERE id = ?').run(status, id);
   if (!info.changes) return null;
+  return db.prepare('SELECT * FROM bookings WHERE id = ?').get(id);
+}
+
+export function updateDepositStatus(id, depositStatus) {
+  const allowed = ['unpaid', 'paid'];
+  if (!allowed.includes(depositStatus)) return null;
+  if (depositStatus === 'paid') {
+    db.prepare("UPDATE bookings SET deposit_status = 'paid', status = CASE WHEN status = 'pending' THEN 'confirmed' ELSE status END WHERE id = ?").run(id);
+  } else {
+    db.prepare("UPDATE bookings SET deposit_status = ? WHERE id = ?").run(depositStatus, id);
+  }
   return db.prepare('SELECT * FROM bookings WHERE id = ?').get(id);
 }
 
