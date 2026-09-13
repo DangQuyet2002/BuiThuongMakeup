@@ -406,6 +406,14 @@ const CATALOG_OPS = {
     setActive: catalog.setArtistActive,
     remove: catalog.deleteArtist,
   },
+  faqs: {
+    label: 'câu hỏi thường gặp',
+    list: () => catalog.listFaqs({ includeInactive: true }),
+    create: catalog.createFaq,
+    update: catalog.updateFaq,
+    setActive: catalog.setFaqActive,
+    remove: catalog.deleteFaq,
+  },
 };
 
 function resolveKind(req, res) {
@@ -426,6 +434,7 @@ router.get('/catalog', requireRole('read'), (req, res) => {
       addons: CATALOG_OPS.addons.list(),
       combos: CATALOG_OPS.combos.list(),
       artists: CATALOG_OPS.artists.list(),
+      faqs: CATALOG_OPS.faqs.list(),
       gallery: gallery.listGallery({ includeInactive: true, includeIncomplete: true }),
       galleryStats: gallery.galleryStats(),
     },

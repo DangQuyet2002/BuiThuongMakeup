@@ -142,6 +142,25 @@ export function getSettings() {
     depositType: readRaw('deposit_type') || 'fixed',
     depositValue: Number(readRaw('deposit_value')) || 200000,
     zaloPhone: readRaw('zalo_phone') || '',
+
+    // Thống kê nổi bật (Trust Stats)
+    stat1Num: readRaw('stat1_num') || '1.200+',
+    stat1Label: readRaw('stat1_label') || 'Khách hàng',
+    stat2Num: readRaw('stat2_num') || '4.9/5',
+    stat2Label: readRaw('stat2_label') || 'Điểm đánh giá',
+    stat3Num: readRaw('stat3_num') || '8 năm',
+    stat3Label: readRaw('stat3_label') || 'Kinh nghiệm',
+    stat4Num: readRaw('stat4_num') || '12',
+    stat4Label: readRaw('stat4_label') || 'Chuyên viên makeup',
+
+    // Thông tin studio & liên hệ
+    studioAddress: readRaw('studio_address') || '128 Nguyễn Trãi, Phường Bến Thành, Quận 1, TP.HCM',
+    studioHoursWeekday: readRaw('studio_hours_weekday') || 'Thứ 2 – Thứ 7: 8:00 – 20:00',
+    studioHoursSunday: readRaw('studio_hours_sunday') || 'Chủ nhật: 9:00 – 17:00',
+    studioPhone: readRaw('studio_phone') || '0912 345 678',
+    studioEmail: readRaw('studio_email') || 'hello@mocstudio.vn',
+    studioMapNote: readRaw('studio_map_note') || 'Bản đồ studio · Quận 1, TP.HCM',
+    studioMapEmbed: readRaw('studio_map_embed') || '',
   };
 }
 
@@ -262,6 +281,41 @@ export function updateSettings(data) {
     if (patch.zaloPhone !== undefined) {
       writeRaw('zalo_phone', text(patch.zaloPhone, 20));
       changed.push('zaloPhone');
+    }
+
+    // ---- thống kê nổi bật (Trust Stats) ----
+    const statKeys = [
+      ['stat1Num', 'stat1_num', 50],
+      ['stat1Label', 'stat1_label', 100],
+      ['stat2Num', 'stat2_num', 50],
+      ['stat2Label', 'stat2_label', 100],
+      ['stat3Num', 'stat3_num', 50],
+      ['stat3Label', 'stat3_label', 100],
+      ['stat4Num', 'stat4_num', 50],
+      ['stat4Label', 'stat4_label', 100],
+    ];
+    for (const [prop, dbKey, len] of statKeys) {
+      if (patch[prop] !== undefined) {
+        writeRaw(dbKey, text(patch[prop], len));
+        changed.push(prop);
+      }
+    }
+
+    // ---- thông tin studio & liên hệ ----
+    const contactKeys = [
+      ['studioAddress', 'studio_address', 300],
+      ['studioHoursWeekday', 'studio_hours_weekday', 150],
+      ['studioHoursSunday', 'studio_hours_sunday', 150],
+      ['studioPhone', 'studio_phone', 50],
+      ['studioEmail', 'studio_email', 100],
+      ['studioMapNote', 'studio_map_note', 200],
+      ['studioMapEmbed', 'studio_map_embed', 1500],
+    ];
+    for (const [prop, dbKey, len] of contactKeys) {
+      if (patch[prop] !== undefined) {
+        writeRaw(dbKey, text(patch[prop], len));
+        changed.push(prop);
+      }
     }
 
     // Ảnh cũ không còn trong danh sách mới thì đánh dấu để dọn sau.

@@ -40,6 +40,7 @@ router.get('/services', readLimiter, (req, res) => {
   const addons = catalog.listAddons();
   const combos = catalog.listCombos();
   const artists = catalog.listArtists();
+  const faqs = catalog.listFaqs();
 
   res.json({
     ok: true,
@@ -48,10 +49,16 @@ router.get('/services', readLimiter, (req, res) => {
       addons,
       combos,
       artists,
+      faqs,
       workHours: WORK_HOURS,
       slotMinutes: SLOT_MINUTES,
     },
   });
+});
+
+// Câu hỏi thường gặp
+router.get('/faqs', readLimiter, (req, res) => {
+  res.json({ ok: true, data: catalog.listFaqs() });
 });
 
 // Thư viện ảnh cho trang chủ. Rỗng nghĩa là chưa tải ảnh nào lên —
@@ -60,8 +67,7 @@ router.get('/gallery', readLimiter, (req, res) => {
   res.json({ ok: true, data: listGallery() });
 });
 
-// Nội dung trang chủ do quản trị viên chỉnh (ảnh đầu trang).
-// Chưa đặt gì thì trả null — trang chủ tự dùng hình minh hoạ có sẵn.
+// Nội dung trang chủ do quản trị viên chỉnh (ảnh đầu trang, thống kê, thông tin liên hệ).
 router.get('/settings', readLimiter, (req, res) => {
   res.json({ ok: true, data: getSettings() });
 });

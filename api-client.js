@@ -141,6 +141,13 @@ export const FALLBACK = {
     { id: 2, name: 'Minh Thư', initials: 'MT', specialty: 'Dự tiệc · tông Tây', years: 7 },
     { id: 3, name: 'Hà My', initials: 'HM', specialty: 'Chụp ảnh · tông tự nhiên', years: 5 },
   ],
+  faqs: [
+    { id: 1, question: 'Makeup giữ được bao lâu?', answer: 'Trung bình 8–10 tiếng tuỳ loại da và thời tiết. Với gói cô dâu, chuyên viên sẽ dặm lại trong ngày để đảm bảo luôn tươi tắn khi chụp ảnh.' },
+    { id: 2, question: 'Da mình dễ kích ứng thì sao?', answer: 'Bạn nên báo trước khi đặt lịch. Studio dùng sản phẩm chính hãng, có dòng dành riêng cho da nhạy cảm và luôn thử một vùng nhỏ trước khi trang điểm toàn mặt.' },
+    { id: 3, question: 'Có makeup tận nơi không?', answer: 'Có. Với gói cô dâu và các buổi tiệc sáng sớm, chuyên viên có thể đến tận nơi trong nội thành. Phụ phí di chuyển tuỳ khoảng cách, sẽ báo rõ trước khi xác nhận.' },
+    { id: 4, question: 'Đặt lịch trước bao lâu?', answer: 'Nên đặt trước 3–5 ngày. Với makeup cô dâu, bạn nên đặt trước 2–4 tuần để kịp buổi thử và trao đổi phong cách.' },
+    { id: 5, question: 'Huỷ lịch có mất phí không?', answer: 'Huỷ trước 24 giờ hoàn toàn miễn phí. Huỷ trong vòng 24 giờ sẽ tính 30% giá trị gói đã chọn.' },
+  ],
   gallery: [],
   // Nội dung trang chủ do quản trị viên chỉnh. Trống = dùng hình minh hoạ có sẵn.
   settings: {},

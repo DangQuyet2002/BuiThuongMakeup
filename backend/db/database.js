@@ -189,6 +189,19 @@ export function initSchema() {
       value      TEXT,
       updated_at TEXT NOT NULL DEFAULT (datetime('now','localtime'))
     );
+
+    -- Câu hỏi thường gặp (FAQ) hiển thị trên trang chủ
+    CREATE TABLE IF NOT EXISTS faqs (
+      id         INTEGER PRIMARY KEY AUTOINCREMENT,
+      question   TEXT    NOT NULL,
+      answer     TEXT    NOT NULL,
+      sort_order INTEGER NOT NULL DEFAULT 0,
+      active     INTEGER NOT NULL DEFAULT 1,
+      created_at TEXT    NOT NULL DEFAULT (datetime('now','localtime'))
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_faqs_sort ON faqs(sort_order);
+    CREATE INDEX IF NOT EXISTS idx_faqs_active ON faqs(active);
   `);
 
   // ---- migration: bổ sung cột cho nội dung hiển thị trên landing page ----
@@ -212,9 +225,6 @@ export function initSchema() {
 }
 
 export function ensureInitialData() {
-  const count = db.prepare('SELECT COUNT(*) c FROM services').get().c;
-  if (count > 0) return;
-
   const defaultServices = [
     {
       name: 'Makeup dự tiệc', slug: 'du-tiec', duration: 60, price: 650000, featured: 0,
@@ -277,29 +287,61 @@ export function ensureInitialData() {
     { name: 'Bảo Ngọc',  initials: 'BN', specialty: 'Học viên · makeup cơ bản', years: 4 },
   ];
 
+  const defaultFaqs = [
+    {
+      question: 'Makeup giữ được bao lâu?',
+      answer: 'Trung bình 8–10 tiếng tuỳ loại da và thời tiết. Với gói cô dâu, chuyên viên sẽ dặm lại trong ngày để đảm bảo luôn tươi tắn khi chụp ảnh.',
+    },
+    {
+      question: 'Da mình dễ kích ứng thì sao?',
+      answer: 'Bạn nên báo trước khi đặt lịch. Studio dùng sản phẩm chính hãng, có dòng dành riêng cho da nhạy cảm và luôn thử một vùng nhỏ trước khi trang điểm toàn mặt.',
+    },
+    {
+      question: 'Có makeup tận nơi không?',
+      answer: 'Có. Với gói cô dâu và các buổi tiệc sáng sớm, chuyên viên có thể đến tận nơi trong nội thành. Phụ phí di chuyển tuỳ khoảng cách, sẽ báo rõ trước khi xác nhận.',
+    },
+    {
+      question: 'Đặt lịch trước bao lâu?',
+      answer: 'Nên đặt trước 3–5 ngày. Với makeup cô dâu, bạn nên đặt trước 2–4 tuần để kịp buổi thử và trao đổi phong cách.',
+    },
+    {
+      question: 'Huỷ lịch có mất phí không?',
+      answer: 'Huỷ trước 24 giờ hoàn toàn miễn phí. Huỷ trong vòng 24 giờ sẽ tính 30% giá trị gói đã chọn.',
+    },
+  ];
+
   db.transaction(() => {
-    const insSvc = db.prepare(`
-      INSERT INTO services (name,slug,description,duration,price,featured,tag,time_label,features,sort_order)
-      VALUES (@name,@slug,@description,@duration,@price,@featured,@tag,@time_label,@features,@sort_order)
-    `);
-    defaultServices.forEach((s, i) => insSvc.run({ ...s, features: JSON.stringify(s.features || []), sort_order: i + 1 }));
+    const count = db.prepare('SELECT COUNT(*) c FROM services').get().c;
+    if (count === 0) {
+      const insSvc = db.prepare(`
+        INSERT INTO services (name,slug,description,duration,price,featured,tag,time_label,features,sort_order)
+        VALUES (@name,@slug,@description,@duration,@price,@featured,@tag,@time_label,@features,@sort_order)
+      `);
+      defaultServices.forEach((s, i) => insSvc.run({ ...s, features: JSON.stringify(s.features || []), sort_order: i + 1 }));
 
-    const insAdd = db.prepare('INSERT INTO addons (name,note,price,sort_order) VALUES (@name,@note,@price,@sort_order)');
-    defaultAddons.forEach((a, i) => insAdd.run({ ...a, sort_order: i + 1 }));
+      const insAdd = db.prepare('INSERT INTO addons (name,note,price,sort_order) VALUES (@name,@note,@price,@sort_order)');
+      defaultAddons.forEach((a, i) => insAdd.run({ ...a, sort_order: i + 1 }));
 
-    const insCombo = db.prepare(`
-      INSERT INTO combos (name,slug,description,old_price,price,featured,tag,features,sort_order)
-      VALUES (@name,@slug,@description,@old_price,@price,@featured,@tag,@features,@sort_order)
-    `);
-    defaultCombos.forEach((c, i) => insCombo.run({ ...c, features: JSON.stringify(c.features || []), sort_order: i + 1 }));
+      const insCombo = db.prepare(`
+        INSERT INTO combos (name,slug,description,old_price,price,featured,tag,features,sort_order)
+        VALUES (@name,@slug,@description,@old_price,@price,@featured,@tag,@features,@sort_order)
+      `);
+      defaultCombos.forEach((c, i) => insCombo.run({ ...c, features: JSON.stringify(c.features || []), sort_order: i + 1 }));
 
-    const insArt = db.prepare('INSERT INTO artists (name,initials,specialty,years,sort_order) VALUES (@name,@initials,@specialty,@years,@sort_order)');
-    defaultArtists.forEach((a, i) => insArt.run({ ...a, sort_order: i + 1 }));
+      const insArt = db.prepare('INSERT INTO artists (name,initials,specialty,years,sort_order) VALUES (@name,@initials,@specialty,@years,@sort_order)');
+      defaultArtists.forEach((a, i) => insArt.run({ ...a, sort_order: i + 1 }));
+    }
+
+    const faqCount = db.prepare('SELECT COUNT(*) c FROM faqs').get().c;
+    if (faqCount === 0) {
+      const insFaq = db.prepare('INSERT INTO faqs (question, answer, sort_order, active) VALUES (@question, @answer, @sort_order, 1)');
+      defaultFaqs.forEach((f, i) => insFaq.run({ ...f, sort_order: i + 1 }));
+    }
 
     const insSetting = db.prepare(`
       INSERT INTO site_settings (key, value, updated_at)
       VALUES (?, ?, datetime('now','localtime'))
-      ON CONFLICT(key) DO UPDATE SET value = excluded.value
+      ON CONFLICT(key) DO NOTHING
     `);
     insSetting.run('bank_id', 'MB');
     insSetting.run('bank_account', '0988776655');
@@ -307,6 +349,24 @@ export function ensureInitialData() {
     insSetting.run('deposit_type', 'fixed');
     insSetting.run('deposit_value', '200000');
     insSetting.run('zalo_phone', '0988776655');
+
+    // Thống kê nổi bật (Trust stats)
+    insSetting.run('stat1_num', '1.200+');
+    insSetting.run('stat1_label', 'Khách hàng');
+    insSetting.run('stat2_num', '4.9/5');
+    insSetting.run('stat2_label', 'Điểm đánh giá');
+    insSetting.run('stat3_num', '8 năm');
+    insSetting.run('stat3_label', 'Kinh nghiệm');
+    insSetting.run('stat4_num', '12');
+    insSetting.run('stat4_label', 'Chuyên viên makeup');
+
+    // Thông tin studio & liên hệ
+    insSetting.run('studio_address', '128 Nguyễn Trãi, Phường Bến Thành, Quận 1, TP.HCM');
+    insSetting.run('studio_hours_weekday', 'Thứ 2 – Thứ 7: 8:00 – 20:00');
+    insSetting.run('studio_hours_sunday', 'Chủ nhật: 9:00 – 17:00');
+    insSetting.run('studio_phone', '0912 345 678');
+    insSetting.run('studio_email', 'hello@mocstudio.vn');
+    insSetting.run('studio_map_note', 'Bản đồ studio · Quận 1, TP.HCM');
   })();
 }
 

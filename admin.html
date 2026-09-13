@@ -1005,6 +1005,147 @@
       padding-bottom: 20px
     }
 
+    /* Sections bên trong Tab Trang chủ */
+    .home-sec {
+      margin-top: 28px;
+      padding: 24px 20px 0;
+      border-top: 1px solid var(--gray-200);
+    }
+
+    .home-sec-head {
+      margin-bottom: 18px;
+    }
+
+    .home-sec-head h4 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--pink-600);
+      margin-bottom: 4px;
+    }
+
+    .home-sec-head p {
+      font-size: 12.5px;
+      color: var(--gray-600);
+    }
+
+    .stats-edit-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    @media(max-width: 860px) {
+      .stats-edit-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media(max-width: 500px) {
+      .stats-edit-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .stat-edit-box {
+      background: var(--gray-50);
+      border: 0.5px solid var(--gray-200);
+      border-radius: 10px;
+      padding: 14px;
+    }
+
+    .stat-edit-box label {
+      display: block;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--gray-600);
+      margin-bottom: 4px;
+    }
+
+    .stat-edit-box input {
+      width: 100%;
+      padding: 8px 10px;
+      border: 0.5px solid var(--gray-200);
+      border-radius: 6px;
+      font-size: 13px;
+      font-family: var(--sans);
+      margin-bottom: 10px;
+      outline: none;
+      background: #fff;
+    }
+
+    .stat-edit-box input:last-child {
+      margin-bottom: 0;
+    }
+
+    .stat-edit-box input:focus {
+      border-color: var(--pink-400);
+    }
+
+    .contact-edit-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    @media(max-width: 760px) {
+      .contact-edit-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .contact-edit-col .field {
+      margin-bottom: 12px;
+    }
+
+    .contact-edit-col .field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--gray-600);
+      margin-bottom: 5px;
+    }
+
+    .contact-edit-col .field input,
+    .contact-edit-col .field textarea {
+      width: 100%;
+      padding: 9px 12px;
+      border: 0.5px solid var(--gray-200);
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-family: var(--sans);
+      outline: none;
+      background: #fff;
+    }
+
+    .contact-edit-col .field input:focus,
+    .contact-edit-col .field textarea:focus {
+      border-color: var(--pink-400);
+    }
+
+    .btn-save-section {
+      background: var(--pink-400);
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: var(--sans);
+      transition: background 0.15s;
+    }
+
+    .btn-save-section:hover {
+      background: var(--pink-600);
+    }
+
+    .btn-save-section:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
     /* ---------- modal form ---------- */
     .modal.wide {
       max-width: 560px
@@ -1513,6 +1654,7 @@
           <button class="subtab" data-kind="combos">Combo</button>
           <button class="subtab" data-kind="addons">Dịch vụ kèm</button>
           <button class="subtab" data-kind="artists">Chuyên viên</button>
+          <button class="subtab" data-kind="faqs">Hỏi đáp FAQ</button>
         </div>
 
         <div class="bar">
@@ -2640,7 +2782,7 @@
 
     /* ================= quản lý nội dung: dịch vụ · giá · combo · ảnh ================= */
 
-    let CAT = { services: [], addons: [], combos: [], artists: [], gallery: [], galleryStats: null };
+    let CAT = { services: [], addons: [], combos: [], artists: [], faqs: [], gallery: [], galleryStats: null };
     let catalogKind = 'services';
     let editingId = null;
 
@@ -2708,6 +2850,17 @@
           { key: 'initials', label: 'Chữ viết tắt', type: 'text', ph: 'Để trống sẽ tự sinh, ví dụ NT' },
           { key: 'specialty', label: 'Sở trường', type: 'text', ph: 'Ví dụ: Cô dâu · tông Hàn Quốc' },
           { key: 'years', label: 'Số năm kinh nghiệm', type: 'number', def: 1 },
+        ],
+      },
+      faqs: {
+        label: 'câu hỏi', empty: 'Chưa có câu hỏi nào. Bấm "+ Thêm" để tạo câu hỏi thường gặp.',
+        columns: [
+          { key: 'question', label: 'Câu hỏi' },
+          { key: 'answer', label: 'Câu trả lời' },
+        ],
+        fields: [
+          { key: 'question', label: 'Câu hỏi', type: 'text', required: true, ph: 'Ví dụ: Makeup giữ được bao lâu?' },
+          { key: 'answer', label: 'Câu trả lời', type: 'textarea', required: true, ph: 'Nội dung giải đáp chi tiết...' },
         ],
       },
     };
@@ -3263,7 +3416,7 @@
       $('homeForm').innerHTML = `
   <div class="hero-head">
     <div>
-      <h4>Ảnh đầu trang</h4>
+      <h4>Ảnh đầu trang (Hero Slideshow)</h4>
       <p class="help">
         Đây là khung dọc bên phải phần mở đầu trang chủ. Thêm <b>nhiều ảnh</b> thì trang chủ tự
         chuyển qua lại như trình chiếu; khách bấm vào khung cũng đổi được ảnh.<br>
@@ -3299,6 +3452,85 @@
     </div>
 
     <div class="form-err" id="homeErr"></div>` : '<span class="ro">Chỉ xem</span>'}
+
+  <!-- ========== KHU VỰC 2: SỐ LIỆU THỐNG KÊ NỔI BẬT ========== -->
+  <div class="home-sec">
+    <div class="home-sec-head">
+      <h4>Số liệu thống kê nổi bật (Trust Stats)</h4>
+      <p>4 khối con số &amp; nhãn hiển thị ngay dưới phần mở đầu trang chủ.</p>
+    </div>
+    <div class="stats-edit-grid">
+      <div class="stat-edit-box">
+        <label>Thống kê 1 - Con số</label>
+        <input type="text" id="stat1Num" value="${esc(HOME?.stat1Num || '1.200+')}" placeholder="vd: 1.200+"${write ? '' : ' disabled'}>
+        <label>Thống kê 1 - Nhãn mô tả</label>
+        <input type="text" id="stat1Label" value="${esc(HOME?.stat1Label || 'Khách hàng')}" placeholder="vd: Khách hàng"${write ? '' : ' disabled'}>
+      </div>
+      <div class="stat-edit-box">
+        <label>Thống kê 2 - Con số</label>
+        <input type="text" id="stat2Num" value="${esc(HOME?.stat2Num || '4.9/5')}" placeholder="vd: 4.9/5"${write ? '' : ' disabled'}>
+        <label>Thống kê 2 - Nhãn mô tả</label>
+        <input type="text" id="stat2Label" value="${esc(HOME?.stat2Label || 'Điểm đánh giá')}" placeholder="vd: Điểm đánh giá"${write ? '' : ' disabled'}>
+      </div>
+      <div class="stat-edit-box">
+        <label>Thống kê 3 - Con số</label>
+        <input type="text" id="stat3Num" value="${esc(HOME?.stat3Num || '8 năm')}" placeholder="vd: 8 năm"${write ? '' : ' disabled'}>
+        <label>Thống kê 3 - Nhãn mô tả</label>
+        <input type="text" id="stat3Label" value="${esc(HOME?.stat3Label || 'Kinh nghiệm')}" placeholder="vd: Kinh nghiệm"${write ? '' : ' disabled'}>
+      </div>
+      <div class="stat-edit-box">
+        <label>Thống kê 4 - Con số</label>
+        <input type="text" id="stat4Num" value="${esc(HOME?.stat4Num || '12')}" placeholder="vd: 12"${write ? '' : ' disabled'}>
+        <label>Thống kê 4 - Nhãn mô tả</label>
+        <input type="text" id="stat4Label" value="${esc(HOME?.stat4Label || 'Chuyên viên makeup')}" placeholder="vd: Chuyên viên makeup"${write ? '' : ' disabled'}>
+      </div>
+    </div>
+    ${write ? `<button type="button" class="btn-save-section" id="btnSaveStats">Lưu số liệu thống kê</button>` : ''}
+  </div>
+
+  <!-- ========== KHU VỰC 3: THÔNG TIN STUDIO & LIÊN HỆ ========== -->
+  <div class="home-sec">
+    <div class="home-sec-head">
+      <h4>Thông tin Studio &amp; Liên hệ</h4>
+      <p>Địa chỉ, giờ mở cửa, số điện thoại, email và ghi chú bản đồ hiển thị ở mục Liên hệ và Chân trang.</p>
+    </div>
+    <div class="contact-edit-grid">
+      <div class="contact-edit-col">
+        <div class="field">
+          <label for="cAddress">Địa chỉ studio</label>
+          <input type="text" id="cAddress" value="${esc(HOME?.studioAddress || '128 Nguyễn Trãi, Phường Bến Thành, Quận 1, TP.HCM')}" placeholder="Địa chỉ studio..."${write ? '' : ' disabled'}>
+        </div>
+        <div class="field">
+          <label for="cHoursWeekday">Giờ mở cửa Thứ 2 – Thứ 7</label>
+          <input type="text" id="cHoursWeekday" value="${esc(HOME?.studioHoursWeekday || 'Thứ 2 – Thứ 7: 8:00 – 20:00')}" placeholder="vd: Thứ 2 – Thứ 7: 8:00 – 20:00"${write ? '' : ' disabled'}>
+        </div>
+        <div class="field">
+          <label for="cHoursSunday">Giờ mở cửa Chủ nhật</label>
+          <input type="text" id="cHoursSunday" value="${esc(HOME?.studioHoursSunday || 'Chủ nhật: 9:00 – 17:00')}" placeholder="vd: Chủ nhật: 9:00 – 17:00"${write ? '' : ' disabled'}>
+        </div>
+      </div>
+      <div class="contact-edit-col">
+        <div class="field">
+          <label for="cPhone">Điện thoại / Zalo tư vấn</label>
+          <input type="text" id="cPhone" value="${esc(HOME?.studioPhone || '0912 345 678')}" placeholder="Số điện thoại..."${write ? '' : ' disabled'}>
+        </div>
+        <div class="field">
+          <label for="cEmail">Email liên hệ</label>
+          <input type="email" id="cEmail" value="${esc(HOME?.studioEmail || 'hello@mocstudio.vn')}" placeholder="Email..."${write ? '' : ' disabled'}>
+        </div>
+        <div class="field">
+          <label for="cMapNote">Ghi chú / Nhãn bản đồ</label>
+          <input type="text" id="cMapNote" value="${esc(HOME?.studioMapNote || 'Bản đồ studio · Quận 1, TP.HCM')}" placeholder="vd: Bản đồ studio · Quận 1, TP.HCM"${write ? '' : ' disabled'}>
+        </div>
+        <div class="field">
+          <label for="cMapEmbed">Link / Mã nhúng Google Maps (tùy chọn)</label>
+          <input type="text" id="cMapEmbed" value="${esc(HOME?.studioMapEmbed || '')}" placeholder="Để trống sẽ tự động lấy theo Địa chỉ studio"${write ? '' : ' disabled'}>
+          <small class="hint" style="color:var(--gray-400);font-size:11px;margin-top:3px;display:block">Hỗ trợ dán đường link Google Maps embed hoặc để trống để tự tạo bản đồ theo địa chỉ trên.</small>
+        </div>
+      </div>
+    </div>
+    ${write ? `<button type="button" class="btn-save-section" id="btnSaveContact">Lưu thông tin liên hệ</button>` : ''}
+  </div>
   `;
 
       if (!write) return;
@@ -3371,6 +3603,59 @@
       if ($('homeInterval')) {
         $('homeInterval').addEventListener('change', (e) => {
           saveHome({ heroInterval: Number(e.target.value), silent: true });
+        });
+      }
+
+      // Lưu số liệu thống kê
+      if ($('btnSaveStats')) {
+        $('btnSaveStats').addEventListener('click', async () => {
+          const btn = $('btnSaveStats');
+          btn.disabled = true;
+          btn.textContent = 'Đang lưu...';
+          try {
+            await saveHome({
+              stat1Num: $('stat1Num').value.trim(),
+              stat1Label: $('stat1Label').value.trim(),
+              stat2Num: $('stat2Num').value.trim(),
+              stat2Label: $('stat2Label').value.trim(),
+              stat3Num: $('stat3Num').value.trim(),
+              stat3Label: $('stat3Label').value.trim(),
+              stat4Num: $('stat4Num').value.trim(),
+              stat4Label: $('stat4Label').value.trim(),
+            });
+            toast('Đã lưu số liệu thống kê');
+          } catch (e) {
+            toast(e.message, true);
+          } finally {
+            btn.disabled = false;
+            btn.textContent = 'Lưu số liệu thống kê';
+          }
+        });
+      }
+
+      // Lưu thông tin liên hệ
+      if ($('btnSaveContact')) {
+        $('btnSaveContact').addEventListener('click', async () => {
+          const btn = $('btnSaveContact');
+          btn.disabled = true;
+          btn.textContent = 'Đang lưu...';
+          try {
+            await saveHome({
+              studioAddress: $('cAddress').value.trim(),
+              studioHoursWeekday: $('cHoursWeekday').value.trim(),
+              studioHoursSunday: $('cHoursSunday').value.trim(),
+              studioPhone: $('cPhone').value.trim(),
+              studioEmail: $('cEmail').value.trim(),
+              studioMapNote: $('cMapNote').value.trim(),
+              studioMapEmbed: $('cMapEmbed')?.value.trim() || '',
+            });
+            toast('Đã lưu thông tin liên hệ');
+          } catch (e) {
+            toast(e.message, true);
+          } finally {
+            btn.disabled = false;
+            btn.textContent = 'Lưu thông tin liên hệ';
+          }
         });
       }
     }

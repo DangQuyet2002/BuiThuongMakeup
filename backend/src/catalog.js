@@ -408,10 +408,74 @@ export function deleteArtist(id) {
 }
 
 /* ============================================================
+   CÂU HỎI THƯỜNG GẶP (FAQ)
+   ============================================================ */
+
+const FAQ_SELECT = 'SELECT id, question, answer, sort_order, active, created_at FROM faqs';
+
+export function listFaqs({ includeInactive = false } = {}) {
+  const sql = `${FAQ_SELECT} ${includeInactive ? '' : 'WHERE active = 1'} ORDER BY sort_order, id`;
+  return db.prepare(sql).all().map(toApi);
+}
+
+export function getFaq(id) {
+  return toApi(db.prepare(`${FAQ_SELECT} WHERE id = ?`).get(id));
+}
+
+export function createFaq(data) {
+  const question = text(data.question, 300);
+  if (!question) return { ok: false, error: 'Vui lòng nhập câu hỏi' };
+
+  const answer = text(data.answer, 2000);
+  if (!answer) return { ok: false, error: 'Vui lòng nhập câu trả lời' };
+
+  const max = db.prepare('SELECT COALESCE(MAX(sort_order),0) m FROM faqs').get().m;
+
+  const info = db.prepare(`
+    INSERT INTO faqs (question, answer, sort_order, active)
+    VALUES (@question, @answer, @sort_order, 1)
+  `).run({
+    question,
+    answer,
+    sort_order: max + 1,
+  });
+
+  return { ok: true, data: getFaq(info.lastInsertRowid) };
+}
+
+export function updateFaq(id, data) {
+  const cur = db.prepare('SELECT * FROM faqs WHERE id = ?').get(id);
+  if (!cur) return { ok: false, error: 'Không tìm thấy câu hỏi' };
+
+  const question = data.question !== undefined ? text(data.question, 300) : cur.question;
+  if (!question) return { ok: false, error: 'Câu hỏi không được để trống' };
+
+  const answer = data.answer !== undefined ? text(data.answer, 2000) : cur.answer;
+  if (!answer) return { ok: false, error: 'Câu trả lời không được để trống' };
+
+  db.prepare('UPDATE faqs SET question = ?, answer = ? WHERE id = ?').run(
+    question,
+    answer,
+    id
+  );
+
+  return { ok: true, data: getFaq(id) };
+}
+
+export function setFaqActive(id, active) {
+  return db.prepare('UPDATE faqs SET active = ? WHERE id = ?').run(active ? 1 : 0, id).changes > 0;
+}
+
+export function deleteFaq(id) {
+  const info = db.prepare('DELETE FROM faqs WHERE id = ?').run(id);
+  return info.changes > 0 ? { ok: true } : { ok: false, error: 'Không tìm thấy câu hỏi' };
+}
+
+/* ============================================================
    SẮP XẾP LẠI THỨ TỰ
    ============================================================ */
 
-const REORDERABLE = { services: 'services', addons: 'addons', combos: 'combos', artists: 'artists' };
+const REORDERABLE = { services: 'services', addons: 'addons', combos: 'combos', artists: 'artists', faqs: 'faqs' };
 
 export function reorder(kind, ids) {
   const table = REORDERABLE[kind];
@@ -428,3 +492,4 @@ export function reorder(kind, ids) {
 }
 
 export { parseFeatures };
+

@@ -192,15 +192,54 @@ async function uploadImage(token, name = 'test.png', type = 'image/png', buf = P
 
   // ---------- 5. Sắp xếp ----------
   section('5. SẮP XẾP THỨ TỰ');
+  const catNow = await req('/admin/catalog', { token: aTok });
+  const allSvcs = catNow.json?.data?.services || [];
+  const baseIds = allSvcs.map((s) => s.id).slice(0, 4);
+  const shuffled = [baseIds[2], baseIds[0], baseIds[1], baseIds[3]].filter(Boolean);
+
   const reorder = await req('/admin/catalog/services/reorder', {
-    method: 'POST', token: aTok, body: { ids: [3, 1, 2, 4] },
+    method: 'POST', token: aTok, body: { ids: shuffled },
   });
   check('lưu thứ tự → 200', reorder.status === 200, 'status=' + reorder.status);
 
   const after = await req('/admin/catalog', { token: aTok });
-  const order = after.json?.data?.services?.filter((s) => [1, 2, 3, 4].includes(s.id)).map((s) => s.id);
-  check('thứ tự được áp dụng đúng', JSON.stringify(order) === JSON.stringify([3, 1, 2, 4]), JSON.stringify(order));
-  await req('/admin/catalog/services/reorder', { method: 'POST', token: aTok, body: { ids: [1, 2, 3, 4] } });
+  const order = after.json?.data?.services?.filter((s) => baseIds.includes(s.id)).map((s) => s.id);
+  check('thứ tự được áp dụng đúng', JSON.stringify(order) === JSON.stringify(shuffled), JSON.stringify(order));
+  await req('/admin/catalog/services/reorder', { method: 'POST', token: aTok, body: { ids: baseIds } });
+
+  // ---------- 5b. Câu hỏi thường gặp (FAQ) & Cài đặt ----------
+  section('5b. FAQ & CÀI ĐẶT TRANG CHỦ');
+  const newFaq = await req('/admin/catalog/faqs', {
+    method: 'POST', token: aTok,
+    body: { question: 'Câu hỏi kiểm thử?', answer: 'Câu trả lời kiểm thử' },
+  });
+  check('thêm FAQ → 201', newFaq.status === 201, 'status=' + newFaq.status);
+  const faqId = newFaq.json?.data?.id;
+
+  const updFaq = await req(`/admin/catalog/faqs/${faqId}`, {
+    method: 'PATCH', token: aTok,
+    body: { question: 'Câu hỏi đã sửa?', answer: 'Câu trả lời đã sửa' },
+  });
+  check('sửa FAQ → 200', updFaq.status === 200, 'status=' + updFaq.status);
+  check('nội dung FAQ đã cập nhật', updFaq.json?.data?.question === 'Câu hỏi đã sửa?');
+
+  const pubFaqs = await req('/faqs');
+  check('API công khai /faqs trả về danh sách', Array.isArray(pubFaqs.json?.data) && pubFaqs.json?.data.some((f) => f.id === faqId));
+
+  const setSettings = await req('/admin/settings', {
+    method: 'PATCH', token: aTok,
+    body: {
+      stat1Num: '2.500+',
+      stat1Label: 'Khách hàng thân thiết',
+      studioAddress: '999 Đường Test, Quận 1, TP.HCM',
+    },
+  });
+  check('lưu cài đặt trang chủ → 200', setSettings.status === 200, 'status=' + setSettings.status);
+  check('thống kê mới đã lưu', setSettings.json?.data?.stat1Num === '2.500+');
+  check('địa chỉ mới đã lưu', setSettings.json?.data?.studioAddress === '999 Đường Test, Quận 1, TP.HCM');
+
+  const delFaq = await req(`/admin/catalog/faqs/${faqId}`, { method: 'DELETE', token: aTok });
+  check('xoá FAQ → 200', delFaq.status === 200, 'status=' + delFaq.status);
 
   // ---------- 6. Tải ảnh ----------
   section('6. TẢI ẢNH LÊN');
@@ -328,9 +367,12 @@ async function uploadImage(token, name = 'test.png', type = 'image/png', buf = P
   }
 
   // dịch vụ đang có đơn không xoá được
-  const usedSvc = await req('/admin/catalog/services/1', { method: 'DELETE', token: aTok });
-  check('không xoá được dịch vụ đang có đơn → 400', usedSvc.status === 400, 'status=' + usedSvc.status);
-  check('gợi ý chuyển sang Ẩn', /ẩn/i.test(usedSvc.json?.error || ''), usedSvc.json?.error);
+  const firstSvcId = baseIds[0];
+  if (firstSvcId) {
+    const usedSvc = await req(`/admin/catalog/services/${firstSvcId}`, { method: 'DELETE', token: aTok });
+    check('không xoá được dịch vụ đang có đơn → 400', usedSvc.status === 400, 'status=' + usedSvc.status);
+    check('gợi ý chuyển sang Ẩn', /ẩn/i.test(usedSvc.json?.error || ''), usedSvc.json?.error);
+  }
 
   const finalCat = await req('/admin/catalog', { token: aTok });
   check('dữ liệu gốc còn nguyên 4 dịch vụ',

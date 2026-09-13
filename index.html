@@ -1683,12 +1683,21 @@
       aspect-ratio: 4/3;
       border-radius: var(--radius-lg);
       background: var(--gray-50);
+      overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
       color: var(--gray-400);
       font-size: 13px;
-      border: 0.5px solid var(--gray-200)
+      border: 0.5px solid var(--gray-200);
+      position: relative;
+    }
+
+    .map iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
     }
 
     footer {
@@ -2871,14 +2880,17 @@
   <script type="module">
     import { MocAPI, FALLBACK, localSlots } from './api-client.js';
 
-    document.querySelectorAll('.faq-q').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        var item = btn.parentElement;
-        var open = item.classList.contains('open');
-        document.querySelectorAll('.faq-item').forEach(function (i) { i.classList.remove('open') });
-        if (!open) item.classList.add('open');
+    function wireFaqs() {
+      document.querySelectorAll('.faq-q').forEach(function (btn) {
+        btn.onclick = function () {
+          var item = btn.parentElement;
+          var open = item.classList.contains('open');
+          document.querySelectorAll('.faq-item').forEach(function (i) { i.classList.remove('open') });
+          if (!open) item.classList.add('open');
+        };
       });
-    });
+    }
+    wireFaqs();
 
     function toast(msg) {
       var t = document.getElementById('toast');
@@ -2951,7 +2963,7 @@
       });
     }
 
-    var CATALOG = { services: [], addons: [], combos: [], artists: [] };
+    var CATALOG = { services: [], addons: [], combos: [], artists: [], faqs: [] };
     var MODE = 'live';
     var pickedTime = '';
     var pickedArtist = null;
@@ -2993,8 +3005,97 @@
       renderServicesSection();
       renderGallerySection();
       renderHero();
+      renderStats();
+      renderFaqs();
+      renderContact();
       updateTotal();
       renderSlots();
+    }
+
+    // ---- Số liệu thống kê nổi bật (Trust Stats) ----
+    function renderStats() {
+      var s = (CATALOG && CATALOG.settings) || {};
+      var grid = document.querySelector('.trust-grid');
+      if (grid) {
+        var s1Num = s.stat1Num || '1.200+';
+        var s1Lbl = s.stat1Label || 'Khách hàng';
+        var s2Num = s.stat2Num || '4.9/5';
+        var s2Lbl = s.stat2Label || 'Điểm đánh giá';
+        var s3Num = s.stat3Num || '8 năm';
+        var s3Lbl = s.stat3Label || 'Kinh nghiệm';
+        var s4Num = s.stat4Num || '12';
+        var s4Lbl = s.stat4Label || 'Chuyên viên makeup';
+
+        grid.innerHTML = '<div><b>' + esc(s1Num) + '</b><small>' + esc(s1Lbl) + '</small></div>'
+          + '<div><b>' + esc(s2Num) + '</b><small>' + esc(s2Lbl) + '</small></div>'
+          + '<div><b>' + esc(s3Num) + '</b><small>' + esc(s3Lbl) + '</small></div>'
+          + '<div><b>' + esc(s4Num) + '</b><small>' + esc(s4Lbl) + '</small></div>';
+      }
+      var heroBadge = document.querySelector('.hero-badge');
+      if (heroBadge) {
+        var bNum = s.stat1Num || '1.200+';
+        var bLbl = (s.stat1Label ? s.stat1Label.toLowerCase() : 'khách hàng') + ' đã tin chọn';
+        heroBadge.innerHTML = '<b>' + esc(bNum) + '</b><small>' + esc(bLbl) + '</small>';
+      }
+    }
+
+    // ---- Câu hỏi thường gặp (FAQ) ----
+    function renderFaqs() {
+      var list = CATALOG && CATALOG.faqs;
+      if (!list || !list.length) return;
+      var box = document.querySelector('.faq-list');
+      if (!box) return;
+
+      box.innerHTML = list.map(function (f) {
+        return '<div class="faq-item">'
+          + '<button class="faq-q" type="button">' + esc(f.question) + '<em>+</em></button>'
+          + '<div class="faq-a"><p>' + esc(f.answer) + '</p></div>'
+          + '</div>';
+      }).join('');
+
+      wireFaqs();
+    }
+
+    // ---- Thông tin studio & liên hệ ----
+    function renderContact() {
+      var s = (CATALOG && CATALOG.settings) || {};
+      var addr = s.studioAddress || '128 Nguyễn Trãi, Phường Bến Thành, Quận 1, TP.HCM';
+      var hw = s.studioHoursWeekday || 'Thứ 2 – Thứ 7: 8:00 – 20:00';
+      var hs = s.studioHoursSunday || 'Chủ nhật: 9:00 – 17:00';
+      var phone = s.studioPhone || '0912 345 678';
+      var email = s.studioEmail || 'hello@mocstudio.vn';
+      var mapNote = s.studioMapNote || 'Bản đồ studio · Quận 1, TP.HCM';
+      var mapEmbed = (s.studioMapEmbed || '').trim();
+
+      var mapSrc = '';
+      if (mapEmbed) {
+        var match = mapEmbed.match(/src=["']([^"']+)["']/i);
+        mapSrc = match ? match[1] : mapEmbed;
+      } else if (addr) {
+        mapSrc = 'https://maps.google.com/maps?q=' + encodeURIComponent(addr) + '&t=&z=15&ie=UTF8&iwloc=&output=embed';
+      }
+
+      var mapHtml = mapSrc
+        ? '<iframe src="' + esc(mapSrc) + '" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Bản đồ chỉ đường tới Studio" aria-label="Bản đồ studio"></iframe>'
+        : '<div style="color:var(--gray-400);font-size:13px">' + esc(mapNote) + '</div>';
+
+      var contactGrid = document.querySelector('.contact-grid');
+      if (contactGrid) {
+        contactGrid.innerHTML = '<div>'
+          + '<div class="info-item"><div class="info-ico">◎</div><div><b>Địa chỉ studio</b><p>' + esc(addr) + '</p></div></div>'
+          + '<div class="info-item"><div class="info-ico">◷</div><div><b>Giờ mở cửa</b><p>' + esc(hw) + (hs ? '<br>' + esc(hs) : '') + '</p></div></div>'
+          + '<div class="info-item"><div class="info-ico">✆</div><div><b>Điện thoại / Zalo</b><p>' + esc(phone) + '</p></div></div>'
+          + '<div class="info-item"><div class="info-ico">✉</div><div><b>Email</b><p>' + esc(email) + '</p></div></div>'
+          + '</div>'
+          + '<div class="map">' + mapHtml + '</div>';
+      }
+
+      var cleanPhone = phone.replace(/\D/g, '');
+      if (cleanPhone) {
+        document.querySelectorAll('a[href^="tel:"]').forEach(function (a) {
+          a.href = 'tel:' + cleanPhone;
+        });
+      }
     }
 
     // ---- Ảnh đầu trang: quản trị viên tải lên ở tab "Trang chủ" ----
