@@ -2388,15 +2388,18 @@
       </div>
       <div class="hero-visual">
         <div class="hero-photo" id="heroPhoto">
-          <svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
-            <ellipse cx="100" cy="88" rx="46" ry="56" fill="#FAECE7" />
-            <path d="M54 82c0-34 20-58 46-58s46 24 46 58c0-14-12-24-46-24s-46 10-46 24z" fill="#4B1528" opacity=".82" />
-            <ellipse cx="100" cy="150" rx="30" ry="14" fill="#F0997B" opacity=".5" />
-            <circle cx="84" cy="86" r="3.4" fill="#4B1528" />
-            <circle cx="116" cy="86" r="3.4" fill="#4B1528" />
-            <path d="M92 106q8 7 16 0" stroke="#D4537E" stroke-width="2.4" fill="none" stroke-linecap="round" />
-            <path d="M46 240c0-42 24-70 54-70s54 28 54 70z" fill="#D4537E" opacity=".28" />
-          </svg>
+          <script>
+            (function() {
+              try {
+                var c = localStorage.getItem('moc_hero_img');
+                if (c) {
+                  document.write('<img src="' + c + '" alt="Khách hàng tại Bùi Thương Makeup" fetchpriority="high" decoding="async">');
+                } else {
+                  document.write('<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg"><ellipse cx="100" cy="88" rx="46" ry="56" fill="#FAECE7" /><path d="M54 82c0-34 20-58 46-58s46 24 46 58c0-14-12-24-46-24s-46 10-46 24z" fill="#4B1528" opacity=".82" /><ellipse cx="100" cy="150" rx="30" ry="14" fill="#F0997B" opacity=".5" /><circle cx="84" cy="86" r="3.4" fill="#4B1528" /><circle cx="116" cy="86" r="3.4" fill="#4B1528" /><path d="M92 106q8 7 16 0" stroke="#D4537E" stroke-width="2.4" fill="none" stroke-linecap="round" /><path d="M46 240c0-42 24-70 54-70s54 28 54 70z" fill="#D4537E" opacity=".28" /></svg>');
+                }
+              } catch(e) {}
+            })();
+          </script>
         </div>
         <div class="hero-dots" id="heroDots"></div>
         <div class="hero-badge"><b>1.200+</b><small>khách hàng đã tin chọn</small></div>
@@ -2958,7 +2961,7 @@
   </div>
 
   <script type="module">
-    import { MocAPI, FALLBACK, localSlots, resolveImg } from './api-client.js';
+    import { MocAPI, FALLBACK, localSlots, resolveImg } from './api-client.js?v=1.2.1';
 
     function wireFaqs() {
       document.querySelectorAll('.faq-q').forEach(function (btn) {
@@ -3117,22 +3120,19 @@
     }
 
     async function boot() {
-      var ok = await MocAPI.ping();
-      if (ok) {
-        try {
-          CATALOG = await MocAPI.getCatalog();
-          MODE = 'live';
-          showNet('live', 'Đã kết nối máy chủ · khung giờ cập nhật theo thời gian thực');
-          setTimeout(function () { netbar.classList.remove('show') }, 4000);
-        } catch (e) {
-          MODE = 'demo';
-          CATALOG = FALLBACK;
-          showNet('err', 'Không tải được dữ liệu từ máy chủ — đang dùng dữ liệu mẫu');
-        }
-      } else {
+      try {
+        CATALOG = await MocAPI.getCatalog();
+        MODE = 'live';
+        showNet('live', 'Đã kết nối máy chủ · khung giờ cập nhật theo thời gian thực');
+        setTimeout(function () { netbar.classList.remove('show') }, 4000);
+      } catch (e) {
         MODE = 'demo';
         CATALOG = FALLBACK;
-        showNet('demo', 'Chế độ xem trước · máy chủ chưa chạy, dữ liệu chỉ mang tính minh hoạ');
+        if (e.message !== 'OFFLINE') {
+          showNet('err', 'Không tải được dữ liệu từ máy chủ — đang dùng dữ liệu mẫu');
+        } else {
+          showNet('demo', 'Chế độ xem trước · máy chủ chưa chạy, dữ liệu chỉ mang tính minh hoạ');
+        }
       }
       renderServices();
       renderAddons();
@@ -3255,11 +3255,12 @@
 
       if (!list.length) {
         if (dots) dots.innerHTML = '';
+        try { localStorage.removeItem('moc_hero_img'); } catch(e) {}
         return;   // giữ hình minh hoạ có sẵn
       }
 
-      // Kiểm tra ảnh tải được trước khi thay hình minh hoạ, để ảnh hỏng không
-      // làm khung trống.
+      try { localStorage.setItem('moc_hero_img', list[0]); } catch(e) {}
+
       var canAuto = list.length > 1 && cfg.heroAutoplay !== false;
 
       // Dùng chung cho nút chấm và cú bấm vào khung
@@ -3269,18 +3270,20 @@
         if (canAuto) startHeroRotation(list);
       };
 
-      var img = new Image();
-      img.onload = function () {
-        box.innerHTML = '';
+      var curImg = box.querySelector('img');
+      if (!curImg || curImg.getAttribute('src') !== list[0]) {
+        var img = document.createElement('img');
+        img.src = list[0];
         img.alt = 'Khách hàng được trang điểm tại Bùi Thương Makeup';
+        img.setAttribute('fetchpriority', 'high');
+        img.setAttribute('decoding', 'async');
+        box.innerHTML = '';
         box.appendChild(img);
+      }
 
-        heroIdx = 0;
-        buildDots(list.length, list);
-        if (canAuto) startHeroRotation(list);
-      };
-      img.onerror = function () { };
-      img.src = list[0];
+      heroIdx = 0;
+      buildDots(list.length, list);
+      if (canAuto) startHeroRotation(list);
 
       // Bấm vào khung thì sang ảnh kế tiếp
       box.style.cursor = list.length > 1 ? 'pointer' : '';

@@ -60,7 +60,8 @@ app.use('/api/admin', adminRoutes);
 
 // Ảnh do quản trị viên tải lên (ưu tiên bộ nhớ đệm đĩa cục bộ)
 app.use('/uploads', express.static(UPLOADS_DIR, {
-  maxAge: '7d',
+  maxAge: '30d',
+  immutable: true,
   index: false,
   dotfiles: 'deny',
 }));
@@ -75,7 +76,7 @@ app.get('/uploads/:filename', async (req, res, next) => {
       writeFileSync(full, cloudFile.data);
     } catch {}
     res.setHeader('Content-Type', cloudFile.mime_type || 'image/jpeg');
-    res.setHeader('Cache-Control', 'public, max-age=604800');
+    res.setHeader('Cache-Control', 'public, max-age=2592000, immutable');
     return res.send(cloudFile.data);
   }
   next();
