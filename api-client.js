@@ -162,8 +162,11 @@ export const FALLBACK = {
     { id: 5, question: 'Huỷ lịch có mất phí không?', answer: 'Huỷ trước 24 giờ hoàn toàn miễn phí. Huỷ trong vòng 24 giờ sẽ tính 30% giá trị gói đã chọn.' },
   ],
   gallery: [],
-  // Nội dung trang chủ do quản trị viên chỉnh. Trống = dùng hình minh hoạ có sẵn.
-  settings: {},
+  // Nội dung trang chủ mặc định
+  settings: {
+    heroImage: '/uploads/anh-mtzivoga-31420bfc.jpg',
+    heroImages: ['/uploads/anh-mtzivoga-31420bfc.jpg'],
+  },
 };
 
 export function localSlots(date) {
