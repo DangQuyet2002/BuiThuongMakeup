@@ -2431,11 +2431,11 @@
       <h3>Cắt &amp; Định hình ảnh</h3>
       <p class="sub">Kéo di chuyển hoặc co giãn các góc để chọn vùng ảnh hiển thị đẹp nhất</p>
       <div class="crop-ratios" id="cropRatios">
-        <button type="button" class="crop-btn" data-ratio="free">Tự do</button>
-        <button type="button" class="crop-btn on" data-ratio="4:5">Dọc (4:5)</button>
-        <button type="button" class="crop-btn" data-ratio="3:4">Dọc (3:4)</button>
+        <button type="button" class="crop-btn on" data-ratio="16:10">✨ Chuẩn So sánh (16:10)</button>
+        <button type="button" class="crop-btn" data-ratio="4:5">✨ Chuẩn Đầu trang Hero (4:5)</button>
+        <button type="button" class="crop-btn" data-ratio="3:4">✨ Chuẩn Thư viện (3:4)</button>
         <button type="button" class="crop-btn" data-ratio="1:1">Vuông (1:1)</button>
-        <button type="button" class="crop-btn" data-ratio="16:9">Ngang (16:9)</button>
+        <button type="button" class="crop-btn" data-ratio="free">Tự do</button>
       </div>
       <div class="crop-container" id="cropContainer">
         <div class="crop-img-wrap" id="cropWrap">
@@ -3854,10 +3854,10 @@
           if (!input.files?.[0]) return;
           const origFile = input.files[0];
           input.value = '';
-          openCropper(origFile, 'free', (croppedFile) => {
+          openCropper(origFile, '16:10', (croppedFile) => {
             uploaded[slot] = croppedFile;
             const url = URL.createObjectURL(croppedFile);
-            drop.innerHTML = `<img class="preview" src="${url}" alt=""><small style="display:block;margin-top:8px">${esc(croppedFile.name)} (Đã định hình)</small>`;
+            drop.innerHTML = `<img class="preview" src="${url}" alt=""><small style="display:block;margin-top:8px">${esc(croppedFile.name)} (Đã định hình 16:10)</small>`;
             drop.style.padding = '12px';
           });
         });
