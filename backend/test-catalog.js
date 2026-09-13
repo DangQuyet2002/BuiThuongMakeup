@@ -369,9 +369,23 @@ async function uploadImage(token, name = 'test.png', type = 'image/png', buf = P
   // dịch vụ đang có đơn không xoá được
   const firstSvcId = baseIds[0];
   if (firstSvcId) {
+    try {
+      const { db } = await import('./db/database.js');
+      const hasBooking = db.prepare('SELECT id FROM bookings WHERE service_id = ?').get(firstSvcId);
+      if (!hasBooking) {
+        db.prepare(`
+          INSERT INTO bookings (code, service_id, service_name, date, time, duration, customer, phone, total)
+          VALUES ('BT-TEST-DEL', ?, 'Test Service', '2026-12-31', '10:00', 60, 'Khách Thử', '0912345678', 100000)
+        `).run(firstSvcId);
+      }
+    } catch {}
     const usedSvc = await req(`/admin/catalog/services/${firstSvcId}`, { method: 'DELETE', token: aTok });
     check('không xoá được dịch vụ đang có đơn → 400', usedSvc.status === 400, 'status=' + usedSvc.status);
     check('gợi ý chuyển sang Ẩn', /ẩn/i.test(usedSvc.json?.error || ''), usedSvc.json?.error);
+    try {
+      const { db } = await import('./db/database.js');
+      db.prepare("DELETE FROM bookings WHERE code = 'BT-TEST-DEL'").run();
+    } catch {}
   }
 
   const finalCat = await req('/admin/catalog', { token: aTok });

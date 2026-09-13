@@ -1,6 +1,7 @@
 import { resolveSession, can, logAudit, createUser, countUsers } from './users.js';
 import { logger } from './logger.js';
 import { db } from '../db/database.js';
+import { triggerSyncToSupabase } from '../db/supabase-sync.js';
 
 const LEGACY_TOKEN = process.env.ADMIN_TOKEN || 'moc-admin-2026';
 
@@ -103,6 +104,7 @@ export function auditAction(action) {
     res.json = function (body) {
       if (res.statusCode < 400) {
         logAudit(req.user, action, req.originalUrl, describeBody(body), req.ip);
+        triggerSyncToSupabase();
       }
       return originalJson(body);
     };

@@ -95,7 +95,7 @@ router.post('/logout', blockIfMustChangePassword, (req, res) => {
   res.json({ ok: true, message: 'Đã đăng xuất' });
 });
 
-router.post('/change-password', (req, res) => {
+router.post('/change-password', auditAction('doi_mat_khau'), (req, res) => {
   const { currentPassword, newPassword } = req.body || {};
   if (req.user.legacy) {
     return res.status(400).json({ ok: false, error: 'Đang dùng mã chung cũ, không đổi được mật khẩu' });

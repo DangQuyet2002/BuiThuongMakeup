@@ -10,6 +10,7 @@ import { notifyBookingCreated } from '../src/notifications.js';
 import * as catalog from '../src/catalog.js';
 import { listGallery } from '../src/gallery.js';
 import { getSettings } from '../src/settings.js';
+import { triggerSyncToSupabase } from '../db/supabase-sync.js';
 
 const router = Router();
 
@@ -160,6 +161,9 @@ router.post('/bookings', bookingLimiter, async (req, res) => {
     total: calc.total,
     deposit_amount: depositAmount,
   });
+
+  // Tự động đẩy lên Supabase Cloud để lưu trữ vĩnh viễn
+  triggerSyncToSupabase();
 
   const bankId = settings.bankId || 'MB';
   const bankAccount = settings.bankAccount || '';

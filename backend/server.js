@@ -6,6 +6,7 @@ import { dirname, join } from 'path';
 import { existsSync } from 'fs';
 
 import { initSchema } from './db/database.js';
+import { pullFromSupabase, pushAllToSupabase } from './db/supabase-sync.js';
 import apiRoutes from './routes/api.js';
 import adminRoutes from './routes/admin.js';
 import { startReminderJob, stopReminderJob } from './src/reminder-job.js';
@@ -20,6 +21,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT || 3000;
 
 initSchema();
+await pullFromSupabase().catch(e => console.error('[Supabase] Initial sync failed:', e.message));
 
 const app = express();
 
@@ -142,6 +144,13 @@ const server = app.listen(PORT, async () => {
   }, 30 * 60_000);
   sessionCleaner.unref();
 
+  // Tự động sao lưu dữ liệu lên Supabase Cloud định kỳ 20 giây
+  const cloudSync = setInterval(() => {
+    pushAllToSupabase().catch(e => logger.warn({ error: e.message }, '[Supabase] Sync error'));
+  }, 20_000);
+  cloudSync.unref();
+
+  console.log('  Cloud Database: đã kết nối Supabase (Lưu trữ vĩnh viễn)');
   console.log('');
 });
 

@@ -46,9 +46,16 @@ async function login(cred) {
   // ngay ở bước đăng nhập và cho ra kết quả sai lệch.
   try {
     const { db } = await import('./db/database.js');
+    const { createUser, getUserByUsername } = await import('./src/users.js');
     db.prepare('DELETE FROM rate_limits').run();
     db.prepare('DELETE FROM users WHERE username LIKE \'test%\'').run();
     db.prepare('DELETE FROM sessions WHERE user_id NOT IN (SELECT id FROM users)').run();
+    if (!getUserByUsername('linh')) {
+      createUser({ username: 'linh', password: 'Staff@2026', displayName: 'Linh Staff', role: 'staff' });
+    }
+    if (!getUserByUsername('mai')) {
+      createUser({ username: 'mai', password: 'View@2026', displayName: 'Mai Viewer', role: 'viewer' });
+    }
   } catch (e) {
     console.warn('  (cảnh báo) không dọn được trạng thái cũ:', e.message);
   }
