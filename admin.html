@@ -3905,8 +3905,15 @@
       try {
         const body = { title, category, kind: 'compare' };
 
-        if (uploaded.before) body.beforeImage = await uploadOne(uploaded.before);
-        if (uploaded.after) body.afterImage = await uploadOne(uploaded.after);
+        const uploadTasks = [];
+        if (uploaded.before) uploadTasks.push(uploadOne(uploaded.before).then(url => { body.beforeImage = url; }));
+        if (uploaded.after) uploadTasks.push(uploadOne(uploaded.after).then(url => { body.afterImage = url; }));
+        
+        if (uploadTasks.length) {
+          btn.textContent = 'Đang tải ảnh lên...';
+          await Promise.all(uploadTasks);
+        }
+
         if (!body.beforeImage && body.afterImage) body.beforeImage = body.afterImage;
         if (!body.afterImage && body.beforeImage) body.afterImage = body.beforeImage;
 
@@ -4341,11 +4348,11 @@
       const oldLabel = btn ? btn.textContent : '';
 
       try {
-        // 1. Tải các ảnh vừa chọn lên (tuần tự để giữ đúng thứ tự)
-        const uploaded = [];
+        // 1. Tải các ảnh vừa chọn lên đồng thời (song song để tăng tốc tối đa)
+        let uploaded = [];
         if (queue.length) {
           if (btn) btn.textContent = `Đang tải ${queue.length} ảnh...`;
-          for (const f of queue) uploaded.push(await uploadOne(f));
+          uploaded = await Promise.all(queue.map(f => uploadOne(f)));
         }
 
         // 2. Gộp vào danh sách hiện có rồi lưu
@@ -4679,32 +4686,67 @@
       });
 
       $('cropApply').addEventListener('click', () => {
-        const img = $('cropImg');
-        const { x, y, w, h } = cropState.box;
-        const scaleX = img.naturalWidth / img.clientWidth;
-        const scaleY = img.naturalHeight / img.clientHeight;
+        const btn = $('cropApply');
+        btn.disabled = true;
+        btn.textContent = '⏳ Đang tối ưu...';
 
-        const canvas = document.createElement('canvas');
-        canvas.width = Math.round(w * scaleX);
-        canvas.height = Math.round(h * scaleY);
-        const ctx = canvas.getContext('2d');
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            try {
+              const img = $('cropImg');
+              const { x, y, w, h } = cropState.box;
+              const scaleX = img.naturalWidth / img.clientWidth;
+              const scaleY = img.naturalHeight / img.clientHeight;
 
-        ctx.drawImage(
-          img,
-          x * scaleX, y * scaleY, w * scaleX, h * scaleY,
-          0, 0, canvas.width, canvas.height
-        );
+              const rawW = Math.round(w * scaleX);
+              const rawH = Math.round(h * scaleY);
+              const maxDim = 1600; // Tối đa 1600px cho độ sắc nét Retina hoàn hảo nhưng nhẹ gấp 10 lần
+              let targetW = rawW;
+              let targetH = rawH;
+              if (targetW > maxDim || targetH > maxDim) {
+                if (targetW > targetH) {
+                  targetH = Math.round((targetH * maxDim) / targetW);
+                  targetW = maxDim;
+                } else {
+                  targetW = Math.round((targetW * maxDim) / targetH);
+                  targetH = maxDim;
+                }
+              }
 
-        const mime = cropState.file.type || 'image/jpeg';
-        canvas.toBlob((blob) => {
-          $('cropBackdrop').classList.remove('on');
-          if (blob) {
-            const croppedFile = new File([blob], cropState.file.name, { type: mime });
-            if (cropState.onDone) cropState.onDone(croppedFile);
-          } else {
-            if (cropState.onDone) cropState.onDone(cropState.file);
-          }
-        }, mime, 0.92);
+              const canvas = document.createElement('canvas');
+              canvas.width = Math.max(1, targetW);
+              canvas.height = Math.max(1, targetH);
+              const ctx = canvas.getContext('2d');
+              ctx.imageSmoothingEnabled = true;
+              ctx.imageSmoothingQuality = 'high';
+
+              ctx.drawImage(
+                img,
+                x * scaleX, y * scaleY, w * scaleX, h * scaleY,
+                0, 0, canvas.width, canvas.height
+              );
+
+              const mime = 'image/jpeg';
+              canvas.toBlob((blob) => {
+                $('cropBackdrop').classList.remove('on');
+                btn.disabled = false;
+                btn.textContent = 'Cắt & Áp dụng';
+                if (blob) {
+                  const baseName = (cropState.file.name || 'image').replace(/\.[^/.]+$/, '');
+                  const croppedFile = new File([blob], `${baseName}.jpg`, { type: mime });
+                  if (cropState.onDone) cropState.onDone(croppedFile);
+                } else {
+                  if (cropState.onDone) cropState.onDone(cropState.file);
+                }
+              }, mime, 0.86);
+            } catch (err) {
+              $('cropBackdrop').classList.remove('on');
+              btn.disabled = false;
+              btn.textContent = 'Cắt & Áp dụng';
+              if (cropState.onDone) cropState.onDone(cropState.file);
+            }
+          }, 20);
+        });
       });
     }
 

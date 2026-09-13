@@ -7,6 +7,7 @@
   <title>Bùi Thương Makeup — Đặt lịch makeup chuyên nghiệp</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://dkrvlkbyieihzywghlpo.supabase.co" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Dancing+Script:wght@600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap" rel="stylesheet">
   <style>
     html {
@@ -294,7 +295,8 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      display: block
+      display: block;
+      transition: opacity .35s ease-out;
     }
 
     .hero-badge {
@@ -475,7 +477,7 @@
       border-radius: var(--radius-lg);
       overflow: hidden;
       aspect-ratio: 3/4;
-      background: #fff;
+      background: linear-gradient(135deg, #FBEAF0 0%, #FAECE7 100%);
       position: relative;
       cursor: pointer;
       transition: transform .25s ease
@@ -499,7 +501,8 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      display: block
+      display: block;
+      transition: opacity .35s ease-out;
     }
 
     .gal-item .cap {
@@ -3061,13 +3064,24 @@
       var g = lbItems[lbIndex];
       var bSrc = resolveImg(g.before_image || g.after_image || g.image_path);
       var aSrc = resolveImg(g.after_image || g.before_image || g.image_path);
-      document.getElementById('lbBefore').innerHTML = '<img src="' + esc(bSrc) + '" alt="Ảnh trước khi trang điểm">';
-      document.getElementById('lbAfter').innerHTML = '<img src="' + esc(aSrc) + '" alt="Ảnh sau khi trang điểm">';
+      document.getElementById('lbBefore').innerHTML = '<img src="' + esc(bSrc) + '" alt="Ảnh trước khi trang điểm" decoding="async" fetchpriority="high">';
+      document.getElementById('lbAfter').innerHTML = '<img src="' + esc(aSrc) + '" alt="Ảnh sau khi trang điểm" decoding="async" fetchpriority="high">';
       document.getElementById('lbCap').innerHTML = esc(g.title || '') + (g.category ? '<small>' + esc(g.category) + '</small>' : '');
       lbCtl.set(50);
       lbEl.classList.add('on');
       lbEl.setAttribute('aria-hidden', 'false');
       document.body.classList.add('lb-open');
+
+      // Tải trước ảnh liền kề để khi bấm < > hiển thị tức thì 0ms
+      var nextG = lbItems[(lbIndex + 1) % lbItems.length];
+      var prevG = lbItems[(lbIndex - 1 + lbItems.length) % lbItems.length];
+      [nextG, prevG].forEach(function (item) {
+        if (!item) return;
+        var b = resolveImg(item.before_image || item.after_image || item.image_path);
+        var a = resolveImg(item.after_image || item.before_image || item.image_path);
+        if (b) { var imgB = new Image(); imgB.decoding = 'async'; imgB.src = b; }
+        if (a) { var imgA = new Image(); imgA.decoding = 'async'; imgA.src = a; }
+      });
     }
 
     function closeCompare() {
@@ -3271,6 +3285,13 @@
       buildDots(list.length, list);
       if (canAuto) startHeroRotation(list);
 
+      // Tải trước ngầm toàn bộ ảnh slideshow vào bộ nhớ đệm trình duyệt
+      list.forEach(function (src) {
+        var pre = new Image();
+        pre.decoding = 'async';
+        pre.src = src;
+      });
+
       // Bấm vào khung thì sang ảnh kế tiếp
       box.style.cursor = list.length > 1 ? 'pointer' : '';
       box.onclick = function () {
@@ -3382,10 +3403,16 @@
       var first = gal[0];
       var beforeEl = document.querySelector('#ba .ba-before');
       var afterEl = document.querySelector('#ba .ba-after');
-      if (beforeEl) beforeEl.innerHTML = '<img src="' + esc(first.before_image) + '" alt="Ảnh trước khi trang điểm">';
-      if (afterEl) afterEl.innerHTML = '<img src="' + esc(first.after_image) + '" alt="Ảnh sau khi trang điểm">';
+      if (beforeEl) beforeEl.innerHTML = '<img src="' + esc(first.before_image) + '" alt="Ảnh trước khi trang điểm" fetchpriority="high" decoding="async">';
+      if (afterEl) afterEl.innerHTML = '<img src="' + esc(first.after_image) + '" alt="Ảnh sau khi trang điểm" fetchpriority="high" decoding="async">';
       var note = document.querySelector('.ba-note');
       if (note) note.textContent = 'Kéo thanh trượt để so sánh — ' + (first.title || 'khách thật tại Bùi Thương Makeup');
+
+      // Tải trước ngầm toàn bộ thư viện ảnh so sánh
+      gal.forEach(function (g) {
+        if (g.before_image) { var p1 = new Image(); p1.decoding = 'async'; p1.src = g.before_image; }
+        if (g.after_image) { var p2 = new Image(); p2.decoding = 'async'; p2.src = g.after_image; }
+      });
 
       // Lưới phía dưới: chỉ hiển thị các tác phẩm KHÁC (từ mục thứ 2 trở đi) để không bị trùng lặp với thanh trượt ở trên
       lbItems = gal;
@@ -3400,7 +3427,7 @@
       box.innerHTML = remaining.map(function (g, idx) {
         var realIndex = idx + 1;
         return '<button type="button" class="gal-item" data-i="' + realIndex + '" aria-label="Xem chi tiết: ' + esc(g.title || '') + '">'
-          + '<img src="' + esc(g.after_image) + '" alt="' + esc(g.alt_text || g.title || 'Ảnh sau khi make') + '" loading="lazy">'
+          + '<img src="' + esc(g.after_image) + '" alt="' + esc(g.alt_text || g.title || 'Ảnh sau khi make') + '" loading="lazy" decoding="async">'
           + '<span class="badge">' + esc(g.category || 'Sau') + '</span>'
           + '<span class="zoom">Bấm để xem trước / sau</span>'
           + '</button>';
