@@ -2,8 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
-import { existsSync } from 'fs';
+import { basename, dirname, join } from 'path';
+import { existsSync, writeFileSync } from 'fs';
 
 import { initSchema } from './db/database.js';
 import { pullFromSupabase, pushAllToSupabase } from './db/supabase-sync.js';
@@ -15,7 +15,7 @@ import { logger, requestLogger, errorLogger, LOG_PATHS } from './src/logger.js';
 import { ensureInitialAdmin, authStatus } from './src/auth-middleware.js';
 import { cleanupSessions } from './src/users.js';
 import { rateLimitStats } from './src/rate-limit.js';
-import { UPLOADS_DIR, uploadsStatus } from './src/uploads.js';
+import { UPLOADS_DIR, uploadsStatus, getUploadFromCloud } from './src/uploads.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT || 3000;
@@ -58,12 +58,28 @@ app.get('/api/health', (req, res) => {
 app.use('/api', apiRoutes);
 app.use('/api/admin', adminRoutes);
 
-// Ảnh do quản trị viên tải lên
+// Ảnh do quản trị viên tải lên (ưu tiên bộ nhớ đệm đĩa cục bộ)
 app.use('/uploads', express.static(UPLOADS_DIR, {
   maxAge: '7d',
   index: false,
   dotfiles: 'deny',
 }));
+
+// Fallback: nếu đĩa bị xoá sau khi Render restart, tự động tải từ Supabase Cloud về và phục vụ ngay
+app.get('/uploads/:filename', async (req, res, next) => {
+  const filename = basename(req.params.filename);
+  const cloudFile = await getUploadFromCloud(filename).catch(() => null);
+  if (cloudFile && cloudFile.data) {
+    try {
+      const full = join(UPLOADS_DIR, filename);
+      writeFileSync(full, cloudFile.data);
+    } catch {}
+    res.setHeader('Content-Type', cloudFile.mime_type || 'image/jpeg');
+    res.setHeader('Cache-Control', 'public, max-age=604800');
+    return res.send(cloudFile.data);
+  }
+  next();
+});
 
 const publicDir = join(__dirname, '..');
 

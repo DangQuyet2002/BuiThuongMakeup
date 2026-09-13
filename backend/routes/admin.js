@@ -18,7 +18,7 @@ import { hashPassword, generatePassword, verifyPassword } from '../src/auth.js';
 import * as catalog from '../src/catalog.js';
 import * as gallery from '../src/gallery.js';
 import * as settings from '../src/settings.js';
-import { upload, publicUrl, uploadsStatus, MAX_UPLOAD_MB } from '../src/uploads.js';
+import { upload, publicUrl, uploadsStatus, MAX_UPLOAD_MB, saveUploadToCloud } from '../src/uploads.js';
 import { db } from '../db/database.js';
 import { logger } from '../src/logger.js';
 
@@ -351,6 +351,11 @@ router.post('/uploads', requireRole('write'), auditAction('tai_anh_len'), handle
   const files = req.files || [];
   if (!files.length) {
     return res.status(400).json({ ok: false, error: 'Chưa chọn ảnh nào' });
+  }
+
+  // Tự động đẩy lên Supabase Cloud để lưu trữ vĩnh viễn
+  for (const f of files) {
+    saveUploadToCloud(f.filename, f.path, f.mimetype).catch(() => {});
   }
 
   const data = files.map((f) => ({
