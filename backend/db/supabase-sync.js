@@ -215,6 +215,11 @@ export async function pushAllToSupabase() {
 
       // 1. SERVICES
       const services = db.prepare('SELECT * FROM services').all();
+      if (services.length > 0) {
+        await client.query('DELETE FROM services WHERE NOT (id = ANY($1::int[]))', [services.map(s => s.id)]);
+      } else {
+        await client.query('DELETE FROM services');
+      }
       for (const s of services) {
         await client.query(`
           INSERT INTO services (id, name, slug, description, duration, price, featured, active, tag, time_label, features, sort_order)
@@ -236,6 +241,11 @@ export async function pushAllToSupabase() {
 
       // 2. ADDONS
       const addons = db.prepare('SELECT * FROM addons').all();
+      if (addons.length > 0) {
+        await client.query('DELETE FROM addons WHERE NOT (id = ANY($1::int[]))', [addons.map(a => a.id)]);
+      } else {
+        await client.query('DELETE FROM addons');
+      }
       for (const a of addons) {
         await client.query(`
           INSERT INTO addons (id, name, note, price, active, sort_order)
@@ -251,6 +261,11 @@ export async function pushAllToSupabase() {
 
       // 3. COMBOS
       const combos = db.prepare('SELECT * FROM combos').all();
+      if (combos.length > 0) {
+        await client.query('DELETE FROM combos WHERE NOT (id = ANY($1::int[]))', [combos.map(c => c.id)]);
+      } else {
+        await client.query('DELETE FROM combos');
+      }
       for (const c of combos) {
         await client.query(`
           INSERT INTO combos (id, name, slug, description, old_price, price, featured, active, tag, features, sort_order)
@@ -271,6 +286,11 @@ export async function pushAllToSupabase() {
 
       // 4. ARTISTS
       const artists = db.prepare('SELECT * FROM artists').all();
+      if (artists.length > 0) {
+        await client.query('DELETE FROM artists WHERE NOT (id = ANY($1::int[]))', [artists.map(ar => ar.id)]);
+      } else {
+        await client.query('DELETE FROM artists');
+      }
       for (const ar of artists) {
         await client.query(`
           INSERT INTO artists (id, name, initials, specialty, years, active, sort_order)
@@ -287,6 +307,11 @@ export async function pushAllToSupabase() {
 
       // 5. FAQS
       const faqs = db.prepare('SELECT * FROM faqs').all();
+      if (faqs.length > 0) {
+        await client.query('DELETE FROM faqs WHERE NOT (id = ANY($1::int[]))', [faqs.map(f => f.id)]);
+      } else {
+        await client.query('DELETE FROM faqs');
+      }
       for (const f of faqs) {
         await client.query(`
           INSERT INTO faqs (id, question, answer, sort_order, active)
@@ -313,6 +338,9 @@ export async function pushAllToSupabase() {
 
       // 7. USERS
       const users = db.prepare('SELECT * FROM users').all();
+      if (users.length > 0) {
+        await client.query('DELETE FROM users WHERE NOT (id = ANY($1::int[]))', [users.map(u => u.id)]);
+      }
       for (const u of users) {
         await client.query(`
           INSERT INTO users (id, username, display_name, password_hash, role, active, must_change)
@@ -344,6 +372,11 @@ export async function pushAllToSupabase() {
 
       // 9. GALLERY
       const gallery = db.prepare('SELECT * FROM gallery').all();
+      if (gallery.length > 0) {
+        await client.query('DELETE FROM gallery WHERE NOT (id = ANY($1::int[]))', [gallery.map(g => g.id)]);
+      } else {
+        await client.query('DELETE FROM gallery');
+      }
       for (const g of gallery) {
         await client.query(`
           INSERT INTO gallery (id, title, category, kind, image_path, before_image, after_image, alt_text, sort_order, active)
