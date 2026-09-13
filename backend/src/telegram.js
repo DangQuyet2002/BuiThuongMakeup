@@ -164,6 +164,9 @@ export async function testTelegram(token, chatId) {
     `⏰ <i>${new Date().toLocaleTimeString('vi-VN')} · Sẵn sàng hoạt động 24/7</i>`,
   ].join('\n');
 
+  return sendTelegram(testMsg, cfg);
+}
+
 /**
  * Gửi tin nhắn Telegram kèm bàn phím nút bấm
  */
