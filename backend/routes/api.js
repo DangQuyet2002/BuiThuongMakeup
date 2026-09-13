@@ -11,6 +11,7 @@ import * as catalog from '../src/catalog.js';
 import { listGallery } from '../src/gallery.js';
 import { getSettings } from '../src/settings.js';
 import { triggerSyncToSupabase } from '../db/supabase-sync.js';
+import { notifyOwnerBookingCreated } from '../src/telegram.js';
 
 const router = Router();
 
@@ -177,9 +178,17 @@ router.post('/bookings', bookingLimiter, async (req, res) => {
   try {
     notify = await notifyBookingCreated({ ...booking, addons: calc.addons, deposit_amount: depositAmount });
   } catch (e) {
-    console.error('Lỗi gửi thông báo:', e.message);
+    console.error('Lỗi gửi thông báo ZNS:', e.message);
     notify = { result: { ok: false, error: e.message }, log: null };
   }
+
+  // Gửi thông báo tức thì về Telegram cho chủ tiệm
+  notifyOwnerBookingCreated({
+    ...booking,
+    artist_name: artist ? artist.name : null,
+    addons: calc.addons,
+    deposit_amount: depositAmount,
+  }).catch((err) => console.error('Lỗi gửi Telegram chủ:', err.message));
 
   const notifyInfo = notify.result.ok
     ? { sent: true, dryRun: !!notify.result.dryRun }

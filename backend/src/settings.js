@@ -163,6 +163,11 @@ export function getSettings() {
     studioFacebook: readRaw('studio_facebook') || '',
     studioMapNote: readRaw('studio_map_note') || 'Bản đồ studio · Quận 1, TP.HCM',
     studioMapEmbed: readRaw('studio_map_embed') || '',
+
+    // Cấu hình Telegram Bot nhận thông báo & nhắc lịch
+    telegramBotToken: readRaw('telegram_bot_token') || '',
+    telegramChatId: readRaw('telegram_chat_id') || '',
+    telegramEnabled: readBool('telegram_enabled', true),
   };
 }
 
@@ -314,12 +319,19 @@ export function updateSettings(data) {
       ['studioFacebook', 'studio_facebook', 300],
       ['studioMapNote', 'studio_map_note', 200],
       ['studioMapEmbed', 'studio_map_embed', 1500],
+      ['telegramBotToken', 'telegram_bot_token', 200],
+      ['telegramChatId', 'telegram_chat_id', 100],
     ];
     for (const [prop, dbKey, len] of contactKeys) {
       if (patch[prop] !== undefined) {
         writeRaw(dbKey, text(patch[prop], len));
         changed.push(prop);
       }
+    }
+
+    if (patch.telegramEnabled !== undefined) {
+      writeRaw('telegram_enabled', patch.telegramEnabled ? '1' : '0');
+      changed.push('telegramEnabled');
     }
 
     // Ảnh cũ không còn trong danh sách mới thì đánh dấu để dọn sau.

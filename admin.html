@@ -2288,6 +2288,44 @@
 
       <!-- --- notifications --- -->
       <div id="tabNotifications" hidden>
+        <!-- Khối cấu hình Telegram nhắc lịch & thông báo về điện thoại -->
+        <div class="panel" style="padding:24px 28px; margin-bottom:20px; border-left:4px solid #0088cc">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:16px">
+            <div>
+              <h3 style="font-size:16px;color:#0088cc;display:flex;align-items:center;gap:8px;margin-bottom:4px">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="#0088cc"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
+                Thông báo &amp; Nhắc lịch qua Telegram (Về điện thoại của chủ tiệm)
+              </h3>
+              <p style="font-size:13px;color:var(--gray-600);margin:0">
+                Tự động gửi thông báo khi có <b>khách đặt lịch mới</b> và <b>nhắc lịch hẹn trước 1 ngày (24 tiếng)</b> về Telegram trên điện thoại.
+              </p>
+            </div>
+            <div id="tgStatusBadge" style="display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:999px;font-size:12px;background:#FEF3E2;color:#92540A;font-weight:600">
+              <span style="width:8px;height:8px;border-radius:50%;background:#92540A"></span> Chưa cấu hình
+            </div>
+          </div>
+
+          <form id="tgForm" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;background:var(--gray-50);padding:18px;border-radius:10px;border:1px solid var(--gray-200)">
+            <div>
+              <label style="display:block;font-size:12px;font-weight:600;margin-bottom:6px;color:var(--gray-900)">Telegram Bot Token</label>
+              <input type="text" id="tgToken" placeholder="Ví dụ: 7123456789:AAH..." style="width:100%;padding:10px 12px;border:1px solid var(--gray-300);border-radius:8px;font-size:13px;font-family:var(--mono)">
+            </div>
+            <div>
+              <label style="display:block;font-size:12px;font-weight:600;margin-bottom:6px;color:var(--gray-900)">Telegram Chat ID (ID của bạn hoặc nhóm)</label>
+              <input type="text" id="tgChatId" placeholder="Ví dụ: 1234567890" style="width:100%;padding:10px 12px;border:1px solid var(--gray-300);border-radius:8px;font-size:13px;font-family:var(--mono)">
+            </div>
+            <div style="grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding-top:6px">
+              <div style="font-size:12px;color:var(--gray-600);line-height:1.5">
+                💡 <b>Hướng dẫn 1 phút:</b> Mở Telegram tìm <code>@BotFather</code> gửi <code>/newbot</code> lấy Token. Sau đó tìm <code>@userinfobot</code> lấy Chat ID.
+              </div>
+              <div style="display:flex;gap:10px;align-items:center">
+                <button type="button" id="tgTestBtn" class="ghost" style="padding:9px 18px;font-size:13px;cursor:pointer">Gửi thử nghiệm</button>
+                <button type="submit" id="tgSaveBtn" style="padding:9px 22px;background:#0088cc;color:#fff;border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer">Lưu cấu hình</button>
+              </div>
+            </div>
+          </form>
+        </div>
+
         <div class="znsbar" id="znsbar"></div>
         <div class="bar">
           <select id="nType">
@@ -3070,9 +3108,91 @@
       });
     }
 
+    async function loadTelegramSettings() {
+      try {
+        const r = await adminFetch('/admin/settings');
+        const s = r.data || {};
+        const token = s.telegramBotToken || '';
+        const chatId = s.telegramChatId || '';
+        const enabled = s.telegramEnabled !== false;
+
+        if ($('tgToken')) $('tgToken').value = token;
+        if ($('tgChatId')) $('tgChatId').value = chatId;
+
+        const badge = $('tgStatusBadge');
+        if (badge) {
+          if (token && chatId && enabled) {
+            badge.style.background = '#E6F7F0';
+            badge.style.color = '#0D6E54';
+            badge.innerHTML = '<span style="width:8px;height:8px;border-radius:50%;background:#0D6E54"></span> Đang hoạt động 24/7';
+          } else {
+            badge.style.background = '#FEF3E2';
+            badge.style.color = '#92540A';
+            badge.innerHTML = '<span style="width:8px;height:8px;border-radius:50%;background:#92540A"></span> Chưa cấu hình';
+          }
+        }
+      } catch (e) {
+        // silent
+      }
+    }
+
+    async function saveTelegramSettings(e) {
+      if (e) e.preventDefault();
+      const btn = $('tgSaveBtn');
+      if (btn) { btn.disabled = true; btn.textContent = 'Đang lưu...'; }
+
+      const token = $('tgToken')?.value.trim() || '';
+      const chatId = $('tgChatId')?.value.trim() || '';
+
+      try {
+        await adminFetch('/admin/settings', {
+          method: 'PATCH',
+          body: JSON.stringify({
+            telegramBotToken: token,
+            telegramChatId: chatId,
+            telegramEnabled: true,
+          }),
+        });
+        toast('Đã lưu cấu hình Telegram');
+        await loadTelegramSettings();
+      } catch (err) {
+        toast('Lỗi lưu: ' + err.message, true);
+      } finally {
+        if (btn) { btn.disabled = false; btn.textContent = 'Lưu cấu hình'; }
+      }
+    }
+
+    async function testTelegramSettings() {
+      const btn = $('tgTestBtn');
+      const token = $('tgToken')?.value.trim();
+      const chatId = $('tgChatId')?.value.trim();
+
+      if (!token || !chatId) {
+        toast('Vui lòng điền cả Token và Chat ID trước khi thử nghiệm', 'warning');
+        return;
+      }
+
+      if (btn) { btn.disabled = true; btn.textContent = 'Đang gửi...'; }
+
+      try {
+        const r = await adminFetch('/admin/telegram/test', {
+          method: 'POST',
+          body: JSON.stringify({ token, chatId }),
+        });
+        toast(r.message || 'Đã gửi tin nhắn test thành công về Telegram!');
+      } catch (err) {
+        toast('Lỗi gửi Telegram: ' + err.message, true);
+      } finally {
+        if (btn) { btn.disabled = false; btn.textContent = 'Gửi thử nghiệm'; }
+      }
+    }
+
+    if ($('tgForm')) $('tgForm').addEventListener('submit', saveTelegramSettings);
+    if ($('tgTestBtn')) $('tgTestBtn').addEventListener('click', testTelegramSettings);
+
     async function loadNotifications() {
       $('nlist').innerHTML = '<div class="loading">Đang tải lịch sử thông báo...</div>';
-      await loadNotificationStats();
+      await Promise.all([loadNotificationStats(), loadTelegramSettings()]);
 
       const q = new URLSearchParams();
       if ($('nType').value) q.set('type', $('nType').value);
@@ -3829,7 +3949,7 @@
 
       $('photoTitle').textContent = item ? 'Sửa ảnh so sánh' : 'Thêm ảnh so sánh';
       $('photoSub').textContent = item
-        ? 'Chọn ảnh mới nếu muốn thay ảnh hiện tại'
+        ? 'Chỉ cần chọn ảnh bạn muốn thay đổi (ảnh nào không chọn sẽ giữ nguyên ảnh cũ).'
         : 'Chọn ảnh trước và ảnh sau. Nếu chỉ chọn 1 ảnh, ảnh sẽ tự động dùng cho cả hai.';
       formError('photoErr');
 
@@ -3914,8 +4034,11 @@
           await Promise.all(uploadTasks);
         }
 
-        if (!body.beforeImage && body.afterImage) body.beforeImage = body.afterImage;
-        if (!body.afterImage && body.beforeImage) body.afterImage = body.beforeImage;
+        // Chỉ khi THÊM MỚI mà chỉ chọn 1 ảnh thì mới tự động gán cho cả hai
+        if (!editingPhotoId) {
+          if (!body.beforeImage && body.afterImage) body.beforeImage = body.afterImage;
+          if (!body.afterImage && body.beforeImage) body.afterImage = body.beforeImage;
+        }
 
         const r = await adminFetch(
           editingPhotoId ? `/admin/gallery/${editingPhotoId}` : '/admin/gallery',

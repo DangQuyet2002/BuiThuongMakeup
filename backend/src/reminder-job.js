@@ -1,4 +1,5 @@
 import { findDueReminders, notifyReminder, znsStatus } from './notifications.js';
+import { notifyOwnerReminder } from './telegram.js';
 
 const CHECK_INTERVAL_MS = Number(process.env.REMINDER_INTERVAL_MS || 15 * 60 * 1000);
 const HOURS_AHEAD = Number(process.env.REMINDER_HOURS_AHEAD || 24);
@@ -22,6 +23,11 @@ async function runOnce() {
     if (result.ok) sent++;
     const tag = result.ok ? (result.dryRun ? 'DRY-RUN' : 'ĐÃ GỬI') : 'THẤT BẠI';
     console.log(`  [nhắc hẹn] ${booking.code} · ${booking.phone} → ${tag}${result.error ? ' (' + result.error + ')' : ''}`);
+
+    // Nhắc lịch trước 1 ngày về Telegram của chủ studio
+    notifyOwnerReminder(booking).catch((err) => {
+      console.error(`  [Telegram nhắc chủ] ${booking.code} lỗi:`, err.message);
+    });
   }
 
   totalSent += sent;
