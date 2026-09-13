@@ -47,14 +47,20 @@ async function login(cred) {
   try {
     const { db } = await import('./db/database.js');
     const { createUser, getUserByUsername } = await import('./src/users.js');
+    const { hashPassword } = await import('./src/auth.js');
     db.prepare('DELETE FROM rate_limits').run();
     db.prepare('DELETE FROM users WHERE username LIKE \'test%\'').run();
     db.prepare('DELETE FROM sessions WHERE user_id NOT IN (SELECT id FROM users)').run();
+    db.prepare('UPDATE users SET password_hash = ? WHERE username = ?').run(hashPassword('Admin@2026!Ok'), 'admin');
     if (!getUserByUsername('linh')) {
       createUser({ username: 'linh', password: 'Staff@2026', displayName: 'Linh Staff', role: 'staff' });
+    } else {
+      db.prepare('UPDATE users SET password_hash = ?, active = 1 WHERE username = ?').run(hashPassword('Staff@2026'), 'linh');
     }
     if (!getUserByUsername('mai')) {
       createUser({ username: 'mai', password: 'View@2026', displayName: 'Mai Viewer', role: 'viewer' });
+    } else {
+      db.prepare('UPDATE users SET password_hash = ?, active = 1 WHERE username = ?').run(hashPassword('View@2026'), 'mai');
     }
   } catch (e) {
     console.warn('  (cảnh báo) không dọn được trạng thái cũ:', e.message);

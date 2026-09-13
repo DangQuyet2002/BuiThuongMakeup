@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Quản trị đơn đặt lịch — Bùi Thương Makeup</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -52,6 +52,14 @@
       box-sizing: border-box;
     }
 
+    html {
+      touch-action: manipulation;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      overflow-x: hidden;
+      width: 100%;
+    }
+
     body {
       font-family: var(--sans);
       background: var(--gray-50);
@@ -60,6 +68,11 @@
       font-size: 14px;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      overflow-x: hidden;
+      width: 100%;
+      max-width: 100vw;
     }
 
     /* ---------- top bar ---------- */
@@ -227,10 +240,10 @@
 
     .gate input {
       width: 100%;
-      padding: 11px 14px;
+      padding: 12px 14px;
       border: 1px solid var(--gray-200);
       border-radius: 8px;
-      font-size: 14px;
+      font-size: 16px; /* Chặn iOS Safari auto-zoom khi focus */
       font-family: var(--sans);
       margin-bottom: 16px;
       outline: none;
@@ -1802,6 +1815,10 @@
     }
 
     @media(max-width:680px) {
+      input, select, textarea {
+        font-size: 16px !important;
+      }
+
       .wrap {
         padding: 16px 12px 32px;
       }
