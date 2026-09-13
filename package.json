@@ -1,0 +1,28 @@
+{
+  "name": "moc-studio",
+  "version": "1.2.0",
+  "description": "Bùi Thương Makeup — Website đặt lịch và bảng quản trị",
+  "private": true,
+  "type": "module",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "node --watch backend/server.js",
+    "build": "cd backend && npm install",
+    "postinstall": "cd backend && npm install",
+    "test": "cd backend && npm test"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.7.0",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "helmet": "^8.3.0",
+    "multer": "^2.3.0",
+    "pg": "^8.23.0",
+    "pino": "^10.3.1",
+    "pino-roll": "^4.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
