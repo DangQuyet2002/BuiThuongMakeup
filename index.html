@@ -1775,48 +1775,72 @@
 
     .fab {
       position: fixed;
-      right: 24px;
-      bottom: 24px;
-      z-index: 60;
+      right: 22px;
+      bottom: 22px;
+      z-index: 999;
       display: flex;
       flex-direction: column;
-      gap: 12px
+      gap: 12px;
+      align-items: center;
     }
 
     .fab a {
-      width: 54px;
-      height: 54px;
+      width: 52px;
+      height: 52px;
       border-radius: 50%;
-      background: var(--pink-400);
       color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 22px;
-      box-shadow: 0 6px 20px rgba(212, 83, 126, .36);
-      transition: .18s
+      text-decoration: none;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, .18), 0 2px 6px rgba(0, 0, 0, .08);
+      transition: transform .22s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow .22s ease, filter .2s;
+      cursor: pointer;
+      position: relative;
     }
 
     .fab a:hover {
-      transform: scale(1.07);
-      background: var(--pink-600)
+      transform: scale(1.12);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .26);
+    }
+
+    .fab .fab-phone {
+      background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+      font-size: 22px;
+    }
+
+    .fab .fab-zalo {
+      background: linear-gradient(135deg, #0088FF 0%, #0066CC 100%);
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: -0.2px;
+      font-family: var(--sans);
+    }
+
+    .fab .fab-messenger {
+      background: #ffffff;
+      box-shadow: 0 4px 18px rgba(0, 132, 255, .32), 0 2px 6px rgba(0, 0, 0, .08);
+    }
+
+    .fab .fab-messenger svg {
+      width: 32px;
+      height: 32px;
+      display: block;
     }
 
     .fab a.pulse {
-      animation: pulse 2.4s infinite
+      animation: fabPulse 2.4s infinite;
     }
 
-    @keyframes pulse {
+    @keyframes fabPulse {
       0% {
-        box-shadow: 0 0 0 0 rgba(212, 83, 126, .5)
+        box-shadow: 0 0 0 0 rgba(0, 132, 255, .6), 0 4px 18px rgba(0, 132, 255, .32);
       }
-
       70% {
-        box-shadow: 0 0 0 16px rgba(212, 83, 126, 0)
+        box-shadow: 0 0 0 16px rgba(0, 132, 255, 0), 0 4px 18px rgba(0, 132, 255, .32);
       }
-
       100% {
-        box-shadow: 0 0 0 0 rgba(212, 83, 126, 0)
+        box-shadow: 0 0 0 0 rgba(0, 132, 255, 0), 0 4px 18px rgba(0, 132, 255, .32);
       }
     }
 
@@ -2928,8 +2952,23 @@
   </footer>
 
   <div class="fab">
-    <a href="tel:0912345678" title="Gọi điện" aria-label="Gọi điện">✆</a>
-    <a href="#datlich" class="pulse" title="Zalo" aria-label="Nhắn Zalo">Z</a>
+    <a href="tel:0912345678" id="fabCall" class="fab-phone" title="Gọi điện tư vấn" aria-label="Gọi điện">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+    </a>
+    <a href="https://zalo.me/0912345678" target="_blank" rel="noopener noreferrer" id="fabZalo" class="fab-zalo" title="Nhắn Zalo" aria-label="Nhắn Zalo">Zalo</a>
+    <a href="https://m.me/buithuongmakeup" target="_blank" rel="noopener noreferrer" id="fabMessenger" class="fab-messenger pulse" title="Nhắn tin Messenger / Facebook" aria-label="Nhắn tin Messenger">
+      <svg viewBox="0 0 28 28" fill="none">
+        <path d="M14 2C7.373 2 2 7.143 2 13.488c0 3.614 1.742 6.843 4.464 8.948v4.404l4.225-2.319c1.056.292 2.167.455 3.311.455 6.627 0 12-5.143 12-11.488C26 7.143 20.627 2 14 2z" fill="url(#fabMsgGrad)"/>
+        <path d="M6.5 17.5L12.5 11l3.5 3.5 6.5-6.5-6 6.5-3.5-3.5-6.5 6.5z" fill="#ffffff"/>
+        <defs>
+          <linearGradient id="fabMsgGrad" x1="2" y1="2" x2="26" y2="26" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#00C6FF"/>
+            <stop offset="0.5" stop-color="#0078FF"/>
+            <stop offset="1" stop-color="#A033FF"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </a>
   </div>
 
   <div class="toast-container" id="toastContainer"></div>
@@ -3233,6 +3272,18 @@
         document.querySelectorAll('a[href^="tel:"]').forEach(function (a) {
           a.href = 'tel:' + cleanPhone;
         });
+      }
+
+      // Cập nhật các nút liên hệ nổi góc màn hình
+      var fabMsg = document.getElementById('fabMessenger');
+      if (fabMsg) {
+        var msgLink = (s.studioMessenger || s.studioFacebook || 'https://m.me/buithuongmakeup').trim();
+        fabMsg.href = msgLink;
+      }
+      var fabZ = document.getElementById('fabZalo');
+      if (fabZ) {
+        var zaloP = (s.zaloPhone || phone).replace(/\D/g, '');
+        if (zaloP) fabZ.href = 'https://zalo.me/' + zaloP;
       }
     }
 

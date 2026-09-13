@@ -159,6 +159,8 @@ export function getSettings() {
     studioHoursSunday: readRaw('studio_hours_sunday') || 'Chủ nhật: 9:00 – 17:00',
     studioPhone: readRaw('studio_phone') || '0912 345 678',
     studioEmail: readRaw('studio_email') || 'hello@mocstudio.vn',
+    studioMessenger: readRaw('studio_messenger') || '',
+    studioFacebook: readRaw('studio_facebook') || '',
     studioMapNote: readRaw('studio_map_note') || 'Bản đồ studio · Quận 1, TP.HCM',
     studioMapEmbed: readRaw('studio_map_embed') || '',
   };
@@ -308,6 +310,8 @@ export function updateSettings(data) {
       ['studioHoursSunday', 'studio_hours_sunday', 150],
       ['studioPhone', 'studio_phone', 50],
       ['studioEmail', 'studio_email', 100],
+      ['studioMessenger', 'studio_messenger', 300],
+      ['studioFacebook', 'studio_facebook', 300],
       ['studioMapNote', 'studio_map_note', 200],
       ['studioMapEmbed', 'studio_map_embed', 1500],
     ];

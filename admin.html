@@ -4140,6 +4140,11 @@
           <input type="email" id="cEmail" value="${esc(HOME?.studioEmail || 'hello@mocstudio.vn')}" placeholder="Email..."${write ? '' : ' disabled'}>
         </div>
         <div class="field">
+          <label for="cMessenger">Link Messenger / Facebook Studio</label>
+          <input type="text" id="cMessenger" value="${esc(HOME?.studioMessenger || HOME?.studioFacebook || '')}" placeholder="vd: https://m.me/buithuongmakeup hoặc https://facebook.com/..."${write ? '' : ' disabled'}>
+          <small class="hint" style="color:var(--gray-400);font-size:11px;margin-top:3px;display:block">Nút Messenger tròn ở góc phải màn hình trang chủ sẽ mở link này khi khách bấm vào.</small>
+        </div>
+        <div class="field">
           <label for="cMapNote">Ghi chú / Nhãn bản đồ</label>
           <input type="text" id="cMapNote" value="${esc(HOME?.studioMapNote || 'Bản đồ studio · Quận 1, TP.HCM')}" placeholder="vd: Bản đồ studio · Quận 1, TP.HCM"${write ? '' : ' disabled'}>
         </div>
@@ -4277,6 +4282,7 @@
               studioHoursSunday: $('cHoursSunday').value.trim(),
               studioPhone: $('cPhone').value.trim(),
               studioEmail: $('cEmail').value.trim(),
+              studioMessenger: $('cMessenger')?.value.trim() || '',
               studioMapNote: $('cMapNote').value.trim(),
               studioMapEmbed: $('cMapEmbed')?.value.trim() || '',
             });
