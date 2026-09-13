@@ -1931,6 +1931,129 @@
         font-size: 24px;
       }
     }
+
+    /* ============ CROPPER MODAL (ĐỊNH HÌNH CẮT ẢNH) ============ */
+    .crop-modal {
+      max-width: 640px;
+      width: 95vw;
+    }
+
+    .crop-ratios {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .crop-btn {
+      padding: 6px 14px;
+      font-size: 12.5px;
+      font-weight: 500;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--gray-200);
+      background: #fff;
+      color: var(--gray-600);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-family: var(--sans);
+    }
+
+    .crop-btn:hover {
+      border-color: var(--pink-400);
+      color: var(--pink-600);
+    }
+
+    .crop-btn.on {
+      background: var(--pink-50);
+      border-color: var(--pink-400);
+      color: var(--pink-600);
+      font-weight: 600;
+    }
+
+    .crop-container {
+      position: relative;
+      width: 100%;
+      height: 380px;
+      max-height: 55vh;
+      background: #0f172a;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      touch-action: none;
+      margin-bottom: 18px;
+    }
+
+    .crop-img-wrap {
+      position: relative;
+      display: inline-block;
+      max-width: 100%;
+      max-height: 100%;
+    }
+
+    .crop-img-wrap img {
+      display: block;
+      max-width: 100%;
+      max-height: 380px;
+      object-fit: contain;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .crop-box {
+      position: absolute;
+      box-shadow: 0 0 0 9999px rgba(15, 23, 42, 0.65);
+      border: 2px solid #fff;
+      cursor: move;
+      touch-action: none;
+      box-sizing: border-box;
+    }
+
+    .crop-grid {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .crop-grid .h1, .crop-grid .h2 {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.4);
+    }
+
+    .crop-grid .h1 { top: 33.33%; }
+    .crop-grid .h2 { top: 66.66%; }
+
+    .crop-grid .v1, .crop-grid .v2 {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: rgba(255, 255, 255, 0.4);
+    }
+
+    .crop-grid .v1 { left: 33.33%; }
+    .crop-grid .v2 { left: 66.66%; }
+
+    .crop-handle {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      background: #fff;
+      border: 2.5px solid var(--pink-600);
+      border-radius: 50%;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+      z-index: 10;
+    }
+
+    .crop-handle.nw { top: -8px; left: -8px; cursor: nwse-resize; }
+    .crop-handle.ne { top: -8px; right: -8px; cursor: nesw-resize; }
+    .crop-handle.sw { bottom: -8px; left: -8px; cursor: nesw-resize; }
+    .crop-handle.se { bottom: -8px; right: -8px; cursor: nwse-resize; }
   </style>
 </head>
 
@@ -2298,6 +2421,43 @@
       <div class="row">
         <button class="secondary" id="photoCancel">Huỷ</button>
         <button class="primary" id="photoSave">Lưu</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MODAL: CẮT & ĐỊNH HÌNH ẢNH ============ -->
+  <div class="backdrop" id="cropBackdrop" style="z-index:1100">
+    <div class="modal crop-modal">
+      <h3>Cắt &amp; Định hình ảnh</h3>
+      <p class="sub">Kéo di chuyển hoặc co giãn các góc để chọn vùng ảnh hiển thị đẹp nhất</p>
+      <div class="crop-ratios" id="cropRatios">
+        <button type="button" class="crop-btn" data-ratio="free">Tự do</button>
+        <button type="button" class="crop-btn on" data-ratio="4:5">Dọc (4:5)</button>
+        <button type="button" class="crop-btn" data-ratio="3:4">Dọc (3:4)</button>
+        <button type="button" class="crop-btn" data-ratio="1:1">Vuông (1:1)</button>
+        <button type="button" class="crop-btn" data-ratio="16:9">Ngang (16:9)</button>
+      </div>
+      <div class="crop-container" id="cropContainer">
+        <div class="crop-img-wrap" id="cropWrap">
+          <img id="cropImg" src="" alt="Cần cắt">
+          <div class="crop-box" id="cropBox">
+            <div class="crop-handle nw" data-handle="nw"></div>
+            <div class="crop-handle ne" data-handle="ne"></div>
+            <div class="crop-handle sw" data-handle="sw"></div>
+            <div class="crop-handle se" data-handle="se"></div>
+            <div class="crop-grid">
+              <div class="h1"></div>
+              <div class="h2"></div>
+              <div class="v1"></div>
+              <div class="v2"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <button type="button" class="secondary" id="cropCancel">Huỷ</button>
+        <button type="button" class="ghost" id="cropSkip" title="Bỏ qua việc cắt, tải lên ảnh gốc">Dùng ảnh gốc</button>
+        <button type="button" class="primary" id="cropApply">Cắt &amp; Áp dụng</button>
       </div>
     </div>
   </div>
@@ -3692,10 +3852,14 @@
         drop.addEventListener('click', () => input.click());
         input.addEventListener('change', () => {
           if (!input.files?.[0]) return;
-          uploaded[slot] = input.files[0];
-          const url = URL.createObjectURL(input.files[0]);
-          drop.innerHTML = `<img class="preview" src="${url}" alt=""><small style="display:block;margin-top:8px">${esc(input.files[0].name)}</small>`;
-          drop.style.padding = '12px';
+          const origFile = input.files[0];
+          input.value = '';
+          openCropper(origFile, 'free', (croppedFile) => {
+            uploaded[slot] = croppedFile;
+            const url = URL.createObjectURL(croppedFile);
+            drop.innerHTML = `<img class="preview" src="${url}" alt=""><small style="display:block;margin-top:8px">${esc(croppedFile.name)} (Đã định hình)</small>`;
+            drop.style.padding = '12px';
+          });
         });
       };
 
@@ -4008,14 +4172,24 @@
           formError('homeErr');
         }
 
-        take.forEach((f) => {
-          homeQueue.push(f);
-          homePreviews.push(URL.createObjectURL(f));
-        });
-
         input.value = '';
-        renderHome();
-        saveHome();   // chọn xong là tải lên và lưu luôn
+
+        // Mở khung cắt định hình từng ảnh
+        let idx = 0;
+        const processNext = () => {
+          if (idx >= take.length) {
+            renderHome();
+            saveHome();
+            return;
+          }
+          const curFile = take[idx++];
+          openCropper(curFile, '4:5', (croppedFile) => {
+            homeQueue.push(croppedFile);
+            homePreviews.push(URL.createObjectURL(croppedFile));
+            processNext();
+          });
+        };
+        processNext();
       });
 
       if ($('homeCancel')) {
@@ -4324,6 +4498,217 @@
     if ($('sBankAccountName')) $('sBankAccountName').addEventListener('input', updateQrPreview);
     if ($('sDepositValue')) $('sDepositValue').addEventListener('input', updateQrPreview);
     if ($('sZaloPhone')) $('sZaloPhone').addEventListener('input', updateQrPreview);
+    /* ================= CROPPER ĐỊNH HÌNH CẮT ẢNH ================= */
+    let cropState = {
+      file: null,
+      ratio: '4:5',
+      onDone: null,
+      box: { x: 0, y: 0, w: 100, h: 100 },
+      drag: null,
+    };
+
+    function parseRatio(r) {
+      if (!r || r === 'free') return 0;
+      const parts = r.split(':').map(Number);
+      return (parts[0] && parts[1]) ? parts[0] / parts[1] : 0;
+    }
+
+    function openCropper(file, defaultRatio = '4:5', onDone) {
+      if (!file || !file.type.startsWith('image/')) {
+        if (onDone) onDone(file);
+        return;
+      }
+      cropState.file = file;
+      cropState.ratio = defaultRatio;
+      cropState.onDone = onDone;
+
+      $('cropRatios').querySelectorAll('.crop-btn').forEach(b => {
+        b.classList.toggle('on', b.dataset.ratio === defaultRatio);
+      });
+
+      const url = URL.createObjectURL(file);
+      const img = $('cropImg');
+      img.onload = () => {
+        $('cropBackdrop').classList.add('on');
+        setTimeout(initCropBox, 50);
+      };
+      img.src = url;
+    }
+
+    function initCropBox() {
+      const img = $('cropImg');
+      const w = img.clientWidth;
+      const h = img.clientHeight;
+      if (!w || !h) return;
+
+      const r = parseRatio(cropState.ratio);
+      let bw = w * 0.85;
+      let bh = h * 0.85;
+
+      if (r > 0) {
+        if (bw / bh > r) {
+          bw = bh * r;
+        } else {
+          bh = bw / r;
+        }
+      }
+
+      const bx = Math.max(0, (w - bw) / 2);
+      const by = Math.max(0, (h - bh) / 2);
+
+      cropState.box = { x: bx, y: by, w: bw, h: bh };
+      renderCropBox();
+    }
+
+    function renderCropBox() {
+      const boxEl = $('cropBox');
+      if (!boxEl) return;
+      const { x, y, w, h } = cropState.box;
+      boxEl.style.left = `${Math.round(x)}px`;
+      boxEl.style.top = `${Math.round(y)}px`;
+      boxEl.style.width = `${Math.round(w)}px`;
+      boxEl.style.height = `${Math.round(h)}px`;
+    }
+
+    function setupCropperEvents() {
+      $('cropRatios').querySelectorAll('.crop-btn').forEach(b => {
+        b.addEventListener('click', () => {
+          $('cropRatios').querySelectorAll('.crop-btn').forEach(x => x.classList.remove('on'));
+          b.classList.add('on');
+          cropState.ratio = b.dataset.ratio;
+          initCropBox();
+        });
+      });
+
+      const boxEl = $('cropBox');
+
+      const getPos = (e) => {
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return { clientX, clientY };
+      };
+
+      const onStart = (e) => {
+        const handle = e.target.dataset.handle;
+        const type = handle || 'move';
+        const { clientX, clientY } = getPos(e);
+        cropState.drag = {
+          type,
+          startX: clientX,
+          startY: clientY,
+          startBox: { ...cropState.box },
+        };
+        e.preventDefault();
+      };
+
+      boxEl.addEventListener('mousedown', onStart);
+      boxEl.addEventListener('touchstart', onStart, { passive: false });
+
+      const onMove = (e) => {
+        if (!cropState.drag) return;
+        const { clientX, clientY } = getPos(e);
+        const dx = clientX - cropState.drag.startX;
+        const dy = clientY - cropState.drag.startY;
+        const sb = cropState.drag.startBox;
+        const img = $('cropImg');
+        const maxW = img.clientWidth;
+        const maxH = img.clientHeight;
+        const r = parseRatio(cropState.ratio);
+
+        let { x, y, w, h } = sb;
+
+        if (cropState.drag.type === 'move') {
+          x = Math.max(0, Math.min(maxW - w, sb.x + dx));
+          y = Math.max(0, Math.min(maxH - h, sb.y + dy));
+        } else {
+          const type = cropState.drag.type;
+          if (type === 'se') {
+            w = Math.max(30, Math.min(maxW - x, sb.w + dx));
+            h = r ? w / r : Math.max(30, Math.min(maxH - y, sb.h + dy));
+            if (y + h > maxH) { h = maxH - y; if (r) w = h * r; }
+            if (x + w > maxW) { w = maxW - x; if (r) h = w / r; }
+          } else if (type === 'sw') {
+            const rawW = Math.max(30, sb.w - dx);
+            const newX = Math.max(0, sb.x + sb.w - rawW);
+            w = sb.x + sb.w - newX;
+            h = r ? w / r : Math.max(30, Math.min(maxH - y, sb.h + dy));
+            if (y + h > maxH) { h = maxH - y; if (r) w = h * r; }
+            x = sb.x + sb.w - w;
+          } else if (type === 'ne') {
+            w = Math.max(30, Math.min(maxW - x, sb.w + dx));
+            h = r ? w / r : Math.max(30, sb.h - dy);
+            const newY = Math.max(0, sb.y + sb.h - h);
+            h = sb.y + sb.h - newY;
+            if (r) w = h * r;
+            if (x + w > maxW) { w = maxW - x; if (r) h = w / r; }
+            y = sb.y + sb.h - h;
+          } else if (type === 'nw') {
+            let rawW = Math.max(30, sb.w - dx);
+            let rawH = r ? rawW / r : Math.max(30, sb.h - dy);
+            let newX = Math.max(0, sb.x + sb.w - rawW);
+            let newY = Math.max(0, sb.y + sb.h - rawH);
+            w = sb.x + sb.w - newX;
+            h = sb.y + sb.h - newY;
+            if (r) {
+              if (w / h > r) w = h * r;
+              else h = w / r;
+            }
+            x = sb.x + sb.w - w;
+            y = sb.y + sb.h - h;
+          }
+        }
+
+        cropState.box = { x, y, w, h };
+        renderCropBox();
+      };
+
+      window.addEventListener('mousemove', onMove);
+      window.addEventListener('touchmove', onMove, { passive: false });
+
+      const onEnd = () => { cropState.drag = null; };
+      window.addEventListener('mouseup', onEnd);
+      window.addEventListener('touchend', onEnd);
+
+      $('cropCancel').addEventListener('click', () => {
+        $('cropBackdrop').classList.remove('on');
+      });
+
+      $('cropSkip').addEventListener('click', () => {
+        $('cropBackdrop').classList.remove('on');
+        if (cropState.onDone) cropState.onDone(cropState.file);
+      });
+
+      $('cropApply').addEventListener('click', () => {
+        const img = $('cropImg');
+        const { x, y, w, h } = cropState.box;
+        const scaleX = img.naturalWidth / img.clientWidth;
+        const scaleY = img.naturalHeight / img.clientHeight;
+
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.round(w * scaleX);
+        canvas.height = Math.round(h * scaleY);
+        const ctx = canvas.getContext('2d');
+
+        ctx.drawImage(
+          img,
+          x * scaleX, y * scaleY, w * scaleX, h * scaleY,
+          0, 0, canvas.width, canvas.height
+        );
+
+        const mime = cropState.file.type || 'image/jpeg';
+        canvas.toBlob((blob) => {
+          $('cropBackdrop').classList.remove('on');
+          if (blob) {
+            const croppedFile = new File([blob], cropState.file.name, { type: mime });
+            if (cropState.onDone) cropState.onDone(croppedFile);
+          } else {
+            if (cropState.onDone) cropState.onDone(cropState.file);
+          }
+        }, mime, 0.92);
+      });
+    }
+
+    setupCropperEvents();
 
     /* ================= boot ================= */
 
