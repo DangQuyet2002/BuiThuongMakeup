@@ -65,7 +65,7 @@ export async function ensureInitialAdmin() {
   const envPass = process.env.ADMIN_PASSWORD;
 
   const username = envUser || 'admin';
-  const password = envPass || 'MocAdmin@2026';
+  const password = envPass || 'Admin@2026!Ok';
   const generated = !envPass;
 
   const r = createUser({
@@ -73,7 +73,7 @@ export async function ensureInitialAdmin() {
     password,
     displayName: 'Chủ studio',
     role: 'owner',
-    mustChange: generated ? 0 : 0,
+    mustChange: 0,
   });
 
   if (!r.ok) {

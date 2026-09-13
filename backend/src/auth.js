@@ -61,8 +61,8 @@ export function passwordStrength(pw) {
   if (pw && !/[a-z]/.test(pw)) problems.push('Cần có chữ thường');
   if (pw && !/[A-Z]/.test(pw)) problems.push('Cần có chữ hoa');
   if (pw && !/\d/.test(pw)) problems.push('Cần có chữ số');
-  const weak = ['123456', 'password', 'matkhau', 'admin', 'qwerty', 'abc123'];
-  if (pw && weak.some((w) => pw.toLowerCase().includes(w))) {
+  const weak = ['12345678', 'password', 'matkhau', 'admin123', 'qwerty123', 'abc12345'];
+  if (pw && weak.some((w) => pw.toLowerCase() === w)) {
     problems.push('Mật khẩu quá dễ đoán');
   }
   return { ok: problems.length === 0, problems };
