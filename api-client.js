@@ -1,4 +1,17 @@
-const API_BASE = window.MOC_API_BASE || '/api';
+const API_BASE = window.MOC_API_BASE || (
+  typeof location !== 'undefined' && (location.hostname === 'localhost' || location.hostname === '127.0.0.1') && location.port && location.port !== '3000'
+    ? `${location.protocol}//${location.hostname}:3000/api`
+    : '/api'
+);
+
+export function resolveImg(src) {
+  if (!src) return '';
+  if (/^https?:\/\//i.test(src) || src.startsWith('data:')) return src;
+  if (typeof location !== 'undefined' && (location.hostname === 'localhost' || location.hostname === '127.0.0.1') && location.port && location.port !== '3000') {
+    return `${location.protocol}//${location.hostname}:3000` + (src.startsWith('/') ? '' : '/') + src;
+  }
+  return src;
+}
 
 let backendOnline = false;
 

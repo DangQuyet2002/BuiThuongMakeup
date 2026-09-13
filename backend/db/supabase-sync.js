@@ -1,6 +1,9 @@
+import { existsSync, writeFileSync } from 'fs';
+import { join } from 'path';
 import pg from 'pg';
 import { db } from './database.js';
 import { logger } from '../src/logger.js';
+import { UPLOADS_DIR } from '../src/uploads.js';
 
 const { Pool } = pg;
 
@@ -168,6 +171,23 @@ export async function pullFromSupabase() {
             created_at: r.created_at ? new Date(r.created_at).toISOString() : new Date().toISOString(),
           }));
         })();
+      }
+
+      // 10. UPLOADED FILES (khôi phục ảnh đĩa từ Cloud)
+      try {
+        const files = await client.query('SELECT filename, data FROM uploaded_files');
+        if (files.rows.length > 0) {
+          for (const f of files.rows) {
+            if (f.data) {
+              const full = join(UPLOADS_DIR, f.filename);
+              if (!existsSync(full)) {
+                writeFileSync(full, f.data);
+              }
+            }
+          }
+        }
+      } catch (fErr) {
+        logger.warn({ error: fErr.message }, '[Supabase] Không thể khôi phục ảnh từ Cloud');
       }
 
       db.pragma('foreign_keys = ON');

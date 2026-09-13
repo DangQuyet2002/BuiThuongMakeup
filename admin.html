@@ -2303,7 +2303,20 @@
   </div>
 
   <script type="module">
-    const API_BASE = window.MOC_API_BASE || '/api';
+    const API_BASE = window.MOC_API_BASE || (
+      typeof location !== 'undefined' && (location.hostname === 'localhost' || location.hostname === '127.0.0.1') && location.port && location.port !== '3000'
+        ? `${location.protocol}//${location.hostname}:3000/api`
+        : '/api'
+    );
+
+    function resolveImg(src) {
+      if (!src) return '';
+      if (/^https?:\/\//i.test(src) || src.startsWith('data:')) return src;
+      if (typeof location !== 'undefined' && (location.hostname === 'localhost' || location.hostname === '127.0.0.1') && location.port && location.port !== '3000') {
+        return `${location.protocol}//${location.hostname}:3000` + (src.startsWith('/') ? '' : '/') + src;
+      }
+      return src;
+    }
     const TOKEN_KEY = 'moc_admin_session';
     const LEGACY_KEY = 'moc_admin_token';
 
@@ -3552,8 +3565,8 @@
   <div class="gal-admin">
     ${rows.map((g) => {
         // Thư viện chỉ có ảnh so sánh trước/sau. Thẻ ngoài hiện ảnh SAU.
-        const src = g.after_image || g.before_image || g.image_path;
-        const missing = !g.before_image || !g.after_image;
+        const src = resolveImg(g.after_image || g.before_image || g.image_path);
+        const missing = !g.before_image && !g.after_image;
         return `
       <div class="gcard${g.active ? '' : ' off'}">
         ${src
@@ -3561,7 +3574,7 @@
             : '<div class="pic" style="display:flex;align-items:center;justify-content:center;color:#888780;font-size:12px">Không có ảnh</div>'}
         <div class="body">
           <b>${esc(g.title)}</b>
-          <small>${esc(g.category || 'Chưa phân loại')}${missing ? ' · <b style="color:#C0392B">thiếu ảnh trước/sau</b>' : ''}</small>
+          <small>${esc(g.category || 'Chưa phân loại')}${missing ? ' · <b style="color:#C0392B">thiếu ảnh</b>' : ''}</small>
         </div>
         <div class="foot acts">
           ${write ? `<button data-gedit="${g.id}">Sửa</button>
@@ -3618,18 +3631,18 @@
       const after = item?.after_image;
 
       const cur = (src, label) => src
-        ? `<div class="cur-img"><img src="${esc(src)}" alt=""><small>${esc(label)} hiện tại</small></div>`
+        ? `<div class="cur-img"><img src="${esc(resolveImg(src))}" alt=""><small>${esc(label)} hiện tại</small></div>`
         : '';
 
       return `
     <div class="field">
-      <label for="p_before">Ảnh TRƯỚC <span class="hint-inline">— lúc chưa trang điểm</span></label>
+      <label for="p_before">Ảnh TRƯỚC <span class="hint-inline">— lúc chưa trang điểm (hoặc ảnh 1)</span></label>
       ${cur(before, 'Ảnh trước')}
       <div class="drop" id="dropBefore"><b>Bấm để chọn ảnh trước</b><small>JPG, PNG, WEBP hoặc GIF · tối đa 5MB</small></div>
       <input type="file" id="p_before" accept="image/*" hidden>
     </div>
     <div class="field">
-      <label for="p_after">Ảnh SAU <span class="hint-inline">— đây là ảnh hiện ra ở lưới thư viện</span></label>
+      <label for="p_after">Ảnh SAU <span class="hint-inline">— ảnh hiện ở lưới thư viện (hoặc ảnh 2)</span></label>
       ${cur(after, 'Ảnh sau')}
       <div class="drop" id="dropAfter"><b>Bấm để chọn ảnh sau</b><small>JPG, PNG, WEBP hoặc GIF · tối đa 5MB</small></div>
       <input type="file" id="p_after" accept="image/*" hidden>
@@ -3657,7 +3670,7 @@
       $('photoTitle').textContent = item ? 'Sửa ảnh so sánh' : 'Thêm ảnh so sánh';
       $('photoSub').textContent = item
         ? 'Chọn ảnh mới nếu muốn thay ảnh hiện tại'
-        : 'Cần đủ ảnh trước và ảnh sau. Ảnh sau sẽ hiện ở lưới Thư viện trên trang chủ.';
+        : 'Chọn ảnh trước và ảnh sau. Nếu chỉ chọn 1 ảnh, ảnh sẽ tự động dùng cho cả hai.';
       formError('photoErr');
 
       $('photoForm').innerHTML = photoFieldsHtml(item);
@@ -3714,13 +3727,11 @@
 
       if (!title) return formError('photoErr', 'Vui lòng nhập tiêu đề ảnh');
 
-      // Khi thêm mới bắt buộc đủ hai ảnh; khi sửa thì có thể giữ ảnh cũ.
+      // Khi thêm mới bắt buộc có ít nhất một ảnh
       if (!editingPhotoId) {
         if (!uploaded.before && !uploaded.after) {
-          return formError('photoErr', 'Vui lòng chọn cả ảnh TRƯỚC và ảnh SAU');
+          return formError('photoErr', 'Vui lòng chọn ít nhất một ảnh');
         }
-        if (!uploaded.before) return formError('photoErr', 'Thiếu ảnh TRƯỚC');
-        if (!uploaded.after) return formError('photoErr', 'Thiếu ảnh SAU');
       }
 
       const btn = $('photoSave');
@@ -3732,6 +3743,8 @@
 
         if (uploaded.before) body.beforeImage = await uploadOne(uploaded.before);
         if (uploaded.after) body.afterImage = await uploadOne(uploaded.after);
+        if (!body.beforeImage && body.afterImage) body.beforeImage = body.afterImage;
+        if (!body.afterImage && body.beforeImage) body.afterImage = body.beforeImage;
 
         const r = await adminFetch(
           editingPhotoId ? `/admin/gallery/${editingPhotoId}` : '/admin/gallery',
@@ -3825,7 +3838,7 @@
         .map((src, i) => `
       <div class="hcard${i === 0 ? ' cover' : ''}">
         <div class="pic-wrap">
-          <img class="pic" src="${esc(src)}" alt="">
+          <img class="pic" src="${esc(resolveImg(src))}" alt="">
           ${i === 0 ? '<span class="badge">Ảnh bìa</span>' : `<span class="badge">${i + 1}</span>`}
         </div>
         ${write ? `
