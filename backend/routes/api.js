@@ -250,4 +250,16 @@ router.post('/hold', readLimiter, (req, res) => {
   res.json({ ok: true, data: { date, time, available: free, holdSeconds: free ? 600 : 0 } });
 });
 
+// Endpoint nhận tin nhắn Webhook từ Telegram Bot
+router.post('/telegram/webhook', async (req, res) => {
+  try {
+    const { handleTelegramUpdate } = await import('../src/telegram.js');
+    await handleTelegramUpdate(req.body);
+    res.json({ ok: true });
+  } catch (e) {
+    console.error('Lỗi xử lý Telegram Webhook:', e.message);
+    res.json({ ok: true }); // Luôn trả 200 OK để Telegram không gửi lại liên tục
+  }
+});
+
 export default router;

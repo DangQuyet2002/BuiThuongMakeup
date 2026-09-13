@@ -250,11 +250,13 @@ router.get('/telegram/status', requireRole('read'), async (req, res) => {
 
 router.post('/telegram/test', requireRole('write'), auditAction('thu_telegram'), async (req, res) => {
   const { token, chatId } = req.body || {};
-  const { testTelegram } = await import('../src/telegram.js');
+  const { testTelegram, registerTelegramWebhook } = await import('../src/telegram.js');
   const result = await testTelegram(token, chatId);
   if (!result.ok) {
     return res.status(400).json({ ok: false, error: result.error || 'Gửi tin nhắn Telegram thất bại' });
   }
+  // Tự động đăng ký Webhook để nhận tin nhắn 2 chiều khi chủ chat với Bot
+  registerTelegramWebhook(token).catch(() => {});
   res.json({ ok: true, message: 'Đã gửi tin nhắn thử nghiệm thành công về Telegram của bạn!' });
 });
 
