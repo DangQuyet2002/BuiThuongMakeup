@@ -78,6 +78,14 @@ export async function saveUploadToCloud(filename, filePathOrBuffer, mimeType) {
         VALUES ($1, $2, $3, $4)
         ON CONFLICT (filename) DO UPDATE SET data = EXCLUDED.data, size = EXCLUDED.size
       `, [filename, mime, data, data.length]);
+
+      // Đồng bộ vào Supabase Storage Bucket (uploads)
+      await client.query(`
+        INSERT INTO storage.objects (bucket_id, name, owner, metadata, version)
+        VALUES ('uploads', $1, NULL, jsonb_build_object('size', $2::bigint, 'mimetype', $3::text), '1')
+        ON CONFLICT (bucket_id, name) DO UPDATE SET metadata = EXCLUDED.metadata
+      `, [filename, data.length, mime]).catch(() => {});
+
       logger.info({ filename, size: data.length }, '[Supabase Storage] Đã lưu ảnh lên Cloud');
     } finally {
       client.release();
@@ -120,6 +128,7 @@ export async function deleteUploadFromCloud(filename) {
     const client = await p.connect();
     try {
       await client.query('DELETE FROM uploaded_files WHERE filename = $1', [filename]);
+      await client.query("DELETE FROM storage.objects WHERE bucket_id = 'uploads' AND name = $1", [filename]).catch(() => {});
       logger.info({ filename }, '[Supabase Storage] Đã xoá ảnh trên Cloud');
     } finally {
       client.release();
