@@ -2503,6 +2503,8 @@
           <button id="filterBtn">Lọc</button>
           <button class="ghost" id="clearBtn">Xoá lọc</button>
           <button class="ghost" id="reloadBtn">Tải lại</button>
+          <span style="flex:1"></span>
+          <button class="primary" id="openNewBookingBtn" style="background:var(--pink-400);color:#fff;border-radius:999px;font-weight:600;padding:8px 18px">+ Thêm đơn mới</button>
         </div>
 
         <div class="panel">
@@ -2521,6 +2523,7 @@
               <h3 id="calMonthTitle" class="ios-cal-title">Tháng ..., 2026</h3>
               <button type="button" class="ios-nav-btn" id="calNextBtn" title="Tháng sau">›</button>
               <button type="button" class="ios-today-btn" id="calTodayBtn">Hôm nay</button>
+              <button type="button" class="ios-today-btn" id="calNewBookingBtn" style="background:var(--pink-400);color:#fff;border-color:var(--pink-400)">+ Thêm lịch hẹn</button>
             </div>
             <div class="ios-cal-summary" id="calSummary">
               <!-- Summary pills -->
@@ -2545,6 +2548,7 @@
                   <h4 id="calSelectedDayTitle" class="ios-agenda-date">Chọn một ngày</h4>
                   <p id="calSelectedDaySub" class="ios-agenda-sub">Danh sách lịch hẹn</p>
                 </div>
+                <button type="button" class="ios-today-btn" id="calAgendaAddBtn" style="font-size:12px;padding:4px 10px">+ Thêm vào ngày này</button>
               </div>
               <div class="ios-events-list" id="calEventsList">
                 <div class="empty" style="padding:24px 0">Chọn một ngày trên lịch để xem chi tiết các khung giờ đặt.</div>
@@ -2926,6 +2930,85 @@
         <button type="button" class="ghost" id="cropSkip" title="Bỏ qua việc cắt, tải lên ảnh gốc">Dùng ảnh gốc</button>
         <button type="button" class="primary" id="cropApply">Cắt &amp; Áp dụng</button>
       </div>
+    </div>
+  </div>
+
+  <!-- ============ MODAL: THÊM LỊCH HẸN THỦ CÔNG ============ -->
+  <div class="backdrop" id="manualBookingBackdrop" style="z-index:1150" hidden>
+    <div class="modal wide" style="max-width:680px">
+      <h3>Thêm lịch hẹn mới</h3>
+      <p class="sub">Tạo lịch hẹn trực tiếp cho khách gọi điện hoặc nhắn tin</p>
+      <div class="form-err" id="manualBookingErr" style="color:var(--red-600);margin-bottom:12px"></div>
+
+      <form id="manualBookingForm" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;text-align:left">
+        <div>
+          <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px">Ngày hẹn *</label>
+          <input type="date" id="mbDate" required style="width:100%;padding:9px 12px;border:1px solid var(--gray-300);border-radius:8px;font-size:13px">
+        </div>
+        <div>
+          <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px">Giờ hẹn (HH:MM) *</label>
+          <input type="text" id="mbTime" placeholder="Ví dụ: 08:30" required style="width:100%;padding:9px 12px;border:1px solid var(--gray-300);border-radius:8px;font-size:13px">
+        </div>
+
+        <div>
+          <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px">Họ tên khách hàng *</label>
+          <input type="text" id="mbCustomer" placeholder="Ví dụ: Chị Lan Anh" required style="width:100%;padding:9px 12px;border:1px solid var(--gray-300);border-radius:8px;font-size:13px">
+        </div>
+        <div>
+          <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px">Số điện thoại *</label>
+          <input type="tel" id="mbPhone" placeholder="Ví dụ: 0988123456" required style="width:100%;padding:9px 12px;border:1px solid var(--gray-300);border-radius:8px;font-size:13px">
+        </div>
+
+        <div style="grid-column:1/-1">
+          <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px">Gói dịch vụ makeup</label>
+          <select id="mbService" style="width:100%;padding:9px 12px;border:1px solid var(--gray-300);border-radius:8px;font-size:13px">
+            <option value="">-- Chọn dịch vụ có sẵn hoặc tự nhập dưới --</option>
+          </select>
+        </div>
+
+        <div>
+          <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px">Tên dịch vụ hiển thị</label>
+          <input type="text" id="mbServiceName" placeholder="Dịch vụ Makeup" style="width:100%;padding:9px 12px;border:1px solid var(--gray-300);border-radius:8px;font-size:13px">
+        </div>
+        <div>
+          <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px">Thời lượng (phút)</label>
+          <input type="number" id="mbDuration" min="15" step="15" value="60" style="width:100%;padding:9px 12px;border:1px solid var(--gray-300);border-radius:8px;font-size:13px">
+        </div>
+
+        <div>
+          <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px">Chuyên viên phụ trách</label>
+          <select id="mbArtist" style="width:100%;padding:9px 12px;border:1px solid var(--gray-300);border-radius:8px;font-size:13px">
+            <option value="">-- Bất kỳ chuyên viên nào rảnh --</option>
+          </select>
+        </div>
+        <div>
+          <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px">Trạng thái duyệt đơn</label>
+          <select id="mbStatus" style="width:100%;padding:9px 12px;border:1px solid var(--gray-300);border-radius:8px;font-size:13px">
+            <option value="confirmed" selected>Đã xác nhận (Confirmed)</option>
+            <option value="pending">Chờ xác nhận (Pending)</option>
+            <option value="done">Đã hoàn thành (Done)</option>
+          </select>
+        </div>
+
+        <div>
+          <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px">Tổng tiền tạm tính (VNĐ)</label>
+          <input type="number" id="mbTotal" min="0" step="10000" placeholder="650000" style="width:100%;padding:9px 12px;border:1px solid var(--gray-300);border-radius:8px;font-size:13px">
+        </div>
+        <div>
+          <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px">Tiền cọc (VNĐ)</label>
+          <input type="number" id="mbDeposit" min="0" step="10000" placeholder="200000" style="width:100%;padding:9px 12px;border:1px solid var(--gray-300);border-radius:8px;font-size:13px">
+        </div>
+
+        <div style="grid-column:1/-1">
+          <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px">Ghi chú yêu cầu của khách</label>
+          <input type="text" id="mbNote" placeholder="Ví dụ: Tông cam đào, làm tóc uốn lơi, đi ăn cưới..." style="width:100%;padding:9px 12px;border:1px solid var(--gray-300);border-radius:8px;font-size:13px">
+        </div>
+
+        <div style="grid-column:1/-1;display:flex;justify-content:flex-end;gap:10px;margin-top:12px">
+          <button type="button" class="secondary" id="mbCancelBtn" style="padding:9px 20px;border-radius:6px;border:1px solid var(--gray-300);background:#fff;cursor:pointer">Huỷ</button>
+          <button type="submit" id="mbSaveBtn" style="padding:9px 24px;border-radius:6px;border:none;background:var(--pink-400);color:#fff;font-weight:600;cursor:pointer">Tạo lịch hẹn</button>
+        </div>
+      </form>
     </div>
   </div>
 
@@ -3763,6 +3846,164 @@
         loadCalendar(calYear, calMonth);
       });
     }
+
+    /* ================= THÊM LỊCH HẸN THỦ CÔNG ================= */
+
+    async function openManualBookingModal(initialDate = null, initialTime = '09:00') {
+      const modal = $('manualBookingBackdrop');
+      if (!modal) return;
+
+      const dateVal = initialDate || calSelectedDate || todayStr();
+      $('mbDate').value = dateVal;
+      $('mbTime').value = initialTime || '09:00';
+      $('mbCustomer').value = '';
+      $('mbPhone').value = '';
+      $('mbServiceName').value = '';
+      $('mbDuration').value = 60;
+      $('mbTotal').value = 650000;
+      $('mbDeposit').value = 200000;
+      $('mbNote').value = '';
+      $('mbStatus').value = 'confirmed';
+      $('manualBookingErr').style.display = 'none';
+      $('manualBookingErr').textContent = '';
+
+      // Tải danh mục dịch vụ & chuyên viên nếu chưa có
+      try {
+        if (!CATALOG.services.length) {
+          await loadCatalog(false);
+        }
+      } catch (e) {}
+
+      // Điền danh sách dịch vụ
+      const svcSelect = $('mbService');
+      svcSelect.innerHTML = '<option value="">-- Chọn dịch vụ có sẵn hoặc tự nhập dưới --</option>';
+
+      if (CATALOG.services && CATALOG.services.length) {
+        const grp = document.createElement('optgroup');
+        grp.label = 'Dịch vụ lẻ';
+        CATALOG.services.forEach(s => {
+          const opt = document.createElement('option');
+          opt.value = `svc_${s.id}`;
+          opt.textContent = `${s.name} (${s.duration}p - ${vnd(s.price)})`;
+          opt.dataset.name = s.name;
+          opt.dataset.duration = s.duration;
+          opt.dataset.price = s.price;
+          opt.dataset.id = s.id;
+          opt.dataset.type = 'service';
+          grp.appendChild(opt);
+        });
+        svcSelect.appendChild(grp);
+      }
+
+      if (CATALOG.combos && CATALOG.combos.length) {
+        const grp = document.createElement('optgroup');
+        grp.label = 'Combo ưu đãi';
+        CATALOG.combos.forEach(c => {
+          const opt = document.createElement('option');
+          opt.value = `combo_${c.id}`;
+          opt.textContent = `${c.name} (${vnd(c.price)})`;
+          opt.dataset.name = c.name;
+          opt.dataset.duration = 120;
+          opt.dataset.price = c.price;
+          opt.dataset.id = c.id;
+          opt.dataset.type = 'combo';
+          grp.appendChild(opt);
+        });
+        svcSelect.appendChild(grp);
+      }
+
+      // Điền danh sách chuyên viên
+      const artSelect = $('mbArtist');
+      artSelect.innerHTML = '<option value="">-- Bất kỳ chuyên viên nào rảnh --</option>';
+      if (CATALOG.artists && CATALOG.artists.length) {
+        CATALOG.artists.forEach(a => {
+          const opt = document.createElement('option');
+          opt.value = a.id;
+          opt.textContent = `${a.name} (${a.specialty || 'Chuyên viên'})`;
+          artSelect.appendChild(opt);
+        });
+      }
+
+      modal.hidden = false;
+      modal.style.display = 'flex';
+      $('mbCustomer').focus();
+    }
+
+    function closeManualBookingModal() {
+      const modal = $('manualBookingBackdrop');
+      if (modal) {
+        modal.hidden = true;
+        modal.style.display = 'none';
+      }
+    }
+
+    $('mbService')?.addEventListener('change', (e) => {
+      const opt = e.target.selectedOptions[0];
+      if (!opt || !opt.dataset.name) return;
+      $('mbServiceName').value = opt.dataset.name;
+      $('mbDuration').value = opt.dataset.duration || 60;
+      $('mbTotal').value = opt.dataset.price || 0;
+      $('mbDeposit').value = Math.min(Number(opt.dataset.price || 0), 200000);
+    });
+
+    $('mbCancelBtn')?.addEventListener('click', closeManualBookingModal);
+    $('manualBookingBackdrop')?.addEventListener('click', (e) => {
+      if (e.target === $('manualBookingBackdrop')) closeManualBookingModal();
+    });
+
+    $('manualBookingForm')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const errBox = $('manualBookingErr');
+      errBox.style.display = 'none';
+      errBox.textContent = '';
+
+      const btn = $('mbSaveBtn');
+      btn.disabled = true;
+      btn.textContent = 'Đang tạo...';
+
+      const opt = $('mbService')?.selectedOptions[0];
+      const isSvc = opt?.dataset.type === 'service';
+      const isCombo = opt?.dataset.type === 'combo';
+
+      const payload = {
+        date: $('mbDate').value,
+        time: $('mbTime').value.trim(),
+        customer: $('mbCustomer').value.trim(),
+        phone: $('mbPhone').value.trim(),
+        serviceId: isSvc ? Number(opt.dataset.id) : null,
+        comboId: isCombo ? Number(opt.dataset.id) : null,
+        serviceName: $('mbServiceName').value.trim() || opt?.dataset.name || 'Dịch vụ Makeup',
+        duration: Number($('mbDuration').value) || 60,
+        artistId: $('mbArtist').value ? Number($('mbArtist').value) : null,
+        total: Number($('mbTotal').value) || 0,
+        depositAmount: Number($('mbDeposit').value) || 0,
+        depositStatus: Number($('mbDeposit').value) > 0 ? 'paid' : 'unpaid',
+        status: $('mbStatus').value || 'confirmed',
+        note: $('mbNote').value.trim() || null,
+      };
+
+      try {
+        const r = await adminFetch('/admin/bookings', {
+          method: 'POST',
+          body: JSON.stringify(payload),
+        });
+        toast(r.message || 'Đã tạo lịch hẹn thành công');
+        closeManualBookingModal();
+        calSelectedDate = payload.date;
+        await load();
+        await loadCalendar();
+      } catch (err) {
+        errBox.textContent = err.message || 'Không tạo được lịch hẹn';
+        errBox.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Tạo lịch hẹn';
+      }
+    });
+
+    $('openNewBookingBtn')?.addEventListener('click', () => openManualBookingModal());
+    $('calNewBookingBtn')?.addEventListener('click', () => openManualBookingModal(calSelectedDate));
+    $('calAgendaAddBtn')?.addEventListener('click', () => openManualBookingModal(calSelectedDate));
 
     const ZNS_LABEL = { sent: 'Đã gửi', dry_run: 'Chạy thử', skipped: 'Bỏ qua', failed: 'Thất bại' };
     const N_TYPE_LABEL = { booking: 'Đơn mới', reminder: 'Nhắc hẹn', status: 'Đổi trạng thái' };

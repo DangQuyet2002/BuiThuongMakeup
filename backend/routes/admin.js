@@ -3,6 +3,7 @@ import { createHash } from 'crypto';
 import {
   listBookings, updateStatus, updateDepositStatus,
   bookingStats, getBookingByCode, deleteBooking,
+  createBooking, normalizePhone,
 } from '../src/booking.js';
 import { rateLimit } from '../src/rate-limit.js';
 import {
@@ -138,6 +139,43 @@ router.get('/bookings/:code/detail', requireRole('read'), (req, res) => {
   if (!b) return res.status(404).json({ ok: false, error: 'Không tìm thấy đơn' });
   const logs = listNotifications({ bookingId: b.id });
   res.json({ ok: true, data: { booking: b, notifications: logs } });
+});
+
+router.post('/bookings', requireRole('write'), auditAction('tao_don_thu_cong'), async (req, res) => {
+  const b = req.body || {};
+  if (!b.date) return res.status(400).json({ ok: false, error: 'Vui lòng chọn ngày hẹn' });
+  if (!b.time) return res.status(400).json({ ok: false, error: 'Vui lòng chọn giờ hẹn' });
+  if (!b.customer || String(b.customer).trim().length < 2) return res.status(400).json({ ok: false, error: 'Vui lòng nhập họ tên khách hàng' });
+  if (!b.phone) return res.status(400).json({ ok: false, error: 'Vui lòng nhập số điện thoại' });
+
+  const booking = createBooking({
+    service_id: b.serviceId ? Number(b.serviceId) : null,
+    service_name: b.serviceName || 'Dịch vụ Makeup',
+    combo_name: b.comboName || null,
+    date: b.date,
+    time: b.time,
+    duration: Number(b.duration) || 60,
+    artist_id: b.artistId ? Number(b.artistId) : null,
+    customer: String(b.customer).trim(),
+    phone: normalizePhone(b.phone),
+    note: b.note ? String(b.note).trim() : null,
+    addons: Array.isArray(b.addons) ? b.addons : [],
+    total: Number(b.total) || 0,
+    deposit_amount: Number(b.depositAmount) || 0,
+    deposit_status: b.depositStatus || (Number(b.depositAmount) > 0 ? 'paid' : 'unpaid'),
+    status: b.status || 'confirmed',
+  });
+
+  try {
+    const { triggerSyncToSupabase } = await import('../db/supabase-sync.js');
+    triggerSyncToSupabase();
+  } catch {}
+
+  res.status(201).json({
+    ok: true,
+    data: booking,
+    message: `Đã tạo thành công lịch hẹn ${booking.code}`,
+  });
 });
 
 router.patch('/bookings/:id/status', requireRole('write'), auditAction('doi_trang_thai'), async (req, res) => {

@@ -192,7 +192,7 @@ export function createBooking(data) {
        customer,phone,note,addons,total,deposit_amount,deposit_status,status)
     VALUES
       (@code,@service_id,@service_name,@combo_name,@date,@time,@duration,@artist_id,
-       @customer,@phone,@note,@addons,@total,@deposit_amount,'unpaid','pending')
+       @customer,@phone,@note,@addons,@total,@deposit_amount,@deposit_status,@status)
   `).run({
     code,
     service_id: data.service_id ?? data.serviceId ?? null,
@@ -200,14 +200,16 @@ export function createBooking(data) {
     combo_name: data.combo_name ?? data.comboName ?? null,
     date: data.date,
     time: data.time,
-    duration: data.duration,
+    duration: Number(data.duration) || 60,
     artist_id: data.artist_id ?? data.artistId ?? null,
     customer: data.customer,
     phone: data.phone,
     note: data.note ?? null,
     addons: JSON.stringify(data.addons || []),
-    total: data.total,
+    total: Number(data.total) || 0,
     deposit_amount: Number(data.deposit_amount ?? data.depositAmount) || 0,
+    deposit_status: data.deposit_status || data.depositStatus || 'unpaid',
+    status: data.status || 'pending',
   });
 
   return db.prepare('SELECT * FROM bookings WHERE id = ?').get(info.lastInsertRowid);
