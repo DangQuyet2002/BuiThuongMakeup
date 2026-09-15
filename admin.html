@@ -2430,6 +2430,165 @@
       border: none;
       transition: all 0.1s;
     }
+
+    /* ================= RESPONSIVE: MODAL THÊM LỊCH & LỊCH IOS ================= */
+    .mb-modal-box {
+      max-width: 680px;
+      width: 94vw;
+      max-height: 90vh;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 24px;
+      border-radius: 16px;
+      background: #fff;
+    }
+
+    .mb-form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px 16px;
+      text-align: left;
+    }
+
+    .mb-col-full {
+      grid-column: 1 / -1;
+    }
+
+    .mb-field {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .mb-label {
+      display: block;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--gray-700);
+      margin-bottom: 5px;
+    }
+
+    .mb-input, .mb-select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--gray-300);
+      border-radius: 8px;
+      font-size: 14px;
+      background: #fff;
+      color: var(--gray-900);
+      transition: border-color 0.15s, box-shadow 0.15s;
+      box-sizing: border-box;
+    }
+
+    .mb-input:focus, .mb-select:focus {
+      outline: none;
+      border-color: var(--pink-400);
+      box-shadow: 0 0 0 3px rgba(212, 83, 126, 0.15);
+    }
+
+    .mb-actions {
+      grid-column: 1 / -1;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--gray-100);
+    }
+
+    .mb-actions button {
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .mb-btn-cancel {
+      border: 1px solid var(--gray-300);
+      background: #fff;
+      color: var(--gray-700);
+    }
+    .mb-btn-cancel:hover {
+      background: var(--gray-50);
+      border-color: var(--gray-400);
+    }
+
+    .mb-btn-submit {
+      border: none;
+      background: var(--pink-400);
+      color: #fff;
+    }
+    .mb-btn-submit:hover {
+      background: var(--pink-600);
+      box-shadow: 0 2px 8px rgba(212, 83, 126, 0.3);
+    }
+
+    @media (max-width: 640px) {
+      .mb-modal-box {
+        padding: 18px 14px;
+        width: 96vw;
+        max-height: 94vh;
+      }
+      .mb-form-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      .mb-input, .mb-select {
+        font-size: 15px;
+        padding: 11px 12px;
+      }
+      .mb-actions {
+        flex-direction: column-reverse;
+        gap: 8px;
+      }
+      .mb-actions button {
+        width: 100%;
+        padding: 12px;
+        text-align: center;
+      }
+      .ios-cal-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+      }
+      .ios-cal-nav {
+        justify-content: space-between;
+      }
+      .ios-cal-title {
+        font-size: 16px;
+      }
+      .ios-month-card {
+        padding: 14px 8px;
+      }
+      .ios-days-grid {
+        gap: 3px;
+      }
+      .ios-day-cell {
+        min-height: 48px;
+        padding: 4px 1px;
+        border-radius: 8px;
+      }
+      .ios-day-num {
+        width: 22px;
+        height: 22px;
+        font-size: 11px;
+      }
+      .ios-day-badge {
+        font-size: 8px;
+        padding: 0 3px;
+      }
+      .ios-agenda-card {
+        padding: 16px 12px;
+        position: static;
+        max-height: none;
+      }
+      .ios-ev-top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+      }
+    }
   </style>
 </head>
 
@@ -2935,78 +3094,78 @@
 
   <!-- ============ MODAL: THÊM LỊCH HẸN THỦ CÔNG ============ -->
   <div class="backdrop" id="manualBookingBackdrop" style="z-index:1150" hidden>
-    <div class="modal wide" style="max-width:680px">
-      <h3>Thêm lịch hẹn mới</h3>
-      <p class="sub">Tạo lịch hẹn trực tiếp cho khách gọi điện hoặc nhắn tin</p>
+    <div class="modal mb-modal-box">
+      <h3 style="font-size:18px;margin-bottom:4px">Thêm lịch hẹn mới</h3>
+      <p class="sub" style="margin-bottom:16px">Tạo lịch hẹn trực tiếp cho khách gọi điện hoặc nhắn tin</p>
       <div class="form-err" id="manualBookingErr" style="color:var(--red-600);margin-bottom:12px"></div>
 
-      <form id="manualBookingForm" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;text-align:left">
-        <div>
-          <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px">Ngày hẹn *</label>
-          <input type="date" id="mbDate" required style="width:100%;padding:9px 12px;border:1px solid var(--gray-300);border-radius:8px;font-size:13px">
+      <form id="manualBookingForm" class="mb-form-grid">
+        <div class="mb-field">
+          <label class="mb-label" for="mbDate">Ngày hẹn *</label>
+          <input type="date" id="mbDate" class="mb-input" required>
         </div>
-        <div>
-          <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px">Giờ hẹn (HH:MM) *</label>
-          <input type="text" id="mbTime" placeholder="Ví dụ: 08:30" required style="width:100%;padding:9px 12px;border:1px solid var(--gray-300);border-radius:8px;font-size:13px">
-        </div>
-
-        <div>
-          <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px">Họ tên khách hàng *</label>
-          <input type="text" id="mbCustomer" placeholder="Ví dụ: Chị Lan Anh" required style="width:100%;padding:9px 12px;border:1px solid var(--gray-300);border-radius:8px;font-size:13px">
-        </div>
-        <div>
-          <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px">Số điện thoại *</label>
-          <input type="tel" id="mbPhone" placeholder="Ví dụ: 0988123456" required style="width:100%;padding:9px 12px;border:1px solid var(--gray-300);border-radius:8px;font-size:13px">
+        <div class="mb-field">
+          <label class="mb-label" for="mbTime">Giờ hẹn (HH:MM) *</label>
+          <input type="text" id="mbTime" class="mb-input" placeholder="Ví dụ: 08:30" required>
         </div>
 
-        <div style="grid-column:1/-1">
-          <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px">Gói dịch vụ makeup</label>
-          <select id="mbService" style="width:100%;padding:9px 12px;border:1px solid var(--gray-300);border-radius:8px;font-size:13px">
+        <div class="mb-field">
+          <label class="mb-label" for="mbCustomer">Họ tên khách hàng *</label>
+          <input type="text" id="mbCustomer" class="mb-input" placeholder="Ví dụ: Chị Lan Anh" required>
+        </div>
+        <div class="mb-field">
+          <label class="mb-label" for="mbPhone">Số điện thoại *</label>
+          <input type="tel" id="mbPhone" class="mb-input" placeholder="Ví dụ: 0988123456" required>
+        </div>
+
+        <div class="mb-field mb-col-full">
+          <label class="mb-label" for="mbService">Gói dịch vụ makeup</label>
+          <select id="mbService" class="mb-select">
             <option value="">-- Chọn dịch vụ có sẵn hoặc tự nhập dưới --</option>
           </select>
         </div>
 
-        <div>
-          <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px">Tên dịch vụ hiển thị</label>
-          <input type="text" id="mbServiceName" placeholder="Dịch vụ Makeup" style="width:100%;padding:9px 12px;border:1px solid var(--gray-300);border-radius:8px;font-size:13px">
+        <div class="mb-field">
+          <label class="mb-label" for="mbServiceName">Tên dịch vụ hiển thị</label>
+          <input type="text" id="mbServiceName" class="mb-input" placeholder="Dịch vụ Makeup">
         </div>
-        <div>
-          <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px">Thời lượng (phút)</label>
-          <input type="number" id="mbDuration" min="15" step="15" value="60" style="width:100%;padding:9px 12px;border:1px solid var(--gray-300);border-radius:8px;font-size:13px">
+        <div class="mb-field">
+          <label class="mb-label" for="mbDuration">Thời lượng (phút)</label>
+          <input type="number" id="mbDuration" class="mb-input" min="15" step="15" value="60">
         </div>
 
-        <div>
-          <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px">Chuyên viên phụ trách</label>
-          <select id="mbArtist" style="width:100%;padding:9px 12px;border:1px solid var(--gray-300);border-radius:8px;font-size:13px">
+        <div class="mb-field">
+          <label class="mb-label" for="mbArtist">Chuyên viên phụ trách</label>
+          <select id="mbArtist" class="mb-select">
             <option value="">-- Bất kỳ chuyên viên nào rảnh --</option>
           </select>
         </div>
-        <div>
-          <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px">Trạng thái duyệt đơn</label>
-          <select id="mbStatus" style="width:100%;padding:9px 12px;border:1px solid var(--gray-300);border-radius:8px;font-size:13px">
+        <div class="mb-field">
+          <label class="mb-label" for="mbStatus">Trạng thái duyệt đơn</label>
+          <select id="mbStatus" class="mb-select">
             <option value="confirmed" selected>Đã xác nhận (Confirmed)</option>
             <option value="pending">Chờ xác nhận (Pending)</option>
             <option value="done">Đã hoàn thành (Done)</option>
           </select>
         </div>
 
-        <div>
-          <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px">Tổng tiền tạm tính (VNĐ)</label>
-          <input type="number" id="mbTotal" min="0" step="10000" placeholder="650000" style="width:100%;padding:9px 12px;border:1px solid var(--gray-300);border-radius:8px;font-size:13px">
+        <div class="mb-field">
+          <label class="mb-label" for="mbTotal">Tổng tiền tạm tính (VNĐ)</label>
+          <input type="number" id="mbTotal" class="mb-input" min="0" step="10000" placeholder="650000">
         </div>
-        <div>
-          <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px">Tiền cọc (VNĐ)</label>
-          <input type="number" id="mbDeposit" min="0" step="10000" placeholder="200000" style="width:100%;padding:9px 12px;border:1px solid var(--gray-300);border-radius:8px;font-size:13px">
-        </div>
-
-        <div style="grid-column:1/-1">
-          <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px">Ghi chú yêu cầu của khách</label>
-          <input type="text" id="mbNote" placeholder="Ví dụ: Tông cam đào, làm tóc uốn lơi, đi ăn cưới..." style="width:100%;padding:9px 12px;border:1px solid var(--gray-300);border-radius:8px;font-size:13px">
+        <div class="mb-field">
+          <label class="mb-label" for="mbDeposit">Tiền cọc (VNĐ)</label>
+          <input type="number" id="mbDeposit" class="mb-input" min="0" step="10000" placeholder="200000">
         </div>
 
-        <div style="grid-column:1/-1;display:flex;justify-content:flex-end;gap:10px;margin-top:12px">
-          <button type="button" class="secondary" id="mbCancelBtn" style="padding:9px 20px;border-radius:6px;border:1px solid var(--gray-300);background:#fff;cursor:pointer">Huỷ</button>
-          <button type="submit" id="mbSaveBtn" style="padding:9px 24px;border-radius:6px;border:none;background:var(--pink-400);color:#fff;font-weight:600;cursor:pointer">Tạo lịch hẹn</button>
+        <div class="mb-field mb-col-full">
+          <label class="mb-label" for="mbNote">Ghi chú yêu cầu của khách</label>
+          <input type="text" id="mbNote" class="mb-input" placeholder="Ví dụ: Tông cam đào, làm tóc uốn lơi, đi ăn cưới...">
+        </div>
+
+        <div class="mb-actions">
+          <button type="button" class="mb-btn-cancel" id="mbCancelBtn">Huỷ</button>
+          <button type="submit" class="mb-btn-submit" id="mbSaveBtn">Tạo lịch hẹn</button>
         </div>
       </form>
     </div>
