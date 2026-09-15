@@ -130,6 +130,7 @@ router.post('/bookings', bookingLimiter, async (req, res) => {
   }
 
   const artistId = b.artistId ? Number(b.artistId) : null;
+  const artist = artistId ? db.prepare('SELECT id, name FROM artists WHERE id = ?').get(artistId) : null;
 
   if (!isSlotFree(b.date, b.time, calc.duration, artistId)) {
     return res.status(409).json({

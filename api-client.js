@@ -172,8 +172,8 @@ export const FALLBACK = {
 export function localSlots(date) {
   const d = new Date(date + 'T00:00:00');
   const wd = d.getDay();
-  const start = wd === 0 ? 9 : 8;
-  const end = wd === 0 ? 17 : 20;
+  const start = 0;
+  const end = 24;
 
   let seed = 0;
   for (let i = 0; i < date.length; i++) seed = (seed * 31 + date.charCodeAt(i)) % 9973;
@@ -187,7 +187,7 @@ export function localSlots(date) {
   for (let h = start; h < end; h++) {
     const time = pad(h) + ':00';
     const rnd = (seed + h * 37) % 100;
-    let available = wd === 0 ? rnd >= 45 : rnd >= 30;
+    let available = rnd >= 30;
     if (date < todayStr) available = false;
     if (date === todayStr && h * 60 <= nowMin) available = false;
     slots.push({ time, available });

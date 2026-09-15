@@ -1,13 +1,13 @@
 import { db } from '../db/database.js';
 
 export const WORK_HOURS = {
-  0: { start: 9,  end: 17 },   // Chủ nhật
-  1: { start: 8,  end: 20 },
-  2: { start: 8,  end: 20 },
-  3: { start: 8,  end: 20 },
-  4: { start: 8,  end: 20 },
-  5: { start: 8,  end: 20 },
-  6: { start: 8,  end: 20 },
+  0: { start: 0,  end: 24 },   // Chủ nhật
+  1: { start: 0,  end: 24 },   // Thứ 2
+  2: { start: 0,  end: 24 },   // Thứ 3
+  3: { start: 0,  end: 24 },   // Thứ 4
+  4: { start: 0,  end: 24 },   // Thứ 5
+  5: { start: 0,  end: 24 },   // Thứ 6
+  6: { start: 0,  end: 24 },   // Thứ 7
 };
 
 export const SLOT_MINUTES = 60;
