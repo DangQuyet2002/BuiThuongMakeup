@@ -1,8 +1,9 @@
 import { findDueReminders, notifyReminder, znsStatus } from './notifications.js';
 import { notifyOwnerReminder } from './telegram.js';
+import { getSettings } from './settings.js';
 
-const CHECK_INTERVAL_MS = Number(process.env.REMINDER_INTERVAL_MS || 15 * 60 * 1000);
-const HOURS_AHEAD = Number(process.env.REMINDER_HOURS_AHEAD || 24);
+const DEFAULT_INTERVAL_MS = Number(process.env.REMINDER_INTERVAL_MS || 15 * 60 * 1000);
+const DEFAULT_HOURS_AHEAD = Number(process.env.REMINDER_HOURS_AHEAD || 24);
 const ENABLED = process.env.REMINDER_ENABLED !== '0';
 
 let timer = null;
@@ -11,7 +12,9 @@ let runs = 0;
 let totalSent = 0;
 
 async function runOnce() {
-  const due = findDueReminders(HOURS_AHEAD);
+  const settings = getSettings();
+  const hoursAhead = Number(settings.reminderHoursAhead) || DEFAULT_HOURS_AHEAD;
+  const due = findDueReminders(hoursAhead);
   runs++;
   lastRun = new Date().toISOString();
 
@@ -24,7 +27,7 @@ async function runOnce() {
     const tag = result.ok ? (result.dryRun ? 'DRY-RUN' : 'ĐÃ GỬI') : 'THẤT BẠI';
     console.log(`  [nhắc hẹn] ${booking.code} · ${booking.phone} → ${tag}${result.error ? ' (' + result.error + ')' : ''}`);
 
-    // Nhắc lịch trước 1 ngày về Telegram của chủ studio
+    // Nhắc lịch về Telegram của chủ studio
     notifyOwnerReminder(booking).catch((err) => {
       console.error(`  [Telegram nhắc chủ] ${booking.code} lỗi:`, err.message);
     });
@@ -63,10 +66,13 @@ export async function runReminderNow() {
 }
 
 export function reminderJobStats() {
+  const settings = getSettings();
+  const hoursAhead = Number(settings.reminderHoursAhead) || DEFAULT_HOURS_AHEAD;
+  const intervalMinutes = Number(settings.reminderIntervalMinutes) || Math.round(DEFAULT_INTERVAL_MS / 60000);
   return {
     enabled: ENABLED,
-    intervalMinutes: Math.round(CHECK_INTERVAL_MS / 60000),
-    hoursAhead: HOURS_AHEAD,
+    intervalMinutes,
+    hoursAhead,
     runs,
     totalSent,
     lastRun,

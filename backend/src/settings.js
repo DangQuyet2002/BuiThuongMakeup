@@ -168,6 +168,8 @@ export function getSettings() {
     telegramBotToken: readRaw('telegram_bot_token') || '',
     telegramChatId: readRaw('telegram_chat_id') || '',
     telegramEnabled: readBool('telegram_enabled', true),
+    reminderHoursAhead: Number(readRaw('reminder_hours_ahead')) || 24,
+    reminderIntervalMinutes: Number(readRaw('reminder_interval_minutes')) || 15,
   };
 }
 
@@ -332,6 +334,18 @@ export function updateSettings(data) {
     if (patch.telegramEnabled !== undefined) {
       writeRaw('telegram_enabled', patch.telegramEnabled ? '1' : '0');
       changed.push('telegramEnabled');
+    }
+
+    if (patch.reminderHoursAhead !== undefined) {
+      const h = Math.max(1, Math.min(168, Number(patch.reminderHoursAhead) || 24));
+      writeRaw('reminder_hours_ahead', String(h));
+      changed.push('reminderHoursAhead');
+    }
+
+    if (patch.reminderIntervalMinutes !== undefined) {
+      const m = Math.max(1, Math.min(1440, Number(patch.reminderIntervalMinutes) || 15));
+      writeRaw('reminder_interval_minutes', String(m));
+      changed.push('reminderIntervalMinutes');
     }
 
     // Ảnh cũ không còn trong danh sách mới thì đánh dấu để dọn sau.

@@ -1,6 +1,9 @@
 import { Router } from 'express';
 import { createHash } from 'crypto';
-import { listBookings, updateStatus, updateDepositStatus, bookingStats, getBookingByCode } from '../src/booking.js';
+import {
+  listBookings, updateStatus, updateDepositStatus,
+  bookingStats, getBookingByCode, deleteBooking,
+} from '../src/booking.js';
 import { rateLimit } from '../src/rate-limit.js';
 import {
   listNotifications, notificationStats, retryNotification,
@@ -190,17 +193,18 @@ router.patch('/bookings/:id/deposit', requireRole('write'), auditAction('xac_nha
   res.json({ ok: true, data: updated, notification: notify, message: status === 'paid' ? 'Đã xác nhận nhận cọc' : 'Đã cập nhật cọc' });
 });
 
-router.delete('/bookings/:id', requireRole('write'), auditAction('huy_don'), async (req, res) => {
-  const updated = updateStatus(Number(req.params.id), 'cancelled');
-  if (!updated) return res.status(404).json({ ok: false, error: 'Không tìm thấy đơn' });
+router.delete('/bookings/:id', requireRole('write'), auditAction('xoa_don'), async (req, res) => {
+  const deleted = deleteBooking(Number(req.params.id));
+  if (!deleted) return res.status(404).json({ ok: false, error: 'Không tìm thấy đơn' });
 
   try {
-    await notifyStatusChanged({ ...updated, addons: parseAddons(updated.addons) });
-  } catch (e) {
-    logger.error({ err: { message: e.message } }, 'lỗi gửi thông báo huỷ đơn');
+    const { triggerSyncToSupabase } = await import('../db/supabase-sync.js');
+    triggerSyncToSupabase();
+  } catch {
+    // ignore
   }
 
-  res.json({ ok: true, data: updated, message: 'Đã huỷ đơn' });
+  res.json({ ok: true, data: deleted, message: `Đã xoá vĩnh viễn đơn ${deleted.code}` });
 });
 
 router.get('/notifications', requireRole('read'), (req, res) => {

@@ -2314,6 +2314,16 @@
               <label style="display:block;font-size:12px;font-weight:600;margin-bottom:6px;color:var(--gray-900)">Telegram Chat ID (ID của bạn hoặc nhóm)</label>
               <input type="text" id="tgChatId" placeholder="Ví dụ: 1234567890" style="width:100%;padding:10px 12px;border:1px solid var(--gray-300);border-radius:8px;font-size:13px;font-family:var(--mono)">
             </div>
+            <div>
+              <label style="display:block;font-size:12px;font-weight:600;margin-bottom:6px;color:var(--gray-900)">Nhắc trước bao nhiêu giờ (tiếng)</label>
+              <input type="number" id="tgHoursAhead" min="1" max="168" value="24" placeholder="Ví dụ: 24" style="width:100%;padding:10px 12px;border:1px solid var(--gray-300);border-radius:8px;font-size:13px">
+              <small style="color:var(--gray-600);font-size:11px;display:block;margin-top:3px">Thời gian gửi tin nhắc trước giờ hẹn của khách (mặc định 24 tiếng = 1 ngày).</small>
+            </div>
+            <div>
+              <label style="display:block;font-size:12px;font-weight:600;margin-bottom:6px;color:var(--gray-900)">Tần suất kiểm tra (phút)</label>
+              <input type="number" id="tgInterval" min="1" max="1440" value="15" placeholder="Ví dụ: 15" style="width:100%;padding:10px 12px;border:1px solid var(--gray-300);border-radius:8px;font-size:13px">
+              <small style="color:var(--gray-600);font-size:11px;display:block;margin-top:3px">Khoảng thời gian hệ thống tự quét tìm đơn sắp tới (mặc định 15 phút).</small>
+            </div>
             <div style="grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding-top:6px">
               <div style="font-size:12px;color:var(--gray-600);line-height:1.5">
                 💡 <b>Hướng dẫn 1 phút:</b> Mở Telegram tìm <code>@BotFather</code> gửi <code>/newbot</code> lấy Token. Sau đó tìm <code>@userinfobot</code> lấy Chat ID.
@@ -2912,6 +2922,7 @@
           if (r.status === 'confirmed') acts += `<button class="ok" data-set="done">Hoàn thành</button>`;
           if (r.status !== 'cancelled' && r.status !== 'done') acts += `<button class="no" data-set="cancelled">Huỷ</button>`;
           if (r.status === 'cancelled') acts += `<button data-set="pending">Mở lại</button>`;
+          acts += `<button class="no" data-delete="${r.id}" data-code="${esc(r.code)}" title="Xoá vĩnh viễn đơn này" style="color:#b91c1c;background:#fee2e2;border:1px solid #fca5a5;font-weight:600">Xoá</button>`;
         }
         return `
         <tr data-id="${r.id}">
@@ -2954,6 +2965,25 @@
       $('list').querySelectorAll('[data-deposit]').forEach(btn => {
         btn.addEventListener('click', () => changeDepositStatus(Number(btn.dataset.deposit), 'paid', btn));
       });
+
+      $('list').querySelectorAll('[data-delete]').forEach(btn => {
+        btn.addEventListener('click', () => deleteBookingRow(Number(btn.dataset.delete), btn.dataset.code, btn));
+      });
+    }
+
+    async function deleteBookingRow(id, code, btn) {
+      if (!confirm(`Bạn có chắc chắn muốn XOÁ VĨNH VIỄN đơn đặt lịch "${code || id}" không?\n\nDữ liệu sẽ bị xoá khỏi cơ sở dữ liệu và không thể khôi phục.`)) {
+        return;
+      }
+      if (btn) { btn.disabled = true; btn.textContent = '...'; }
+      try {
+        const r = await adminFetch(`/admin/bookings/${id}`, { method: 'DELETE' });
+        toast(r.message || 'Đã xoá đơn thành công');
+        await load();
+      } catch (e) {
+        if (e.status !== 401 && e.status !== 403) toast('Không xoá được đơn: ' + e.message, true);
+        if (btn) { btn.disabled = false; btn.textContent = 'Xoá'; }
+      }
     }
 
     async function changeDepositStatus(id, depositStatus, btn) {
@@ -3115,9 +3145,13 @@
         const token = s.telegramBotToken || '';
         const chatId = s.telegramChatId || '';
         const enabled = s.telegramEnabled !== false;
+        const hours = s.reminderHoursAhead || 24;
+        const interval = s.reminderIntervalMinutes || 15;
 
         if ($('tgToken')) $('tgToken').value = token;
         if ($('tgChatId')) $('tgChatId').value = chatId;
+        if ($('tgHoursAhead')) $('tgHoursAhead').value = hours;
+        if ($('tgInterval')) $('tgInterval').value = interval;
 
         const badge = $('tgStatusBadge');
         if (badge) {
@@ -3143,6 +3177,8 @@
 
       const token = $('tgToken')?.value.trim() || '';
       const chatId = $('tgChatId')?.value.trim() || '';
+      const reminderHoursAhead = Number($('tgHoursAhead')?.value) || 24;
+      const reminderIntervalMinutes = Number($('tgInterval')?.value) || 15;
 
       try {
         await adminFetch('/admin/settings', {
@@ -3151,9 +3187,11 @@
             telegramBotToken: token,
             telegramChatId: chatId,
             telegramEnabled: true,
+            reminderHoursAhead,
+            reminderIntervalMinutes,
           }),
         });
-        toast('Đã lưu cấu hình Telegram');
+        toast('Đã lưu cấu hình thông báo & nhắc lịch thành công');
         await loadTelegramSettings();
       } catch (err) {
         toast('Lỗi lưu: ' + err.message, true);

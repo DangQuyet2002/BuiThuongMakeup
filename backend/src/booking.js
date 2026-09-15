@@ -254,6 +254,18 @@ export function updateDepositStatus(id, depositStatus) {
   return db.prepare('SELECT * FROM bookings WHERE id = ?').get(id);
 }
 
+export function deleteBooking(id) {
+  const existing = db.prepare('SELECT * FROM bookings WHERE id = ?').get(id);
+  if (!existing) return null;
+
+  db.transaction(() => {
+    db.prepare('DELETE FROM notification_log WHERE booking_id = ?').run(id);
+    db.prepare('DELETE FROM bookings WHERE id = ?').run(id);
+  })();
+
+  return existing;
+}
+
 export function bookingStats() {
   const total = db.prepare('SELECT COUNT(*) c FROM bookings').get().c;
   const pending = db.prepare("SELECT COUNT(*) c FROM bookings WHERE status='pending'").get().c;
