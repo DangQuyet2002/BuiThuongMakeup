@@ -2054,6 +2054,382 @@
     .crop-handle.ne { top: -8px; right: -8px; cursor: nesw-resize; }
     .crop-handle.sw { bottom: -8px; left: -8px; cursor: nesw-resize; }
     .crop-handle.se { bottom: -8px; right: -8px; cursor: nwse-resize; }
+
+    /* ============ iOS Calendar View ============ */
+    .ios-cal-container {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .ios-cal-header {
+      background: #fff;
+      border-radius: var(--radius-md);
+      padding: 16px 22px;
+      border: 1px solid var(--gray-200);
+      box-shadow: var(--shadow-xs);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .ios-cal-nav {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .ios-cal-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--gray-900);
+      min-width: 170px;
+      font-family: var(--sans);
+      letter-spacing: -0.3px;
+    }
+
+    .ios-nav-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 1px solid var(--gray-200);
+      background: #fff;
+      color: var(--gray-900);
+      font-size: 18px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      box-shadow: var(--shadow-xs);
+    }
+
+    .ios-nav-btn:hover {
+      background: var(--pink-50);
+      color: var(--pink-600);
+      border-color: var(--pink-100);
+    }
+
+    .ios-today-btn {
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--gray-200);
+      background: var(--gray-50);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-600);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .ios-today-btn:hover {
+      background: var(--pink-400);
+      color: #fff;
+      border-color: var(--pink-400);
+    }
+
+    .ios-cal-summary {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .ios-sum-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: var(--radius-full);
+      font-size: 12px;
+      font-weight: 600;
+      background: var(--gray-100);
+      color: var(--gray-600);
+    }
+
+    .ios-sum-pill.hot {
+      background: var(--pink-50);
+      color: var(--pink-600);
+    }
+
+    .ios-cal-body {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    @media (max-width: 900px) {
+      .ios-cal-body {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Month Grid Card */
+    .ios-month-card {
+      background: #fff;
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      border: 1px solid var(--gray-200);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .ios-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--gray-400);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .ios-weekdays .sun {
+      color: var(--pink-600);
+    }
+
+    .ios-days-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+    }
+
+    .ios-day-cell {
+      min-height: 72px;
+      border-radius: 12px;
+      border: 1px solid transparent;
+      padding: 6px 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      background: var(--gray-50);
+      position: relative;
+    }
+
+    .ios-day-cell:hover {
+      background: var(--pink-50);
+      border-color: var(--pink-100);
+      transform: translateY(-1px);
+    }
+
+    .ios-day-cell.other-month {
+      opacity: 0.25;
+      background: transparent;
+    }
+
+    .ios-day-cell.is-selected {
+      background: #fff;
+      border-color: var(--pink-400);
+      box-shadow: 0 0 0 2px var(--pink-400), var(--shadow-sm);
+    }
+
+    .ios-day-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-900);
+      margin-bottom: 4px;
+      transition: all 0.15s;
+    }
+
+    .ios-day-cell.is-today .ios-day-num {
+      background: var(--pink-400);
+      color: #fff;
+      font-weight: 700;
+      box-shadow: 0 2px 6px rgba(212, 83, 126, 0.35);
+    }
+
+    .ios-day-cell.has-events {
+      background: #fff;
+      border-color: var(--gray-200);
+    }
+
+    .ios-dots {
+      display: flex;
+      gap: 3px;
+      align-items: center;
+      justify-content: center;
+      margin-top: 2px;
+      flex-wrap: wrap;
+    }
+
+    .ios-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--pink-400);
+    }
+
+    .ios-dot.pending { background: #F59E0B; }
+    .ios-dot.confirmed { background: #10B981; }
+    .ios-dot.done { background: #3B82F6; }
+    .ios-dot.cancelled { background: #9CA3AF; }
+
+    .ios-day-badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 999px;
+      background: var(--pink-50);
+      color: var(--pink-600);
+      margin-top: 4px;
+      white-space: nowrap;
+    }
+
+    /* Agenda Card */
+    .ios-agenda-card {
+      background: #fff;
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      border: 1px solid var(--gray-200);
+      box-shadow: var(--shadow-sm);
+      position: sticky;
+      top: 20px;
+      max-height: calc(100vh - 120px);
+      overflow-y: auto;
+    }
+
+    .ios-agenda-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 1px solid var(--gray-100);
+      padding-bottom: 14px;
+      margin-bottom: 16px;
+    }
+
+    .ios-agenda-date {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-bottom: 2px;
+    }
+
+    .ios-agenda-sub {
+      font-size: 13px;
+      color: var(--gray-400);
+      margin: 0;
+    }
+
+    .ios-events-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .ios-event-card {
+      background: var(--gray-50);
+      border-radius: 12px;
+      padding: 14px 16px;
+      border-left: 4px solid var(--pink-400);
+      border-top: 1px solid var(--gray-100);
+      border-right: 1px solid var(--gray-100);
+      border-bottom: 1px solid var(--gray-100);
+      transition: all 0.15s ease;
+    }
+
+    .ios-event-card:hover {
+      background: #fff;
+      box-shadow: var(--shadow-sm);
+      transform: translateY(-1px);
+    }
+
+    .ios-event-card.st-pending { border-left-color: #F59E0B; }
+    .ios-event-card.st-confirmed { border-left-color: #10B981; }
+    .ios-event-card.st-done { border-left-color: #3B82F6; }
+    .ios-event-card.st-cancelled { border-left-color: #9CA3AF; opacity: 0.65; }
+
+    .ios-ev-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .ios-ev-time {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--gray-900);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .ios-ev-cust {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .ios-ev-phone {
+      font-size: 13px;
+      color: var(--pink-600);
+      text-decoration: none;
+      font-weight: 600;
+      background: var(--pink-50);
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+
+    .ios-ev-phone:hover {
+      text-decoration: underline;
+    }
+
+    .ios-ev-svc {
+      font-size: 13px;
+      color: var(--gray-600);
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+
+    .ios-ev-foot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 8px;
+      border-top: 1px dashed var(--gray-200);
+      margin-top: 8px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .ios-ev-price {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--pink-600);
+    }
+
+    .ios-ev-acts {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .ios-ev-acts button {
+      padding: 4px 10px;
+      font-size: 11.5px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      border: none;
+      transition: all 0.1s;
+    }
   </style>
 </head>
 
@@ -2102,6 +2478,7 @@
 
       <div class="tabs">
         <button class="tab on" data-tab="bookings">Đơn đặt lịch</button>
+        <button class="tab" data-tab="calendar">📅 Lịch iOS</button>
         <button class="tab" data-tab="catalog">Dịch vụ &amp; giá</button>
         <button class="tab" data-tab="gallery">Thư viện ảnh</button>
         <button class="tab" data-tab="home">Trang chủ</button>
@@ -2131,6 +2508,48 @@
         <div class="panel">
           <div id="list">
             <div class="loading">Đang tải danh sách đơn...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- --- iOS Calendar View --- -->
+      <div id="tabCalendar" hidden>
+        <div class="ios-cal-container">
+          <div class="ios-cal-header">
+            <div class="ios-cal-nav">
+              <button type="button" class="ios-nav-btn" id="calPrevBtn" title="Tháng trước">‹</button>
+              <h3 id="calMonthTitle" class="ios-cal-title">Tháng ..., 2026</h3>
+              <button type="button" class="ios-nav-btn" id="calNextBtn" title="Tháng sau">›</button>
+              <button type="button" class="ios-today-btn" id="calTodayBtn">Hôm nay</button>
+            </div>
+            <div class="ios-cal-summary" id="calSummary">
+              <!-- Summary pills -->
+            </div>
+          </div>
+
+          <div class="ios-cal-body">
+            <!-- Khung Lưới Tháng (Apple Month Grid) -->
+            <div class="ios-month-card">
+              <div class="ios-weekdays">
+                <span>T2</span><span>T3</span><span>T4</span><span>T5</span><span>T6</span><span>T7</span><span class="sun">CN</span>
+              </div>
+              <div class="ios-days-grid" id="calDaysGrid">
+                <!-- Days rendered dynamically -->
+              </div>
+            </div>
+
+            <!-- Khung Chi tiết Ngày (Apple Agenda View) -->
+            <div class="ios-agenda-card">
+              <div class="ios-agenda-header">
+                <div>
+                  <h4 id="calSelectedDayTitle" class="ios-agenda-date">Chọn một ngày</h4>
+                  <p id="calSelectedDaySub" class="ios-agenda-sub">Danh sách lịch hẹn</p>
+                </div>
+              </div>
+              <div class="ios-events-list" id="calEventsList">
+                <div class="empty" style="padding:24px 0">Chọn một ngày trên lịch để xem chi tiết các khung giờ đặt.</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -2844,6 +3263,7 @@
         currentTab = t.dataset.tab;
 
         $('tabBookings').hidden = currentTab !== 'bookings';
+        $('tabCalendar').hidden = currentTab !== 'calendar';
         $('tabCatalog').hidden = currentTab !== 'catalog';
         $('tabGallery').hidden = currentTab !== 'gallery';
         $('tabHome').hidden = currentTab !== 'home';
@@ -2852,6 +3272,7 @@
         $('tabUsers').hidden = currentTab !== 'users';
         $('tabAudit').hidden = currentTab !== 'audit';
 
+        if (currentTab === 'calendar') loadCalendar();
         if (currentTab === 'catalog') loadCatalog(true);
         if (currentTab === 'gallery') loadGallery(true);
         if (currentTab === 'home') loadHome();
@@ -3043,7 +3464,305 @@
     });
     $('fPhone').addEventListener('keydown', e => { if (e.key === 'Enter') load() });
 
-    /* ================= notifications ================= */
+    /* ================= iOS Calendar View ================= */
+
+    let calYear = new Date().getFullYear();
+    let calMonth = new Date().getMonth(); // 0-indexed
+    let calSelectedDate = todayStr();
+    let calBookingsMap = new Map(); // dateStr -> [bookings]
+
+    function todayStr() {
+      const d = new Date();
+      const pad = (n) => String(n).padStart(2, '0');
+      return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+    }
+
+    async function loadCalendar(year = calYear, month = calMonth) {
+      calYear = year;
+      calMonth = month;
+
+      if (!calSelectedDate) {
+        calSelectedDate = todayStr();
+      }
+
+      const monthNames = ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'];
+      if ($('calMonthTitle')) $('calMonthTitle').textContent = `${monthNames[calMonth]}, ${calYear}`;
+
+      try {
+        const res = await adminFetch('/admin/bookings?limit=1000');
+        const bookings = res.data || [];
+
+        calBookingsMap.clear();
+        let monthTotal = 0;
+        let monthConfirmed = 0;
+        let monthPending = 0;
+        let monthRevenue = 0;
+
+        const currentYM = `${calYear}-${String(calMonth + 1).padStart(2, '0')}`;
+
+        for (const b of bookings) {
+          if (!calBookingsMap.has(b.date)) calBookingsMap.set(b.date, []);
+          calBookingsMap.get(b.date).push(b);
+
+          if (b.date.startsWith(currentYM)) {
+            monthTotal++;
+            if (b.status === 'confirmed' || b.status === 'done') monthConfirmed++;
+            if (b.status === 'pending') monthPending++;
+            if (b.status !== 'cancelled') monthRevenue += b.total;
+          }
+        }
+
+        if ($('calSummary')) {
+          $('calSummary').innerHTML = `
+            <span class="ios-sum-pill hot"><b>${monthTotal}</b> đơn tháng này</span>
+            <span class="ios-sum-pill"><b>${monthConfirmed}</b> đã duyệt</span>
+            <span class="ios-sum-pill"><b>${monthPending}</b> chờ duyệt</span>
+            <span class="ios-sum-pill"><b>${vnd(monthRevenue)}</b></span>
+          `;
+        }
+
+        renderCalendarGrid();
+        renderCalendarAgenda();
+      } catch (e) {
+        if (e.status === 401 || e.status === 403) return;
+        toast('Không tải được dữ liệu lịch: ' + e.message, true);
+      }
+    }
+
+    function renderCalendarGrid() {
+      const grid = $('calDaysGrid');
+      if (!grid) return;
+
+      const pad = (n) => String(n).padStart(2, '0');
+      const today = todayStr();
+
+      // Ngày đầu tiên trong tháng (Thứ 2 = 0 ... Chủ Nhật = 6)
+      const firstDay = new Date(calYear, calMonth, 1).getDay();
+      const startDayIndex = (firstDay + 6) % 7;
+
+      const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+      const daysInPrevMonth = new Date(calYear, calMonth, 0).getDate();
+
+      let html = '';
+
+      // 1. Các ngày cuối tháng trước để lấp đầy hàng đầu
+      for (let i = startDayIndex - 1; i >= 0; i--) {
+        const d = daysInPrevMonth - i;
+        const prevM = calMonth === 0 ? 12 : calMonth;
+        const prevY = calMonth === 0 ? calYear - 1 : calYear;
+        const dateStr = `${prevY}-${pad(prevM)}-${pad(d)}`;
+        html += `<div class="ios-day-cell other-month" data-date="${dateStr}">
+          <span class="ios-day-num">${d}</span>
+        </div>`;
+      }
+
+      // 2. Các ngày trong tháng hiện tại
+      for (let d = 1; d <= daysInMonth; d++) {
+        const dateStr = `${calYear}-${pad(calMonth + 1)}-${pad(d)}`;
+        const isToday = dateStr === today;
+        const isSelected = dateStr === calSelectedDate;
+        const events = calBookingsMap.get(dateStr) || [];
+        const hasEvents = events.length > 0;
+
+        let dotsHtml = '';
+        if (hasEvents) {
+          const dots = events.slice(0, 4).map(e => `<span class="ios-dot ${e.status}"></span>`).join('');
+          dotsHtml = `<div class="ios-dots">${dots}</div>`;
+        }
+
+        let badgeHtml = '';
+        if (events.length > 0) {
+          badgeHtml = `<span class="ios-day-badge">${events.length} lịch</span>`;
+        }
+
+        const cls = [
+          'ios-day-cell',
+          isToday ? 'is-today' : '',
+          isSelected ? 'is-selected' : '',
+          hasEvents ? 'has-events' : '',
+        ].filter(Boolean).join(' ');
+
+        html += `
+          <div class="${cls}" data-date="${dateStr}">
+            <span class="ios-day-num">${d}</span>
+            ${dotsHtml}
+            ${badgeHtml}
+          </div>
+        `;
+      }
+
+      // 3. Các ngày đầu tháng sau để đủ lưới
+      const totalCells = startDayIndex + daysInMonth;
+      const nextDays = (7 - (totalCells % 7)) % 7;
+      for (let d = 1; d <= nextDays; d++) {
+        const nextM = calMonth === 11 ? 1 : calMonth + 2;
+        const nextY = calMonth === 11 ? calYear + 1 : calYear;
+        const dateStr = `${nextY}-${pad(nextM)}-${pad(d)}`;
+        html += `<div class="ios-day-cell other-month" data-date="${dateStr}">
+          <span class="ios-day-num">${d}</span>
+        </div>`;
+      }
+
+      grid.innerHTML = html;
+
+      grid.querySelectorAll('.ios-day-cell').forEach(cell => {
+        cell.addEventListener('click', () => {
+          calSelectedDate = cell.dataset.date;
+          const [y, m] = calSelectedDate.split('-').map(Number);
+          if (y !== calYear || m - 1 !== calMonth) {
+            loadCalendar(y, m - 1);
+          } else {
+            renderCalendarGrid();
+            renderCalendarAgenda();
+          }
+        });
+      });
+    }
+
+    function renderCalendarAgenda() {
+      const listEl = $('calEventsList');
+      const titleEl = $('calSelectedDayTitle');
+      const subEl = $('calSelectedDaySub');
+      if (!listEl || !titleEl) return;
+
+      if (!calSelectedDate) {
+        titleEl.textContent = 'Chọn một ngày';
+        if (subEl) subEl.textContent = 'Danh sách lịch hẹn';
+        listEl.innerHTML = '<div class="empty" style="padding:24px 0">Chọn một ngày trên lịch để xem chi tiết các khung giờ đặt.</div>';
+        return;
+      }
+
+      const d = new Date(calSelectedDate + 'T00:00:00');
+      const dayName = d.toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+      titleEl.textContent = dayName;
+
+      const events = (calBookingsMap.get(calSelectedDate) || []).slice().sort((a, b) => a.time.localeCompare(b.time));
+
+      if (subEl) {
+        subEl.textContent = events.length ? `${events.length} lịch hẹn trong ngày` : 'Không có lịch hẹn';
+      }
+
+      if (!events.length) {
+        listEl.innerHTML = `
+          <div class="empty" style="padding:32px 16px;text-align:center">
+            <div style="font-size:28px;margin-bottom:8px">☕</div>
+            <div style="font-weight:600;color:var(--gray-900);margin-bottom:4px">Chưa có lịch hẹn nào</div>
+            <div style="font-size:12.5px;color:var(--gray-400)">Ngày này hiện đang hoàn toàn trống giờ.</div>
+          </div>
+        `;
+        return;
+      }
+
+      const write = can('write');
+
+      listEl.innerHTML = events.map(b => {
+        const ad = (b.addons || []).map(a => a.name).join(', ');
+        const dep = b.deposit_status === 'paid'
+          ? `<span class="badge b-confirmed" style="font-size:10px;padding:2px 6px">Đã cọc ${vnd(b.deposit_amount || 0)}</span>`
+          : `<span class="badge b-pending" style="font-size:10px;padding:2px 6px">Chưa cọc (${vnd(b.deposit_amount || 0)})</span>`;
+
+        let acts = '';
+        if (write) {
+          if (b.deposit_status !== 'paid' && b.status !== 'cancelled') {
+            acts += `<button class="ok" data-cal-deposit="${b.id}">✓ Nhận cọc</button>`;
+          }
+          if (b.status === 'pending') acts += `<button class="ok" data-cal-status="${b.id}" data-val="confirmed">Xác nhận</button>`;
+          if (b.status === 'confirmed') acts += `<button class="ok" data-cal-status="${b.id}" data-val="done">Hoàn thành</button>`;
+          if (b.status !== 'cancelled' && b.status !== 'done') acts += `<button class="no" data-cal-status="${b.id}" data-val="cancelled">Huỷ</button>`;
+          acts += `<button class="no" data-cal-del="${b.id}" data-code="${esc(b.code)}" style="color:#b91c1c;background:#fee2e2">Xoá</button>`;
+        }
+
+        return `
+          <div class="ios-event-card st-${b.status}" data-id="${b.id}">
+            <div class="ios-ev-top">
+              <div class="ios-ev-time">
+                <span>⏰ ${esc(b.time)}</span>
+                <small style="color:var(--gray-400);font-weight:500">(${b.duration || 60} phút)</small>
+              </div>
+              <div>
+                <span class="badge b-${b.status}">${STATUS_LABEL[b.status] || b.status}</span>
+              </div>
+            </div>
+
+            <div class="ios-ev-cust">
+              <span>👤 <b>${esc(b.customer)}</b></span>
+              <a href="tel:${esc(b.phone)}" class="ios-ev-phone">📞 ${esc(b.phone)}</a>
+            </div>
+
+            <div class="ios-ev-svc">
+              <div>💄 <b>${esc(b.service_name)}</b></div>
+              ${ad ? `<div style="font-size:12px;color:var(--gray-600);margin-top:2px">+ ${esc(ad)}</div>` : ''}
+              ${b.note ? `<div style="font-size:12px;color:var(--gray-600);font-style:italic;margin-top:2px">"${esc(b.note)}"</div>` : ''}
+            </div>
+
+            <div class="ios-ev-foot">
+              <div style="display:flex;align-items:center;gap:8px">
+                <span class="ios-ev-price">${vnd(b.total)}</span>
+                ${dep}
+              </div>
+              <div class="ios-ev-acts">
+                ${acts}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      listEl.querySelectorAll('[data-cal-status]').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          await changeStatus(Number(btn.dataset.calStatus), btn.dataset.val, btn);
+          await loadCalendar();
+        });
+      });
+
+      listEl.querySelectorAll('[data-cal-deposit]').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          await changeDepositStatus(Number(btn.dataset.calDeposit), 'paid', btn);
+          await loadCalendar();
+        });
+      });
+
+      listEl.querySelectorAll('[data-cal-del]').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          await deleteBookingRow(Number(btn.dataset.calDel), btn.dataset.code, btn);
+          await loadCalendar();
+        });
+      });
+    }
+
+    if ($('calPrevBtn')) {
+      $('calPrevBtn').addEventListener('click', () => {
+        if (calMonth === 0) {
+          calMonth = 11;
+          calYear--;
+        } else {
+          calMonth--;
+        }
+        loadCalendar(calYear, calMonth);
+      });
+    }
+
+    if ($('calNextBtn')) {
+      $('calNextBtn').addEventListener('click', () => {
+        if (calMonth === 11) {
+          calMonth = 0;
+          calYear++;
+        } else {
+          calMonth++;
+        }
+        loadCalendar(calYear, calMonth);
+      });
+    }
+
+    if ($('calTodayBtn')) {
+      $('calTodayBtn').addEventListener('click', () => {
+        const now = new Date();
+        calYear = now.getFullYear();
+        calMonth = now.getMonth();
+        calSelectedDate = todayStr();
+        loadCalendar(calYear, calMonth);
+      });
+    }
 
     const ZNS_LABEL = { sent: 'Đã gửi', dry_run: 'Chạy thử', skipped: 'Bỏ qua', failed: 'Thất bại' };
     const N_TYPE_LABEL = { booking: 'Đơn mới', reminder: 'Nhắc hẹn', status: 'Đổi trạng thái' };
