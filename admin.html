@@ -2122,7 +2122,7 @@
             <option value="done">Đã hoàn thành</option>
             <option value="cancelled">Đã huỷ</option>
           </select>
-          <input type="tel" id="fPhone" placeholder="Số điện thoại">
+          <input type="search" id="fPhone" name="filter_phone_search" placeholder="Số điện thoại" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
           <button id="filterBtn">Lọc</button>
           <button class="ghost" id="clearBtn">Xoá lọc</button>
           <button class="ghost" id="reloadBtn">Tải lại</button>
@@ -2780,9 +2780,15 @@
 
       // Bất kỳ lỗi nào khi vẽ bảng điều khiển cũng không được để trắng trang
       try {
+        if ($('fPhone')) $('fPhone').value = '';
         renderIdentity();
         applyPermissions();
         await load();
+        setTimeout(() => {
+          if ($('fPhone') && ($('fPhone').value === 'admin' || (ME && $('fPhone').value === ME.username))) {
+            $('fPhone').value = '';
+          }
+        }, 150);
       } catch (err) {
         toast(err.message || 'Không tải được bảng điều khiển', true);
       }
@@ -2858,7 +2864,12 @@
       const q = new URLSearchParams();
       if ($('fDate').value) q.set('date', $('fDate').value);
       if ($('fStatus').value) q.set('status', $('fStatus').value);
-      if ($('fPhone').value.trim()) q.set('phone', $('fPhone').value.trim());
+      const phoneVal = $('fPhone')?.value.trim() || '';
+      if (phoneVal && phoneVal !== 'admin' && (!ME || phoneVal !== ME.username)) {
+        q.set('phone', phoneVal);
+      } else if (phoneVal === 'admin' || (ME && phoneVal === ME.username)) {
+        if ($('fPhone')) $('fPhone').value = '';
+      }
 
       try {
         const stats = await adminFetch('/admin/stats');
