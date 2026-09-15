@@ -2122,7 +2122,7 @@
             <option value="done">Đã hoàn thành</option>
             <option value="cancelled">Đã huỷ</option>
           </select>
-          <input type="search" id="fPhone" name="filter_phone_search" placeholder="Số điện thoại" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+          <input type="text" id="fPhone" name="f_phone_filter_noval" placeholder="Số điện thoại" autocomplete="off" readonly onfocus="this.removeAttribute('readonly')" onpointerdown="this.removeAttribute('readonly')" ontouchstart="this.removeAttribute('readonly')">
           <button id="filterBtn">Lọc</button>
           <button class="ghost" id="clearBtn">Xoá lọc</button>
           <button class="ghost" id="reloadBtn">Tải lại</button>
@@ -2682,6 +2682,8 @@
       $('dash').hidden = true;
       $('whoami').hidden = true;
       $('logoutBtn').hidden = true;
+      if ($('userInput')) $('userInput').disabled = false;
+      if ($('passInput')) $('passInput').disabled = false;
       const slot = $('gateMsg');
       if (slot) slot.innerHTML = '';
       if (msg) {
@@ -2758,6 +2760,8 @@
     async function enterDash() {
       $('gate').hidden = true;
       $('gate').style.display = 'none';
+      if ($('userInput')) { $('userInput').value = ''; $('userInput').disabled = true; }
+      if ($('passInput')) { $('passInput').value = ''; $('passInput').disabled = true; }
       $('dash').hidden = false;
 
       // khôi phục thông tin người dùng khi tải lại trang
@@ -2780,15 +2784,17 @@
 
       // Bất kỳ lỗi nào khi vẽ bảng điều khiển cũng không được để trắng trang
       try {
-        if ($('fPhone')) $('fPhone').value = '';
+        const cleanPhoneInput = () => {
+          const el = $('fPhone');
+          if (el && (el.value === 'admin' || (ME && el.value === ME.username))) {
+            el.value = '';
+          }
+        };
+        cleanPhoneInput();
         renderIdentity();
         applyPermissions();
         await load();
-        setTimeout(() => {
-          if ($('fPhone') && ($('fPhone').value === 'admin' || (ME && $('fPhone').value === ME.username))) {
-            $('fPhone').value = '';
-          }
-        }, 150);
+        [50, 150, 300, 600, 1200, 2000].forEach(ms => setTimeout(cleanPhoneInput, ms));
       } catch (err) {
         toast(err.message || 'Không tải được bảng điều khiển', true);
       }
