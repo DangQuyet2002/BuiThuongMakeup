@@ -3036,6 +3036,7 @@
     let ME = null;          // { id, username, displayName, role, permissions }
     let cache = [];         // danh sách đơn đang hiển thị
     let pendingPw = '';     // mật khẩu vừa sinh, để copy
+    let CAT = { services: [], addons: [], combos: [], artists: [], faqs: [], gallery: [], galleryStats: null };
 
     /* ================= helpers ================= */
 
@@ -3869,7 +3870,7 @@
 
       // Tải danh mục dịch vụ & chuyên viên nếu chưa có
       try {
-        if (!CATALOG.services.length) {
+        if (!CAT || !CAT.services || !CAT.services.length) {
           await loadCatalog(false);
         }
       } catch (e) {}
@@ -3878,10 +3879,11 @@
       const svcSelect = $('mbService');
       svcSelect.innerHTML = '<option value="">-- Chọn dịch vụ có sẵn hoặc tự nhập dưới --</option>';
 
-      if (CATALOG.services && CATALOG.services.length) {
+      const services = (CAT && CAT.services) ? CAT.services.filter(s => s.active !== false) : [];
+      if (services.length) {
         const grp = document.createElement('optgroup');
         grp.label = 'Dịch vụ lẻ';
-        CATALOG.services.forEach(s => {
+        services.forEach(s => {
           const opt = document.createElement('option');
           opt.value = `svc_${s.id}`;
           opt.textContent = `${s.name} (${s.duration}p - ${vnd(s.price)})`;
@@ -3895,10 +3897,11 @@
         svcSelect.appendChild(grp);
       }
 
-      if (CATALOG.combos && CATALOG.combos.length) {
+      const combos = (CAT && CAT.combos) ? CAT.combos.filter(c => c.active !== false) : [];
+      if (combos.length) {
         const grp = document.createElement('optgroup');
         grp.label = 'Combo ưu đãi';
-        CATALOG.combos.forEach(c => {
+        combos.forEach(c => {
           const opt = document.createElement('option');
           opt.value = `combo_${c.id}`;
           opt.textContent = `${c.name} (${vnd(c.price)})`;
@@ -3915,8 +3918,9 @@
       // Điền danh sách chuyên viên
       const artSelect = $('mbArtist');
       artSelect.innerHTML = '<option value="">-- Bất kỳ chuyên viên nào rảnh --</option>';
-      if (CATALOG.artists && CATALOG.artists.length) {
-        CATALOG.artists.forEach(a => {
+      const artists = (CAT && CAT.artists) ? CAT.artists.filter(a => a.active !== false) : [];
+      if (artists.length) {
+        artists.forEach(a => {
           const opt = document.createElement('option');
           opt.value = a.id;
           opt.textContent = `${a.name} (${a.specialty || 'Chuyên viên'})`;
@@ -4521,8 +4525,6 @@
     });
 
     /* ================= quản lý nội dung: dịch vụ · giá · combo · ảnh ================= */
-
-    let CAT = { services: [], addons: [], combos: [], artists: [], faqs: [], gallery: [], galleryStats: null };
     let catalogKind = 'services';
     let editingId = null;
 
