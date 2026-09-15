@@ -74,6 +74,8 @@ export function initSchema() {
       note         TEXT,
       addons       TEXT,
       total        INTEGER NOT NULL DEFAULT 0,
+      location_type TEXT   NOT NULL DEFAULT 'studio',
+      address      TEXT,
       status       TEXT    NOT NULL DEFAULT 'pending',
       created_at   TEXT    NOT NULL DEFAULT (datetime('now','localtime')),
       FOREIGN KEY (service_id) REFERENCES services(id),
@@ -220,6 +222,8 @@ export function initSchema() {
 
   addColumnIfMissing('bookings', 'deposit_amount', 'INTEGER NOT NULL DEFAULT 0');
   addColumnIfMissing('bookings', 'deposit_status', "TEXT NOT NULL DEFAULT 'unpaid'");
+  addColumnIfMissing('bookings', 'location_type', "TEXT NOT NULL DEFAULT 'studio'");
+  addColumnIfMissing('bookings', 'address', 'TEXT');
 
   ensureInitialData();
 }

@@ -189,10 +189,10 @@ export function createBooking(data) {
   const info = db.prepare(`
     INSERT INTO bookings
       (code,service_id,service_name,combo_name,date,time,duration,artist_id,
-       customer,phone,note,addons,total,deposit_amount,deposit_status,status)
+       customer,phone,location_type,address,note,addons,total,deposit_amount,deposit_status,status)
     VALUES
       (@code,@service_id,@service_name,@combo_name,@date,@time,@duration,@artist_id,
-       @customer,@phone,@note,@addons,@total,@deposit_amount,@deposit_status,@status)
+       @customer,@phone,@location_type,@address,@note,@addons,@total,@deposit_amount,@deposit_status,@status)
   `).run({
     code,
     service_id: data.service_id ?? data.serviceId ?? null,
@@ -204,6 +204,8 @@ export function createBooking(data) {
     artist_id: data.artist_id ?? data.artistId ?? null,
     customer: data.customer,
     phone: data.phone,
+    location_type: data.location_type || data.locationType || (data.address ? 'home' : 'studio'),
+    address: data.address ? String(data.address).trim() : null,
     note: data.note ?? null,
     addons: JSON.stringify(data.addons || []),
     total: Number(data.total) || 0,

@@ -97,9 +97,13 @@ export async function initSupabaseSchema() {
         total          INTEGER NOT NULL DEFAULT 0,
         deposit_amount INTEGER NOT NULL DEFAULT 0,
         deposit_status VARCHAR(50) NOT NULL DEFAULT 'unpaid',
+        location_type  VARCHAR(50) NOT NULL DEFAULT 'studio',
+        address        TEXT,
         status         VARCHAR(50) NOT NULL DEFAULT 'pending',
         created_at     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
       );
+      ALTER TABLE bookings ADD COLUMN IF NOT EXISTS location_type VARCHAR(50) NOT NULL DEFAULT 'studio';
+      ALTER TABLE bookings ADD COLUMN IF NOT EXISTS address TEXT;
       CREATE INDEX IF NOT EXISTS idx_bookings_date ON bookings(date);
       CREATE INDEX IF NOT EXISTS idx_bookings_status ON bookings(status);
       CREATE INDEX IF NOT EXISTS idx_bookings_phone ON bookings(phone);

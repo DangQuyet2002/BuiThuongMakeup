@@ -899,6 +899,71 @@
       display: flex
     }
 
+    .loc-toggle {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .loc-opt {
+      cursor: pointer;
+      display: block;
+    }
+
+    .loc-opt input {
+      display: none;
+    }
+
+    .loc-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-md);
+      background: #fff;
+      transition: all 0.16s ease;
+    }
+
+    .loc-opt input:checked + .loc-box {
+      border-color: var(--pink-400);
+      background: var(--pink-50);
+      box-shadow: 0 0 0 1px var(--pink-400);
+    }
+
+    .loc-ico {
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .loc-txt {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+    }
+
+    .loc-txt b {
+      font-size: 13.5px;
+      color: var(--gray-900);
+    }
+
+    .loc-opt input:checked + .loc-box .loc-txt b {
+      color: var(--pink-800);
+    }
+
+    .loc-txt small {
+      font-size: 11.5px;
+      color: var(--gray-400);
+      margin-top: 1px;
+    }
+
+    @media (max-width: 600px) {
+      .loc-toggle {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+    }
+
     .hold-n {
       font-family: var(--serif);
       font-size: 20px;
@@ -2760,16 +2825,44 @@
           </div>
 
           <div class="field">
-            <label class="label">6. Thông tin liên hệ</label>
-            <div class="row2">
-              <input type="text" id="bName" placeholder="Họ và tên" required autocomplete="name">
-              <input type="tel" id="bPhone" placeholder="Số điện thoại / Zalo" required autocomplete="tel">
+            <label class="label">6. Địa điểm thực hiện makeup</label>
+            <div class="loc-toggle">
+              <label class="loc-opt">
+                <input type="radio" name="bLocationType" value="studio" checked id="locStudio">
+                <span class="loc-box">
+                  <span class="loc-ico">🏢</span>
+                  <span class="loc-txt">
+                    <b>Tại Studio</b>
+                    <small>Tại tiệm Bùi Thương Makeup</small>
+                  </span>
+                </span>
+              </label>
+              <label class="loc-opt">
+                <input type="radio" name="bLocationType" value="home" id="locHome">
+                <span class="loc-box">
+                  <span class="loc-ico">🚗</span>
+                  <span class="loc-txt">
+                    <b>Tận nơi theo yêu cầu</b>
+                    <small>Tại nhà, tiệc cưới, khách sạn...</small>
+                  </span>
+                </span>
+              </label>
+            </div>
+            <div id="addressField" style="display:none;margin-top:12px">
+              <input type="text" id="bAddress" placeholder="Nhập địa chỉ cụ thể: Số nhà, tên đường, phường/xã, quận/huyện..." autocomplete="street-address">
             </div>
           </div>
 
           <div class="field">
-            <label class="label">7. Ghi chú thêm <span style="font-weight:400;color:var(--gray-400)">(không bắt
-                buộc)</span></label>
+            <label class="label">7. Thông tin liên hệ</label>
+            <div class="row2">
+              <input type="text" id="bName" placeholder="Họ và tên *" required autocomplete="name">
+              <input type="tel" id="bPhone" placeholder="Số điện thoại / Zalo *" required autocomplete="tel">
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">8. Ghi chú thêm <span style="font-weight:400;color:var(--gray-400)">(không bắt buộc)</span></label>
             <textarea id="bNote"
               placeholder="Ví dụ: mình cần makeup lúc 5h sáng cho tiệc cưới, muốn tông tự nhiên..."></textarea>
           </div>
@@ -3697,12 +3790,28 @@
     var submitBtn = document.getElementById('submitBtn');
     var formBody = document.getElementById('formBody');
     var resultCard = document.getElementById('resultCard');
+    var addressField = document.getElementById('addressField');
+    var bAddress = document.getElementById('bAddress');
+
+    document.querySelectorAll('input[name=bLocationType]').forEach(function (r) {
+      r.addEventListener('change', function () {
+        if (r.value === 'home' && r.checked) {
+          addressField.style.display = 'block';
+          if (bAddress) bAddress.focus();
+        } else if (r.value === 'studio' && r.checked) {
+          addressField.style.display = 'none';
+        }
+      });
+    });
 
     document.getElementById('newBooking').addEventListener('click', function () {
       resultCard.classList.remove('show');
       formBody.style.display = 'block';
       document.getElementById('bookForm').reset();
       document.querySelector('input[name=service]').checked = true;
+      var locStudio = document.getElementById('locStudio');
+      if (locStudio) locStudio.checked = true;
+      if (addressField) addressField.style.display = 'none';
       cancelHold();
       artistField.style.display = 'none';
       renderSlots();
@@ -3716,9 +3825,12 @@
       var phone = document.getElementById('bPhone');
       var note = document.getElementById('bNote');
       var svc = currentService();
+      var isHome = document.getElementById('locHome')?.checked;
+      var addrVal = bAddress ? bAddress.value.trim() : '';
 
       if (!dateInput.value) { toast('Vui lòng chọn ngày mong muốn'); dateInput.focus(); return }
       if (!pickedTime) { toast('Vui lòng chọn khung giờ còn trống'); return }
+      if (isHome && !addrVal) { toast('Vui lòng nhập địa chỉ makeup tận nơi'); bAddress.focus(); return }
       if (!name.value.trim()) { toast('Vui lòng nhập họ tên'); name.focus(); return }
       var digits = phone.value.replace(/\D/g, '');
       if (digits.length < 9 || digits.length > 11) { toast('Số điện thoại chưa hợp lệ'); phone.focus(); return }
@@ -3731,6 +3843,8 @@
         artistId: pickedArtist,
         customer: name.value.trim(),
         phone: phone.value.trim(),
+        locationType: isHome ? 'home' : 'studio',
+        address: isHome ? addrVal : null,
         note: note.value.trim(),
       };
 

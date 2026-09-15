@@ -141,17 +141,21 @@ export async function pullFromSupabase() {
       if (bookings.rows.length > 0) {
         db.transaction(() => {
           const ins = db.prepare(`
-            INSERT INTO bookings (id, code, service_id, service_name, combo_name, date, time, duration, artist_id, customer, phone, note, addons, total, deposit_amount, deposit_status, status, created_at)
-            VALUES (@id, @code, @service_id, @service_name, @combo_name, @date, @time, @duration, @artist_id, @customer, @phone, @note, @addons, @total, @deposit_amount, @deposit_status, @status, @created_at)
+            INSERT INTO bookings (id, code, service_id, service_name, combo_name, date, time, duration, artist_id, customer, phone, location_type, address, note, addons, total, deposit_amount, deposit_status, status, created_at)
+            VALUES (@id, @code, @service_id, @service_name, @combo_name, @date, @time, @duration, @artist_id, @customer, @phone, @location_type, @address, @note, @addons, @total, @deposit_amount, @deposit_status, @status, @created_at)
             ON CONFLICT(code) DO UPDATE SET
               status = excluded.status,
               deposit_status = excluded.deposit_status,
               deposit_amount = excluded.deposit_amount,
               total = excluded.total,
+              location_type = excluded.location_type,
+              address = excluded.address,
               note = excluded.note
           `);
           bookings.rows.forEach(r => ins.run({
             ...r,
+            location_type: r.location_type || 'studio',
+            address: r.address || null,
             created_at: r.created_at ? new Date(r.created_at).toISOString() : new Date().toISOString(),
           }));
         })();
@@ -359,15 +363,17 @@ export async function pushAllToSupabase() {
       const bookings = db.prepare('SELECT * FROM bookings').all();
       for (const b of bookings) {
         await client.query(`
-          INSERT INTO bookings (id, code, service_id, service_name, combo_name, date, time, duration, artist_id, customer, phone, note, addons, total, deposit_amount, deposit_status, status)
-          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
+          INSERT INTO bookings (id, code, service_id, service_name, combo_name, date, time, duration, artist_id, customer, phone, location_type, address, note, addons, total, deposit_amount, deposit_status, status)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)
           ON CONFLICT (code) DO UPDATE SET
             status = excluded.status,
             deposit_status = excluded.deposit_status,
             deposit_amount = excluded.deposit_amount,
             total = excluded.total,
+            location_type = excluded.location_type,
+            address = excluded.address,
             note = excluded.note
-        `, [b.id, b.code, b.service_id, b.service_name, b.combo_name, b.date, b.time, b.duration, b.artist_id, b.customer, b.phone, b.note, b.addons, b.total, b.deposit_amount, b.deposit_status, b.status]);
+        `, [b.id, b.code, b.service_id, b.service_name, b.combo_name, b.date, b.time, b.duration, b.artist_id, b.customer, b.phone, b.location_type || 'studio', b.address || null, b.note, b.addons, b.total, b.deposit_amount, b.deposit_status, b.status]);
       }
 
       // 9. GALLERY

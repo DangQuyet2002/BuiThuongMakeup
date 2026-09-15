@@ -158,6 +158,8 @@ router.post('/bookings', bookingLimiter, async (req, res) => {
     artist_id: artistId,
     customer: String(b.customer).trim(),
     phone: normalizePhone(b.phone),
+    location_type: b.location_type || b.locationType || (b.address ? 'home' : 'studio'),
+    address: b.address ? String(b.address).trim().slice(0, 500) : null,
     note: b.note ? String(b.note).trim().slice(0, 500) : null,
     addons: calc.addons,
     total: calc.total,

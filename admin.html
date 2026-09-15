@@ -2065,39 +2065,48 @@
     .ios-cal-header {
       background: #fff;
       border-radius: var(--radius-md);
-      padding: 16px 22px;
+      padding: 14px 18px;
       border: 1px solid var(--gray-200);
       box-shadow: var(--shadow-xs);
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 14px;
+      gap: 12px;
     }
 
     .ios-cal-nav {
       display: flex;
       align-items: center;
-      gap: 12px;
+      flex-wrap: wrap;
+      gap: 8px 10px;
     }
 
     .ios-cal-title {
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 700;
       color: var(--gray-900);
-      min-width: 170px;
+      margin: 0;
       font-family: var(--sans);
       letter-spacing: -0.3px;
+      white-space: nowrap;
+    }
+
+    .ios-cal-actions {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px 12px;
     }
 
     .ios-nav-btn {
-      width: 34px;
-      height: 34px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
       border: 1px solid var(--gray-200);
       background: #fff;
       color: var(--gray-900);
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 600;
       display: flex;
       align-items: center;
@@ -2131,9 +2140,31 @@
       border-color: var(--pink-400);
     }
 
+    .ios-add-btn {
+      padding: 6px 16px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--pink-400);
+      background: var(--pink-400);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+
+    .ios-add-btn:hover {
+      background: var(--pink-600);
+      border-color: var(--pink-600);
+      box-shadow: 0 2px 8px rgba(212, 83, 126, 0.3);
+    }
+
     .ios-cal-summary {
       display: flex;
-      gap: 10px;
+      gap: 8px;
       flex-wrap: wrap;
     }
 
@@ -2551,12 +2582,28 @@
         flex-direction: column;
         align-items: stretch;
         gap: 12px;
+        padding: 14px;
       }
       .ios-cal-nav {
         justify-content: space-between;
+        width: 100%;
       }
       .ios-cal-title {
         font-size: 16px;
+      }
+      .ios-cal-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+        width: 100%;
+        gap: 10px;
+      }
+      .ios-add-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 10px;
+      }
+      .ios-cal-summary {
+        justify-content: center;
       }
       .ios-month-card {
         padding: 14px 8px;
@@ -2682,10 +2729,12 @@
               <h3 id="calMonthTitle" class="ios-cal-title">Tháng ..., 2026</h3>
               <button type="button" class="ios-nav-btn" id="calNextBtn" title="Tháng sau">›</button>
               <button type="button" class="ios-today-btn" id="calTodayBtn">Hôm nay</button>
-              <button type="button" class="ios-today-btn" id="calNewBookingBtn" style="background:var(--pink-400);color:#fff;border-color:var(--pink-400)">+ Thêm lịch hẹn</button>
             </div>
-            <div class="ios-cal-summary" id="calSummary">
-              <!-- Summary pills -->
+            <div class="ios-cal-actions">
+              <div class="ios-cal-summary" id="calSummary">
+                <!-- Summary pills -->
+              </div>
+              <button type="button" class="ios-add-btn" id="calNewBookingBtn">+ Thêm lịch hẹn</button>
             </div>
           </div>
 
@@ -3158,6 +3207,18 @@
           <input type="number" id="mbDeposit" class="mb-input" min="0" step="10000" placeholder="200000">
         </div>
 
+        <div class="mb-field">
+          <label class="mb-label" for="mbLocationType">Địa điểm makeup</label>
+          <select id="mbLocationType" class="mb-select">
+            <option value="studio" selected>🏢 Tại Studio</option>
+            <option value="home">🚗 Tận nơi theo yêu cầu</option>
+          </select>
+        </div>
+        <div class="mb-field">
+          <label class="mb-label" for="mbAddress">Địa chỉ makeup cụ thể</label>
+          <input type="text" id="mbAddress" class="mb-input" placeholder="Số nhà, đường, phường/xã, quận/huyện...">
+        </div>
+
         <div class="mb-field mb-col-full">
           <label class="mb-label" for="mbNote">Ghi chú yêu cầu của khách</label>
           <input type="text" id="mbNote" class="mb-input" placeholder="Ví dụ: Tông cam đào, làm tóc uốn lơi, đi ăn cưới...">
@@ -3614,6 +3675,7 @@
           <td class="cust">
             <b>${esc(r.customer)}</b>
             <small>${esc(r.phone)}</small>
+            ${r.address ? `<div class="addons-t" style="color:#B45309;font-weight:600;margin-top:2px">🚗 ${esc(r.address)}</div>` : '<div class="addons-t" style="color:var(--gray-400);margin-top:2px">🏢 Tại Studio</div>'}
             ${r.note ? `<div class="note">"${esc(r.note)}"</div>` : ''}
           </td>
           <td>
@@ -3934,6 +3996,7 @@
 
             <div class="ios-ev-svc">
               <div>💄 <b>${esc(b.service_name)}</b></div>
+              ${b.address ? `<div style="font-size:12px;color:#B45309;font-weight:600;margin-top:3px">🚗 Tận nơi: ${esc(b.address)}</div>` : '<div style="font-size:12px;color:var(--gray-500);margin-top:3px">🏢 Tại Studio</div>'}
               ${ad ? `<div style="font-size:12px;color:var(--gray-600);margin-top:2px">+ ${esc(ad)}</div>` : ''}
               ${b.note ? `<div style="font-size:12px;color:var(--gray-600);font-style:italic;margin-top:2px">"${esc(b.note)}"</div>` : ''}
             </div>
@@ -4022,6 +4085,8 @@
       $('mbDuration').value = 60;
       $('mbTotal').value = 650000;
       $('mbDeposit').value = 200000;
+      if ($('mbLocationType')) $('mbLocationType').value = 'studio';
+      if ($('mbAddress')) $('mbAddress').value = '';
       $('mbNote').value = '';
       $('mbStatus').value = 'confirmed';
       $('manualBookingErr').style.display = 'none';
@@ -4141,6 +4206,8 @@
         total: Number($('mbTotal').value) || 0,
         depositAmount: Number($('mbDeposit').value) || 0,
         depositStatus: Number($('mbDeposit').value) > 0 ? 'paid' : 'unpaid',
+        locationType: $('mbLocationType')?.value || 'studio',
+        address: $('mbAddress')?.value.trim() || null,
         status: $('mbStatus').value || 'confirmed',
         note: $('mbNote').value.trim() || null,
       };
