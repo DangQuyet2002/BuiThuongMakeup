@@ -3167,35 +3167,13 @@
           <input type="tel" id="mbPhone" class="mb-input" placeholder="Ví dụ: 0988123456" required>
         </div>
 
-        <div class="mb-field mb-col-full">
-          <label class="mb-label" for="mbService">Gói dịch vụ makeup</label>
-          <select id="mbService" class="mb-select">
-            <option value="">-- Chọn dịch vụ có sẵn hoặc tự nhập dưới --</option>
-          </select>
-        </div>
-
         <div class="mb-field">
-          <label class="mb-label" for="mbServiceName">Tên dịch vụ hiển thị</label>
-          <input type="text" id="mbServiceName" class="mb-input" placeholder="Dịch vụ Makeup">
+          <label class="mb-label" for="mbServiceName">Dịch vụ makeup / Yêu cầu *</label>
+          <input type="text" id="mbServiceName" class="mb-input" placeholder="Ví dụ: Makeup dự tiệc, Makeup cô dâu..." required>
         </div>
         <div class="mb-field">
           <label class="mb-label" for="mbDuration">Thời lượng (phút)</label>
           <input type="number" id="mbDuration" class="mb-input" min="15" step="15" value="60">
-        </div>
-
-        <div class="mb-field">
-          <label class="mb-label" for="mbArtist">Chuyên viên phụ trách</label>
-          <select id="mbArtist" class="mb-select">
-            <option value="">-- Bất kỳ chuyên viên nào rảnh --</option>
-          </select>
-        </div>
-        <div class="mb-field">
-          <label class="mb-label" for="mbStatus">Trạng thái duyệt đơn</label>
-          <select id="mbStatus" class="mb-select">
-            <option value="confirmed" selected>Đã xác nhận (Confirmed)</option>
-            <option value="pending">Chờ xác nhận (Pending)</option>
-            <option value="done">Đã hoàn thành (Done)</option>
-          </select>
         </div>
 
         <div class="mb-field">
@@ -4081,76 +4059,15 @@
       $('mbTime').value = initialTime || '09:00';
       $('mbCustomer').value = '';
       $('mbPhone').value = '';
-      $('mbServiceName').value = '';
+      $('mbServiceName').value = 'Makeup dự tiệc';
       $('mbDuration').value = 60;
       $('mbTotal').value = 650000;
       $('mbDeposit').value = 200000;
       if ($('mbLocationType')) $('mbLocationType').value = 'studio';
       if ($('mbAddress')) $('mbAddress').value = '';
       $('mbNote').value = '';
-      $('mbStatus').value = 'confirmed';
       $('manualBookingErr').style.display = 'none';
       $('manualBookingErr').textContent = '';
-
-      // Tải danh mục dịch vụ & chuyên viên nếu chưa có
-      try {
-        if (!CAT || !CAT.services || !CAT.services.length) {
-          await loadCatalog(false);
-        }
-      } catch (e) {}
-
-      // Điền danh sách dịch vụ
-      const svcSelect = $('mbService');
-      svcSelect.innerHTML = '<option value="">-- Chọn dịch vụ có sẵn hoặc tự nhập dưới --</option>';
-
-      const services = (CAT && CAT.services) ? CAT.services.filter(s => s.active !== false) : [];
-      if (services.length) {
-        const grp = document.createElement('optgroup');
-        grp.label = 'Dịch vụ lẻ';
-        services.forEach(s => {
-          const opt = document.createElement('option');
-          opt.value = `svc_${s.id}`;
-          opt.textContent = `${s.name} (${s.duration}p - ${vnd(s.price)})`;
-          opt.dataset.name = s.name;
-          opt.dataset.duration = s.duration;
-          opt.dataset.price = s.price;
-          opt.dataset.id = s.id;
-          opt.dataset.type = 'service';
-          grp.appendChild(opt);
-        });
-        svcSelect.appendChild(grp);
-      }
-
-      const combos = (CAT && CAT.combos) ? CAT.combos.filter(c => c.active !== false) : [];
-      if (combos.length) {
-        const grp = document.createElement('optgroup');
-        grp.label = 'Combo ưu đãi';
-        combos.forEach(c => {
-          const opt = document.createElement('option');
-          opt.value = `combo_${c.id}`;
-          opt.textContent = `${c.name} (${vnd(c.price)})`;
-          opt.dataset.name = c.name;
-          opt.dataset.duration = 120;
-          opt.dataset.price = c.price;
-          opt.dataset.id = c.id;
-          opt.dataset.type = 'combo';
-          grp.appendChild(opt);
-        });
-        svcSelect.appendChild(grp);
-      }
-
-      // Điền danh sách chuyên viên
-      const artSelect = $('mbArtist');
-      artSelect.innerHTML = '<option value="">-- Bất kỳ chuyên viên nào rảnh --</option>';
-      const artists = (CAT && CAT.artists) ? CAT.artists.filter(a => a.active !== false) : [];
-      if (artists.length) {
-        artists.forEach(a => {
-          const opt = document.createElement('option');
-          opt.value = a.id;
-          opt.textContent = `${a.name} (${a.specialty || 'Chuyên viên'})`;
-          artSelect.appendChild(opt);
-        });
-      }
 
       modal.hidden = false;
       modal.style.display = 'flex';
@@ -4164,15 +4081,6 @@
         modal.style.display = 'none';
       }
     }
-
-    $('mbService')?.addEventListener('change', (e) => {
-      const opt = e.target.selectedOptions[0];
-      if (!opt || !opt.dataset.name) return;
-      $('mbServiceName').value = opt.dataset.name;
-      $('mbDuration').value = opt.dataset.duration || 60;
-      $('mbTotal').value = opt.dataset.price || 0;
-      $('mbDeposit').value = Math.min(Number(opt.dataset.price || 0), 200000);
-    });
 
     $('mbCancelBtn')?.addEventListener('click', closeManualBookingModal);
     $('manualBookingBackdrop')?.addEventListener('click', (e) => {
@@ -4189,26 +4097,22 @@
       btn.disabled = true;
       btn.textContent = 'Đang tạo...';
 
-      const opt = $('mbService')?.selectedOptions[0];
-      const isSvc = opt?.dataset.type === 'service';
-      const isCombo = opt?.dataset.type === 'combo';
-
       const payload = {
         date: $('mbDate').value,
         time: $('mbTime').value.trim(),
         customer: $('mbCustomer').value.trim(),
         phone: $('mbPhone').value.trim(),
-        serviceId: isSvc ? Number(opt.dataset.id) : null,
-        comboId: isCombo ? Number(opt.dataset.id) : null,
-        serviceName: $('mbServiceName').value.trim() || opt?.dataset.name || 'Dịch vụ Makeup',
+        serviceId: null,
+        comboId: null,
+        serviceName: $('mbServiceName').value.trim() || 'Dịch vụ Makeup',
         duration: Number($('mbDuration').value) || 60,
-        artistId: $('mbArtist').value ? Number($('mbArtist').value) : null,
+        artistId: null,
         total: Number($('mbTotal').value) || 0,
         depositAmount: Number($('mbDeposit').value) || 0,
         depositStatus: Number($('mbDeposit').value) > 0 ? 'paid' : 'unpaid',
         locationType: $('mbLocationType')?.value || 'studio',
         address: $('mbAddress')?.value.trim() || null,
-        status: $('mbStatus').value || 'confirmed',
+        status: 'confirmed',
         note: $('mbNote').value.trim() || null,
       };
 
